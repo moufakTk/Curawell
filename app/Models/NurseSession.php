@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class NurseSession extends Model
+{
+    //
+
+    protected $fillable = [
+        'work_imployee_id',
+        'status',
+        'time_in',
+
+    ];
+
+
+    /*
+     * who has my PK
+    */
+
+    //hasOne
+    public function appointments_home()
+    {
+        return $this->hasOne(AppointmentHomeCare::class ,'nurse_session_id');
+    }
+
+    //hasMany
+
+
+    /*
+     * my FK belongs to
+    */
+
+    public function nurse_session()
+    {
+        return $this->belongsTo(WorkImployee::class ,'work_imployee_id');
+    }
+}

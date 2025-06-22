@@ -1,0 +1,46 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Doctor_examin extends Model
+{
+    //
+
+    protected $fillable = [
+        'doctor_id',
+        'price',
+        'is_discounted',
+        'discount_rate',
+
+    ];
+
+
+    /*
+     * who has my PK
+    */
+
+
+
+    /*
+     * my FK belongs to
+    */
+
+    public function examination_doctor()
+    {
+        return $this->belongsTo(Doctor::class, 'doctor_id');
+    }
+
+
+
+    /*
+     * Morph PK
+     */
+
+    public function descounts()
+    {
+        return $this->morphMany(Descount::class, 'descountable');
+    }
+
+}

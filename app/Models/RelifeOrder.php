@@ -1,0 +1,46 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class RelifeOrder extends Model
+{
+    //
+
+    protected $fillable =[
+        'patient_id',
+        'order_type',
+        'destination',
+        'use_car',
+        'status',
+    ];
+
+    /*
+     * who has my PK
+    */
+
+    //hasOne
+    public function relifes()
+    {
+        return $this->hasOne(Relife::class ,'relife_order_id');
+    }
+
+    public function details_Transport()
+    {
+        return $this->hasOne(DetailsTransport::class ,'relife_order_id');
+    }
+
+
+    //hasMany
+
+
+    /*
+     * my FK belongs to
+    */
+
+    public function relife_order_patient()
+    {
+        $this->belongsTo(Patient::class ,'patient_id');
+    }
+}
