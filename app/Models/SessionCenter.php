@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Sessions\SessionCenterType;
 use Illuminate\Database\Eloquent\Model;
 
 class SessionCenter extends Model
@@ -18,6 +19,9 @@ class SessionCenter extends Model
     ];
 
 
+    protected $casts = [
+        'session_type'=>SessionCenterType::class,
+    ];
     /*
      * who has my PK
     */

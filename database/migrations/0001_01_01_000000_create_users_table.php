@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('location_en')->nullable();
             $table->string('location_ar')->nullable();
             $table->enum('gender', ['male', 'female'])->nullable();
-            $table->enum('user_type',['Doctor','Patient','Nurse','Secretary','Reception','driver'])->nullable();
+            $table->enum('user_type',['Doctor','Patient','Nurse','Secretary','Reception','driver','Admin'])->nullable();
             $table->Integer('verify_code')->nullable();
             $table->boolean('is_active')->default(true);
             $table->rememberToken();

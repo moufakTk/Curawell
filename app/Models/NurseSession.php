@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Sessions\SessionNurseStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class NurseSession extends Model
@@ -13,6 +14,10 @@ class NurseSession extends Model
         'status',
         'time_in',
 
+    ];
+
+    protected $casts = [
+        'status'=>SessionNurseStatus::class,
     ];
 
 

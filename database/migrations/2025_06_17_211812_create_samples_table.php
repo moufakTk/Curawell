@@ -17,7 +17,7 @@ return new class extends Migration
             $table->enum('process_take',['HomeCare','External']);
             $table>date('time_take');
             $table->date('time_don');
-            $table->enum('sample_type',['Blood','Gland','Urinalysis','Stool Analysis','Biopsy']);
+            $table->enum('sample_type',['Blood','Gland','Urinalysis','StoolAnalysis','Biopsy']);
             $table->boolean('status')->default(true);
             $table->timestamps();
         });

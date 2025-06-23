@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('private_num');
             $table->decimal('total_ball');
             $table->decimal('paid_of_ball');
-            $table->enum('status',['Complete','Incomplete','Cancel'])->default('Incomplete');
+            $table->enum('status',['Complete','Incomplete','Canceled'])->default('Incomplete');
             $table->timestamps();
         });
     }

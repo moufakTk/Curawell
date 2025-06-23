@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('relife_orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('patient_id')->constrained('patients')->cascadeOnDelete();
-            $table->enum('order_type', ['Call','FaceToFace']);
+            $table->enum('order_type', ['Call','FaceToFace','NonEmergency']);
             $table->enum('destination',['MedicalCenter','AlHiaHospital','AlHilalHospital','UnKnown']);
             $table->boolean('use_car')->default(false);
-            $table->enum('status', ['In Progress','Completed','Cancel'])->default('In Progress');
+            $table->enum('status', ['InProgress','Completed','Canceled'])->default('InProgress');
             $table->timestamps();
         });
     }

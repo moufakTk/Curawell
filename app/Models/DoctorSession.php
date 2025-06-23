@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Sessions\SessionDoctorStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class DoctorSession extends Model
@@ -12,6 +13,10 @@ class DoctorSession extends Model
         'status',
         'from',
         'to',
+    ];
+
+    protected $casts =[
+        'status'=>SessionDoctorStatus::class,
     ];
 
     /*

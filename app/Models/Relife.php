@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Appointments\EmergencyStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class Relife extends Model
@@ -14,6 +15,10 @@ class Relife extends Model
         'relife_order_id',
         'phone_number',
         'status',
+    ];
+
+    protected $casts =[
+        'status'=>EmergencyStatus::class,
     ];
 
     /*

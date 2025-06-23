@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\SampleType;
 use Illuminate\Database\Eloquent\Model;
 
 class Sample extends Model
@@ -15,6 +16,10 @@ class Sample extends Model
         'time_don',
         'sample_type',
         'status',
+    ];
+
+    protected $casts = [
+        'sample_type'=>SampleType::class,
     ];
 
     /*

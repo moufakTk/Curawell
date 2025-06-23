@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Orders\AnalyzeOrderStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class AnalyzeOrder extends Model
@@ -19,6 +20,10 @@ class AnalyzeOrder extends Model
         'analyzed_ordering_en',
         'sample_type',
         'sample_num',
+    ];
+
+    protected $casts =[
+        'status'=>AnalyzeOrderStatus::class,
     ];
 
 

@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\Orders\EmergencyOrder\EmergencyOrderDestination;
+use App\Enums\Orders\EmergencyOrder\EmergencyOrderStatus;
+use App\Enums\Orders\EmergencyOrder\EmergencyOrderType;
 use Illuminate\Database\Eloquent\Model;
 
 class RelifeOrder extends Model
@@ -14,6 +17,12 @@ class RelifeOrder extends Model
         'destination',
         'use_car',
         'status',
+    ];
+
+    protected $casts = [
+        'order_type'=>EmergencyOrderType::class,
+        'destination'=>EmergencyOrderDestination::class,
+        'status'=>EmergencyOrderStatus::class,
     ];
 
     /*

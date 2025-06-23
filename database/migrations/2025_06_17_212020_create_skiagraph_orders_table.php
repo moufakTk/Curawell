@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('doctor_id')->constrained('doctors')->cascadeOnDelete();
             $table->string('doctor_name');
             $table->decimal('price');
-            $table->enum('status', ['In Preparation', 'Prepared','Cancel'])->default('In Preparation');
+            $table->enum('status', ['InPreparation', 'Prepared','Canceled'])->default('InPreparation');
             //$table->boolean('bay')->default(false);
             $table->timestamps();
         });

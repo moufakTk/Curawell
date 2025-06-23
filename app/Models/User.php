@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\Gender;
+use App\Enums\Users\UserType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -29,6 +31,11 @@ class User extends Authenticatable
         'user_type',
         'is_active',
 
+    ];
+
+    protected $casts = [
+        'gender'=>Gender::class,
+        'user_type'=>UserType::class,
     ];
 
     /**

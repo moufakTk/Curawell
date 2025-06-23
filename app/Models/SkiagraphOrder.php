@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Orders\SkiagraphOrderStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class SkiagraphOrder extends Model
@@ -14,6 +15,10 @@ class SkiagraphOrder extends Model
         'doctor_name',
         'price',
         'status',
+    ];
+
+    protected $casts = [
+        'status'=>SkiagraphOrderStatus::class,
     ];
 
 

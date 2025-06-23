@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\Appointments\appointment\AppointmentStatus;
+use App\Enums\Appointments\appointment\AppointmentType;
 use Illuminate\Database\Eloquent\Model;
 
 class Appointment extends Model
@@ -18,6 +20,12 @@ class Appointment extends Model
         'delivery_location_en',
         'delivery_location_ar',
         'appointment_type',
+    ];
+
+
+    protected $casts =[
+        'status'=>AppointmentStatus::class ,
+        'appointment_type'=>AppointmentType::class ,
     ];
 
     /*

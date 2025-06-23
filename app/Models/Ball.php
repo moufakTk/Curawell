@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Payments\BallStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class Ball extends Model
@@ -15,6 +16,10 @@ class Ball extends Model
         'total_ball',
         'paid_of_ball',
         'status',
+    ];
+
+    protected $casts = [
+        'status'=>BallStatus::class,
     ];
 
     /*

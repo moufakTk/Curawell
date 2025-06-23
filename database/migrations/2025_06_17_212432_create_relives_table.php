@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('doctor_id')->constrained('doctors')->cascadeOnDelete();
             $table->foreignId('relife_order_id')->constrained('relife_orders')->cascadeOnDelete();
             $table->string('phone_number');
-            $table->enum('status',['canceled','confirmed','Don']);
+            $table->enum('status',['Confirmed','Occur','Don','Cancel']);
             $table->timestamps();
         });
     }

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\Appointments\Waiting\WaitingStatus;
+use App\Enums\Appointments\Waiting\WaitingType;
 use Illuminate\Database\Eloquent\Model;
 
 class Waiting extends Model
@@ -14,6 +16,11 @@ class Waiting extends Model
         'phone_number',
         'status',
         'waiting_type',
+    ];
+
+    protected $casts =[
+        'status'=>WaitingStatus::class,
+        'waiting_type'=>WaitingType::class,
     ];
 
     /*

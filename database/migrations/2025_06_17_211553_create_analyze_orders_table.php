@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('doctor_id')->nullable()->constrained('doctors')->cascadeOnDelete();
             $table->string('doctor_name_ar');
             $table->string('doctor_name_en');
-            $table->enum('status', ['In Progress', 'In Preparation','Prepared','Cancel'])->default('In Progress');
+            $table->enum('status', ['InProgress', 'InPreparation','Prepared','Canceled'])->default('InProgress');
             $table->decimal('price');
             $table->json('analyzed_ordering_ar');
             $table->json('analyzed_ordering_en');

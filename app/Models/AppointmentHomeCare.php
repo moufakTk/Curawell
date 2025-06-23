@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\Appointments\AppointmentHomeCareType;
+use App\Enums\Gender;
 use Illuminate\Database\Eloquent\Model;
 
 class AppointmentHomeCare extends Model
@@ -18,6 +20,11 @@ class AppointmentHomeCare extends Model
         'phone_number',
         'price',
         'explain',
+    ];
+
+    protected $casts =[
+        'type'=>AppointmentHomeCareType::class,
+        'gender'=>Gender::class,
     ];
 
 

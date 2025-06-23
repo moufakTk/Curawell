@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('description_ar');
             $table->morphs('discountable');
             $table->decimal('discount_rate');
-            $table->enum('status',['active','inactive'])->default('active');
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

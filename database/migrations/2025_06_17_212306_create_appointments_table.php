@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('doctor_id')->constrained('doctors')->cascadeOnDelete();
             $table->foreignId('doctor_session_id')->constrained('doctor_sessions')->cascadeOnDelete();
             $table->string('phone_number');
-            $table->enum('status',['canceled','confirmed','Don']);
+            $table->enum('status',['Confirmed','Occur','Don','Cancel']);
             $table->boolean('delivery')->default(false);
             $table->string('delivery_location_en')->nullable();
             $table->string('delivery_location_ar')->nullable();

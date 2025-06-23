@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Services\SectionType;
 use Illuminate\Database\Eloquent\Model;
 
 class Section extends Model
@@ -14,6 +15,10 @@ class Section extends Model
         'brief_description_en',
         'brief_description_ar',
         'section_type',
+    ];
+
+    protected $casts =[
+        'section_type'=>SectionType::class,
     ];
 
 

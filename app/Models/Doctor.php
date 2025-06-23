@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Users\DoctorType;
 use Illuminate\Database\Eloquent\Model;
 
 class Doctor extends Model
@@ -22,6 +23,9 @@ class Doctor extends Model
         'doctor_type',
     ];
 
+    protected $casts =[
+        'doctor_type' =>DoctorType::class,
+    ];
 
 
     /*
