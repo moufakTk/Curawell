@@ -9,7 +9,7 @@ class Competence extends Model
     //
 
     protected $fillable = [
-        'servise_id',
+        'service_id',
         'name_en',
         'name_ar',
         'brief_description_en',
@@ -30,7 +30,7 @@ class Competence extends Model
 
     public function competence_services()
     {
-        return $this->belongsTo(Servise::class , 'servise_id');
+        return $this->belongsTo(Service::class , 'service_id');
     }
 
 

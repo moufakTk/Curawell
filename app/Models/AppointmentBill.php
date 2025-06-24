@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AppointmentBall extends Model
+class AppointmentBill extends Model
 {
     //
 
     protected $fillable = [
-        'ball_id',
+        'bill_id',
         'appointable',
         'total_treatment_amount',
         'paid_of_amount',
@@ -25,9 +25,9 @@ class AppointmentBall extends Model
      * my FK belongs to
     */
 
-    public function appointmentBall_ball()
+    public function appointmentBall_bill()
     {
-        return $this->belongsTo(Ball::class , 'ball_id');
+        return $this->belongsTo(Bill::class , 'bill_id');
 
     }
 

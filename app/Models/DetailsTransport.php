@@ -9,7 +9,7 @@ class DetailsTransport extends Model
     //
 
     protected $fillable = [
-        'relife_order_id',
+        'relief_order_id',
         'ambulance_team_id',
         'location_en',
         'location_ar',
@@ -26,9 +26,9 @@ class DetailsTransport extends Model
      * my FK belongs to
     */
 
-    public function details_relife_order()
+    public function details_relief_order()
     {
-        return $this->belongsTo(RelifeOrder::class , 'relife_order_id');
+        return $this->belongsTo(ReliefOrder::class , 'relief_order_id');
     }
 
     public function details_ambulance_team()

@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('relives', function (Blueprint $table) {
+        Schema::create('bills', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('patient_id')->constrained('patients')->cascadeOnDelete();
             $table->foreignId('doctor_id')->constrained('doctors')->cascadeOnDelete();
-            $table->foreignId('relife_order_id')->constrained('relife_orders')->cascadeOnDelete();
-            $table->string('phone_number');
-            $table->enum('status',['Confirmed','Occur','Don','Cancel']);
+            $table->foreignId('patient_id')->constrained('patients')->cascadeOnDelete();
+            $table->string('private_num');
+            $table->decimal('total_bill');
+            $table->decimal('paid_of_bill');
+            $table->enum('status',['Complete','Incomplete','Canceled'])->default('Incomplete');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('relives');
+        Schema::dropIfExists('bills');
     }
 };

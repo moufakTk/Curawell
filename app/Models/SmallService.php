@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SmallServise extends Model
+class SmallService extends Model
 {
     //
 
@@ -27,12 +27,12 @@ class SmallServise extends Model
     //hasMany
     public function divisions()
     {
-        return $this->hasMany(Division::class , 'small_servise_id');
+        return $this->hasMany(Division::class , 'small_service_id');
     }
 
     public function whatPhotos()
     {
-        return $this->hasMany(WhatPhoto::class , 'small_servise_id');
+        return $this->hasMany(WhatPhoto::class , 'small_service_id');
     }
 
 
@@ -40,7 +40,7 @@ class SmallServise extends Model
      * my FK belongs to
     */
 
-    public function smallServise_section()
+    public function smallService_section()
     {
         return $this->belongsTo(Section::class , 'section_id');
     }

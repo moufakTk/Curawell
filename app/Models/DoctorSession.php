@@ -9,7 +9,7 @@ class DoctorSession extends Model
 {
     //
     protected $fillable =[
-        'work_imployee_id',
+        'work_employee_id',
         'status',
         'from',
         'to',
@@ -39,7 +39,7 @@ class DoctorSession extends Model
 
     public function session_doctor()
     {
-        return $this->belongsTo(WorkImployee::class, 'work_imployee_id');
+        return $this->belongsTo(WorkEmployee::class, 'work_employee_id');
     }
 
 

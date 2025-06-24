@@ -26,14 +26,14 @@ class Section extends Model
      * who has my PK
     */
 
-    public function servises()
+    public function services()
     {
-        return $this->hasMany(Servise::class , 'section_id');
+        return $this->hasMany(Service::class , 'section_id');
     }
 
-    public function small_servises()
+    public function small_services()
     {
-        return $this->hasMany(SmallServise::class , 'section_id');
+        return $this->hasMany(SmallService::class , 'section_id');
     }
 
 

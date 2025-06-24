@@ -12,7 +12,7 @@ class UserReplacement extends Model
         'patient_id',
         'replacement_id',
         'replacement_time',
-        'replece_point_num',
+        'replace_point_num',
 
     ];
 

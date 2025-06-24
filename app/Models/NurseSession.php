@@ -10,7 +10,7 @@ class NurseSession extends Model
     //
 
     protected $fillable = [
-        'work_imployee_id',
+        'work_employee_id',
         'status',
         'time_in',
 
@@ -40,6 +40,6 @@ class NurseSession extends Model
 
     public function nurse_session()
     {
-        return $this->belongsTo(WorkImployee::class ,'work_imployee_id');
+        return $this->belongsTo(WorkEmployee::class ,'work_employee_id');
     }
 }

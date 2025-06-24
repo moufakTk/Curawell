@@ -9,7 +9,7 @@ class WhatPhoto extends Model
     //
     protected $fillable =[
         'skiagraph_order_id',
-        'small_servise_id',
+        'small_service_id',
         'price',
     ];
 
@@ -30,7 +30,7 @@ class WhatPhoto extends Model
 
     public function whatPhoto_small_servise()
     {
-        return $this->belongsTo(SmallServise::class, 'small_servise_id');
+        return $this->belongsTo(SmallService::class, 'small_service_id');
     }
 
 }

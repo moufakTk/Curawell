@@ -9,7 +9,7 @@ class Division extends Model
     //
 
     protected $fillable = [
-        'small_servise_id',
+        'small_service_id',
         'doctor_id',
         'is_discounted',
         'discount_rate',
@@ -38,9 +38,9 @@ class Division extends Model
         return $this->belongsTo(Doctor::class, 'doctor_id');
     }
 
-    public function division_small_servise()
+    public function division_small_service()
     {
-        return $this->belongsTo(SmallServise::class, 'small_servise_id');
+        return $this->belongsTo(SmallService::class, 'small_service_id');
     }
 
 
@@ -49,8 +49,8 @@ class Division extends Model
      * Morph PK
      */
 
-    public function descounts()
+    public function discounts()
     {
-        return $this->morphMany(Descount::class, 'descountable');
+        return $this->morphMany(Discount::class, 'discountable');
     }
 }

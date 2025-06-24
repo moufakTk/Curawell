@@ -38,9 +38,9 @@ class Doctor_examin extends Model
      * Morph PK
      */
 
-    public function descounts()
+    public function discounts()
     {
-        return $this->morphMany(Descount::class, 'descountable');
+        return $this->morphMany(Discount::class, 'discountable');
     }
 
 }

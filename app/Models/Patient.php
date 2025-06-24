@@ -43,12 +43,12 @@ class Patient extends Model
 
     public function relifes()
     {
-        return $this->hasMany(Relife::class ,'patient_id');
+        return $this->hasMany(Relief::class ,'patient_id');
     }
 
-    public function balls()
+    public function bills()
     {
-        return $this->hasMany(Ball::class ,'patient_id');
+        return $this->hasMany(Bill::class ,'patient_id');
     }
 
     public function analyze_orders()
@@ -62,7 +62,7 @@ class Patient extends Model
 
     public function relife_orders()
     {
-        return $this->hasMany(RelifeOrder::class ,'patient_id');
+        return $this->hasMany(ReliefOrder::class ,'patient_id');
     }
 
     public function samples()
@@ -87,7 +87,7 @@ class Patient extends Model
 
     public function user_descounts()
     {
-        return $this->hasMany(UserDescount::class ,'patient_id');
+        return $this->hasMany(UserDiscount::class ,'patient_id');
     }
 
     public function appointment_homes()

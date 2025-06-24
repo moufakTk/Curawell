@@ -5,14 +5,14 @@ namespace App\Models;
 use App\Enums\Appointments\EmergencyStatus;
 use Illuminate\Database\Eloquent\Model;
 
-class Relife extends Model
+class Relief extends Model
 {
     //
 
     protected $fillable = [
         'patient_id',
         'doctor_id',
-        'relife_order_id',
+        'relief_order_id',
         'phone_number',
         'status',
     ];
@@ -32,19 +32,19 @@ class Relife extends Model
      * my FK belongs to
     */
 
-    public function relife_doctor()
+    public function relief_doctor()
     {
         return $this->belongsTo(Doctor::class, 'doctor_id');
     }
 
-    public function relife_patient()
+    public function relief_patient()
     {
         return $this->belongsTo(Patient::class, 'patient_id');
     }
 
-    public function relife_order()
+    public function relief_order()
     {
-        return $this->belongsTo(RelifeOrder::class, 'relife_order_id');
+        return $this->belongsTo(ReliefOrder::class, 'relief_order_id');
     }
 
 
@@ -57,9 +57,9 @@ class Relife extends Model
         return $this->morphMany(SessionCenter::class , 'sessionable');
     }
 
-    public function appointment_balls()
+    public function appointment_bills()
     {
-        return $this->morphMany(AppointmentBall::class , 'appointmentable');
+        return $this->morphMany(AppointmentBill::class , 'appointmentable');
     }
 
 

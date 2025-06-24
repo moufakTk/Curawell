@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name_ar');
             $table->text('description_en');
             $table->text('description_ar');
-            $table->tinyInteger('replece_point_num');
+            $table->tinyInteger('replace_point_num');
             $table->boolean('is_active');
             $table->timestamps();
         });

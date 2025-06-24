@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('medicines')->nullable();
             $table->decimal('doctor_examination')->default(0);
             $table->decimal('discount')->nullable(0);
-            $table->enum('session_type',['Relife','Clinic']);
+            $table->enum('session_type',['Relief','Clinic']);
             $table->timestamps();
         });
     }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('patient_id')->constrained('patients')->onDelete('cascade');
             $table->foreignId('replacement_id')->constrained('replacements')->onDelete('cascade');
             $table->date('replacement_time');
-            $table->tinyInteger('replece_point_num');
+            $table->tinyInteger('replace_point_num');
             $table->timestamps();
         });
     }

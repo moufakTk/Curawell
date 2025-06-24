@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('restores', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ball_id')->constrained('balls')->cascadeOnDelete();
+            $table->foreignId('bill_id')->constrained('bills')->cascadeOnDelete();
             $table->decimal('restore_amount');
             $table->text('cause');
             $table->timestamps();

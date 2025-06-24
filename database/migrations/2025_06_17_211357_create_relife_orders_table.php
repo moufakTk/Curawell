@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('relife_orders', function (Blueprint $table) {
+        Schema::create('relief_orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('patient_id')->constrained('patients')->cascadeOnDelete();
             $table->enum('order_type', ['Call','FaceToFace','NonEmergency']);
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('relife_orders');
+        Schema::dropIfExists('relief_orders');
     }
 };

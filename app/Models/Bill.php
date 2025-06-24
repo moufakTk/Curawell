@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Enums\Payments\BallStatus;
 use Illuminate\Database\Eloquent\Model;
 
-class Ball extends Model
+class Bill extends Model
 {
     //
 
@@ -29,14 +29,14 @@ class Ball extends Model
     //hasOne
 
     //hasMAny
-    public function appointment_balls()
+    public function appointment_bills()
     {
-        return $this->hasMany(AppointmentBall::class , 'ball_id');
+        return $this->hasMany(AppointmentBill::class , 'bill_id');
     }
 
     public function restores()
     {
-        return $this->hasMany(Restore::class , 'ball_id');
+        return $this->hasMany(Restore::class , 'bill_id');
     }
 
 
@@ -44,12 +44,12 @@ class Ball extends Model
     * my FK belongs to
    */
 
-    public function ball_doctor()
+    public function bill_doctor()
     {
         return $this->belongsTo(Doctor::class , 'doctor_id');
     }
 
-    public function ball_patient()
+    public function bill_patient()
     {
         return $this->belongsTo(Patient::class , 'patient_id');
     }

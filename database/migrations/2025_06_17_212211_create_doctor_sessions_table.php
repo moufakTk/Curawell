@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('doctor_sessions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('work_imployee_id')->constrained('work_imployees')->cascadeOnDelete();
+            $table->foreignId('work_employee_id')->constrained('work_employees')->cascadeOnDelete();
             $table->enum('status',['Available','Reserved','UnAvailable','TurnOff']);
             $table->time('from');
             $table->time('to');

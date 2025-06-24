@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('balls', function (Blueprint $table) {
+        Schema::create('reliefs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('doctor_id')->constrained('doctors')->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained('patients')->cascadeOnDelete();
-            $table->string('private_num');
-            $table->decimal('total_ball');
-            $table->decimal('paid_of_ball');
-            $table->enum('status',['Complete','Incomplete','Canceled'])->default('Incomplete');
+            $table->foreignId('doctor_id')->constrained('doctors')->cascadeOnDelete();
+            $table->foreignId('relief_order_id')->constrained('relief_orders')->cascadeOnDelete();
+            $table->string('phone_number');
+            $table->enum('status',['Confirmed','Occur','Don','Cancel']);
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('balls');
+        Schema::dropIfExists('reliefs');
     }
 };

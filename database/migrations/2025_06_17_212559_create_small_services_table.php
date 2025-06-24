@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('articals', function (Blueprint $table) {
+        Schema::create('small_services', function (Blueprint $table) {
             $table->id();
-            $table->string('title_en');
-            $table->string('title_ar');
-            $table->text('brief_description_en');
-            $table->text('brief_description_ar');
-            $table->string('path_link');
-
+            $table->foreignId('section_id')->constrained('sections')->cascadeOnDelete();
+            $table->string('name-en');
+            $table->string('name-ar');
+            $table->decimal('price');
+            $table->text('description_en');
+            $table->text('description_ar');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('articals');
+        Schema::dropIfExists('small_services');
     }
 };

@@ -13,7 +13,7 @@ class Replacement extends Model
         'name_ar',
         'description_en',
         'description_ar',
-        'replece_point_num',
+        'replace_point_num',
         'is_active',
     ];
 

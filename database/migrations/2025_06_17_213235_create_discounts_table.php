@@ -11,11 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_descounts', function (Blueprint $table) {
+        Schema::create('discounts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('patient_id')->constrained('patients')->cascadeOnDelete();
-            $table->foreignId('descount_id')->constrained('descounts')->cascadeOnDelete();
-            $table->decimal('descount_rate');
+            $table->string('name_en');
+            $table->string('name_ar');
+            $table->text('description_en');
+            $table->text('description_ar');
+            $table->morphs('discountable');
+            $table->decimal('discount_rate');
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }
@@ -25,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_descounts');
+        Schema::dropIfExists('discounts');
     }
 };

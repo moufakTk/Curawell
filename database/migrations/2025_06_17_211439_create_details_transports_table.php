@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('details_transports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('relife_order_id')->constrained('relife_orders')->cascadeOnDelete();
+            $table->foreignId('relief_order_id')->constrained('relief_orders')->cascadeOnDelete();
             $table->foreignId('ambulance_team_id')->constrained('ambulance_teams')->cascadeOnDelete();
             $table->string('location_en')->nullable();
             $table->string('location_ar')->nullable();

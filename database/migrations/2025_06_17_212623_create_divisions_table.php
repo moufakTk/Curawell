@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('divisions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('small_servise_id')->constrained('small_servises')->cascadeOnDelete();
+            $table->foreignId('small_service_id')->constrained('small_services')->cascadeOnDelete();
             $table->foreignId('doctor_id')->constrained('doctors')->cascadeOnDelete();
             $table->boolean('is_discounted')->default(false);
             $table->decimal('discount_rate')->default(0);

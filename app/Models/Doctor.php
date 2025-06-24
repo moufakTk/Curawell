@@ -54,14 +54,14 @@ class Doctor extends Model
         return $this->hasMany(Waiting::class,'doctor_id');
     }
 
-    public function relife()
+    public function relief()
     {
-        return $this->hasMany(Relife::class,'doctor_id');
+        return $this->hasMany(Relief::class,'doctor_id');
     }
 
-    public function ball()
+    public function bill()
     {
-        return $this->hasMany(Ball::class,'doctor_id');
+        return $this->hasMany(Bill::class,'doctor_id');
     }
 
     public function analyze_orders()

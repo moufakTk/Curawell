@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class FrecquentlyQuestion extends Model
+class FrequentlyQuestion extends Model
 {
     //
 

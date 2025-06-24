@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserDescount extends Model
+class UserDiscount extends Model
 {
     //
 
     protected $fillable =[
         'patient_id',
-        'descount_id',
-        'descount_rate',
+        'discount_id',
+        'discount_rate',
     ];
 
     /*
@@ -28,7 +28,7 @@ class UserDescount extends Model
     }
 
     public function user_desc_descount(){
-        return $this->belongsTo(Descount::class, 'descount_id');
+        return $this->belongsTo(Discount::class, 'discount_id');
     }
 
 }

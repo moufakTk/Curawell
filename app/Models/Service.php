@@ -4,19 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Descount extends Model
+class Service extends Model
 {
     //
 
-
     protected $fillable = [
+        'section_id',
         'name_en',
         'name_ar',
-        'description_en',
-        'description_ar',
-        'discountable',
-        'discount_rate',
-        'status',
+        'brief_description_en',
+        'brief_description_ar',
+        'details_services_en',
+        'details_services_ar',
     ];
 
 
@@ -24,27 +23,18 @@ class Descount extends Model
      * who has my PK
     */
 
-    //hasOne
-
-    //hasMany
-    public function user_descounts()
+    public function competences()
     {
-        return $this->hasMany(UserDescount::class ,'descount_id');
+        return $this->hasMany(Competence::class , 'service_id');
     }
-
 
     /*
      * my FK belongs to
     */
 
-
-    /*
-     * Morph FK
-     */
-
-    public function descountable()
+    public function service_section()
     {
-        return $this->morphTo();
+        return $this->belongsTo(Section::class , 'section_id');
     }
 
     /*

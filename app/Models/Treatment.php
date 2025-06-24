@@ -11,8 +11,8 @@ class Treatment extends Model
     protected $fillable = [
         'session_id',
         'division_id',
-        'small_servise_price',
-        'small_servise_num',
+        'small_service_price',
+        'small_service_num',
         'total',
     ];
 

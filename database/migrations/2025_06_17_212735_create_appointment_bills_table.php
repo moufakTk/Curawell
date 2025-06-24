@@ -11,15 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('descounts', function (Blueprint $table) {
+        Schema::create('appointment_bills', function (Blueprint $table) {
             $table->id();
-            $table->string('name_en');
-            $table->string('name_ar');
-            $table->text('description_en');
-            $table->text('description_ar');
-            $table->morphs('discountable');
-            $table->decimal('discount_rate');
-            $table->boolean('active')->default(true);
+            $table->foreignId('bill_id')->constrained('bills')->cascadeOnDelete();
+            $table->morphs('appointable');
+            $table->decimal('total_treatment_amount');
+            $table->decimal('paid_of_amount');
             $table->timestamps();
         });
     }
@@ -29,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('descounts');
+        Schema::dropIfExists('appointment_bills');
     }
 };

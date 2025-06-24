@@ -7,7 +7,7 @@ use App\Enums\Orders\EmergencyOrder\EmergencyOrderStatus;
 use App\Enums\Orders\EmergencyOrder\EmergencyOrderType;
 use Illuminate\Database\Eloquent\Model;
 
-class RelifeOrder extends Model
+class ReliefOrder extends Model
 {
     //
 
@@ -32,7 +32,7 @@ class RelifeOrder extends Model
     //hasOne
     public function relifes()
     {
-        return $this->hasOne(Relife::class ,'relife_order_id');
+        return $this->hasOne(Relief::class ,'relife_order_id');
     }
 
     public function details_Transport()

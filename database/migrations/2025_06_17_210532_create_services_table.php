@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('small_servises', function (Blueprint $table) {
+        Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->foreignId('section_id')->constrained('sections')->cascadeOnDelete();
-            $table->string('name-en');
-            $table->string('name-ar');
-            $table->decimal('price');
-            $table->text('description_en');
-            $table->text('description_ar');
+            $table->string('name_en');
+            $table->string('name_ar');
+            $table->text('brief_description_en');
+            $table->text('brief_description_ar');
+            $table->json('details_services_en');
+            $table->json('details_services_ar');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('small_servises');
+        Schema::dropIfExists('services');
     }
 };

@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('session_center_id')->constrained('session_centers')->cascadeOnDelete();
             $table->foreignId('division_id')->constrained('divisions')->cascadeOnDelete();
-            $table->decimal('small_servise_price');
-            $table->integer('small_servise_num');
+            $table->decimal('small_service_price');
+            $table->integer('small_service_num');
             $table->decimal('total');
 
             $table->timestamps();
