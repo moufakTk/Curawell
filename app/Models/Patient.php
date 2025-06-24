@@ -96,7 +96,10 @@ class Patient extends Model
     }
 
 
-
+    public function assigneds()
+    {
+        return $this->hasMany(Assigned::class ,'patient_id');
+    }
 
 
     /*
