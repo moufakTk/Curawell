@@ -11,7 +11,7 @@ enum UserType :string
     case Nurse     ='Nurse';
     case Secretary ='Secretary';
     case Reception ='Reception';
-    case driver    ='driver';
+    case Driver    ='Driver';
     case Patient   ='Patient';
 
 
@@ -23,7 +23,7 @@ enum UserType :string
             self::Nurse =>'Nurse',
             self::Secretary =>'Secretary',
             self::Reception =>'Reception',
-            self::driver   =>'driver',
+            self::Driver   =>'Driver',
             self::Patient  =>'Patient',
 
         };

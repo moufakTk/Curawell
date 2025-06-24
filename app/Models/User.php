@@ -8,11 +8,12 @@ use App\Enums\Users\UserType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable ,HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -103,7 +104,7 @@ class User extends Authenticatable
     //hasMany
     protected function work_employees()
     {
-        return $this->hasMany(WorkImployee::class ,'user_id');
+        return $this->hasMany(WorkEmployee::class ,'user_id');
     }
 
 
@@ -113,6 +114,17 @@ class User extends Authenticatable
     /*
      * my FK belongs to
     */
+
+
+
+    /*
+     * Morph PK
+     */
+
+    public function assigned()
+    {
+        return $this->morphMany(Assigned::class ,'assignable');
+    }
 
 
 }

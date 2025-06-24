@@ -102,4 +102,10 @@ class Doctor extends Model
         return $this->morphMany(Image::class,'imageable');
     }
 
+
+    public function assigned()
+    {
+        return $this->morphMany(Assigned::class ,'assignable');
+    }
+
 }
