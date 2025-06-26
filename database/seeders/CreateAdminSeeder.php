@@ -23,8 +23,8 @@ class CreateAdminSeeder extends Seeder
         if(!$admin) {
 
             $admin =User::create([
-                'name_en'=>'moufak AlTaklh',
-                'name_ar'=>'وفق التكلة',
+                'first_name'=>'moufak',
+                'last_name'=>'AlTaklh',
                 'email'=>'muofak@gmail.com',
                 'password'=>Hash::make('moufak123456789'),
                 'age'=>21 ,

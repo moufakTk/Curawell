@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('section_id')->constrained('sections')->cascadeOnDelete();
             $table->string('name_en');
             $table->string('name_ar');
-            $table->text('brief_description_en');
-            $table->text('brief_description_ar');
+           // $table->text('brief_description_en');
+           // $table->text('brief_description_ar');
             $table->json('details_services_en');
             $table->json('details_services_ar');
             $table->timestamps();

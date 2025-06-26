@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name_ar');
             $table->text('brief_description_en');
             $table->text('brief_description_ar');
-            $table->enum('section_type',['Clinics','HomeCare','LaboratoryAnalysis','Radiography','Ambulance']);
+            $table->enum('section_type',['Clinics','HomeCare','LaboratoryAnalysis','Radiography','Emergency'])->nullable();
             $table->timestamps();
         });
     }

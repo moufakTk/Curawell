@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('location_en')->nullable();
             $table->string('location_ar')->nullable();
             $table->string('phone_number');
+            $table->text('notes')->nullable();
             $table->decimal('price');
             $table->text('explain');
             $table->timestamps();

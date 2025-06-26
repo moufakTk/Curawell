@@ -12,10 +12,16 @@ class Service extends Model
         'section_id',
         'name_en',
         'name_ar',
-        'brief_description_en',
-        'brief_description_ar',
+        //'brief_description_en',
+        //'brief_description_ar',
         'details_services_en',
         'details_services_ar',
+    ];
+
+    protected $casts =[
+        'details_services_en'=>'array',
+        'details_services_ar'=>'array',
+
     ];
 
 

@@ -71,37 +71,37 @@ class User extends Authenticatable
     /*
      * who has my PK
     */
-    protected function codes(){
+    public function codes(){
         return $this->hasMany(verificationCode::class,'user_id');
     }
 
     //hasOne
-    protected function patient()
+    public function patient()
     {
-return $this->hasOne(patient::class,'user_id');
+        return $this->hasOne(patient::class,'user_id');
     }
 
-    protected function doctor()
+    public function doctor()
     {
         return $this->hasOne(Doctor::class ,'doctor_id');
     }
 
-    protected function work_location()
+    public function work_location()
     {
         return $this->hasOne(WorkLocation::class ,'work_location_id');
 
     }
 
-    protected function team_one()
+    public function team_one()
     {
         return $this->hasOne(Ambulance_team::class ,'user_doctor_id'); //As Doctor
     }
-    protected function team_two()
+    public function team_two()
     {
         return $this->hasOne(Ambulance_team::class ,'user_nurse_id'); //As Nurse
     }
 
-    protected function team_three()
+    public function team_three()
     {
         return $this->hasOne(Ambulance_team::class ,'user_driver_id'); //As Driver
     }
@@ -109,7 +109,7 @@ return $this->hasOne(patient::class,'user_id');
 
 
     //hasMany
-    protected function work_employees()
+    public function work_employees()
     {
         return $this->hasMany(WorkEmployee::class ,'user_id');
     }

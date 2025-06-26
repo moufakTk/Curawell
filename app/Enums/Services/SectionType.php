@@ -9,7 +9,7 @@ enum SectionType:string
     case HomeCare           ='HomeCare';
     case LaboratoryAnalysis = 'LaboratoryAnalysis';
     case Radiography        = 'Radiography';
-    case Ambulance          = 'Ambulance';
+    case Emergency          = 'Emergency';
 
 
     public function label(): string
@@ -19,7 +19,7 @@ enum SectionType:string
             self::HomeCare  => 'HomeCare',
             self::LaboratoryAnalysis  => 'LaboratoryAnalysis',
             self::Radiography => 'Radiography',
-            self::Ambulance => 'Ambulance',
+            self::Emergency => 'Emergency',
         };
     }
 
