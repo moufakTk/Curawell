@@ -28,4 +28,19 @@ enum UserType :string
 
         };
     }
+
+
+    public function defaultRole(): string
+    {
+        return match($this) {
+            self::Admin => 'Admin',
+            //self::Doctor => 'doctor',
+            self::Nurse => 'Nurse',
+            self::Secretary => 'Secretary',
+            self::Driver => 'Driver',
+            self::Reception => 'Reception',
+            self::Patient => 'Patient',
+        };
+    }
+
 }
