@@ -8,31 +8,35 @@ use App\Enums\Users\UserType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use League\CommonMark\Extension\CommonMark\Node\Inline\Code;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable ,HasRoles;
-
     /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
     protected $fillable = [
-        'name_en',
-        'name_ar',
+        'first_name',
+        'first_name_ar',
+        'last_name',
+        'last_name_ar',
         'email',
         'password',
         'phone',
-        'location_en',
-        'location_ar',
+        'address',
+        'address_ar',
         'gender',
         'user_type',
         'is_active',
-
+'age',
+        'birthday'
     ];
+
+    use HasFactory, Notifiable ,HasRoles;
 
     protected $casts = [
         'gender'=>Gender::class,
@@ -67,11 +71,14 @@ class User extends Authenticatable
     /*
      * who has my PK
     */
+    protected function codes(){
+        return $this->hasMany(verificationCode::class,'user_id');
+    }
 
     //hasOne
     protected function patient()
     {
-        return $this->hasOne(Patient::class ,'patient_id');
+return $this->hasOne(patient::class,'user_id');
     }
 
     protected function doctor()

@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class MedicalHistory extends Model
+{
+    //
+    /*
+   * who has my PK
+  */
+
+    protected $fillable = [
+        'patient_id',
+        'chronic_diseases',
+        'chronic_diseases_ar',
+        'hereditary_diseases',
+        'hereditary_diseases_ar',
+        'new_diseases',
+        'new_diseases_ar',
+        'allergies',
+        'allergies_ar',
+        'blood_group',
+        'weight',
+        'height',
+    ];
+ protected $casts = [
+     'chronic_diseases' => 'array',
+     'hereditary_diseases' => 'array',
+     'new_diseases' => 'array',
+     'allergies' => 'array',
+ ];
+
+    /*
+     * my FK belongs to
+    */
+
+    public function medical_history_patient()
+    {
+        return $this->belongsTo(Patient::class , 'patient_id');
+    }
+
+
+}

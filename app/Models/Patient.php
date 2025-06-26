@@ -10,8 +10,8 @@ class Patient extends Model
 
     protected $fillable =[
         'user_id',
-        'national_number',
-        'backup_number',
+        'civil_id_number',
+        'alternative_phone',
     ];
 
 
@@ -22,7 +22,7 @@ class Patient extends Model
     //hasOne
     public function medical_history()
     {
-        return $this->hasOne(Medical_history::class ,'patient_id');
+        return $this->hasOne(MedicalHistory::class ,'patient_id');
     }
 
     //hasMane

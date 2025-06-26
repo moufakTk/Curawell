@@ -14,15 +14,15 @@ return new class extends Migration
         Schema::create('medical_histories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
-            $table->json('chronic_diseases-en')->nullable();
-            $table->json('chronic_diseases-ar')->nullable();
-            $table->json('hereditary_diseases-en')->nullable();
-            $table->json('hereditary_diseases-ar')->nullable();
-            $table->json('new_diseases-en')->nullable();
-            $table->json('new_diseases-ar')->nullable();
-            $table->json('sensitivities-en')->nullable();
-            $table->json('sensitivities-ar')->nullable();
-            $table->string('bloodGroup')->nullable();
+            $table->json('chronic_diseases')->nullable();
+            $table->json('chronic_diseases_ar')->nullable();
+            $table->json('hereditary_diseases')->nullable();
+            $table->json('hereditary_diseases_ar')->nullable();
+            $table->json('new_diseases')->nullable();
+            $table->json('new_diseases_ar')->nullable();
+            $table->json('allergies')->nullable();
+            $table->json('allergies_ar')->nullable();
+            $table->string('blood_group')->nullable();
             $table->decimal('weight')->nullable();
             $table->decimal('height')->nullable();
             $table->timestamps();
