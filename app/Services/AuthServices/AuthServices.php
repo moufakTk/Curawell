@@ -4,15 +4,23 @@ namespace App\Services\AuthServices;
 
 
 use App\Enums\Users\UserType;
+use App\Http\Controllers\Auth\VerificationController;
 use App\Models\MedicalHistory;
 use App\Models\Patient;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use PhpParser\Node\Expr\FuncCall;
+use SebastianBergmann\CodeUnit\FileUnit;
+use Spatie\Permission\Models\Role;
 
 class AuthServices
 {
+    protected $verificationService;
+    public function __Construct(VerificationController $verificationService){
+        $this->verificationService = $verificationService;
+    }
 
 
 //'first_name' => 'required|string|between:2,100',
@@ -57,13 +65,16 @@ public function register($request){
                 'height'             => $request->height,
             ]);
 
-
+            $user->assignRole(UserType::Patient->defaultRole());
+//            $user->load('roles.permissions');
             return $user;
             });
+        $this->verificationService->sendCode($registered,'phone');
+        $this->verificationService->sendCode($registered,'email');
         return $registered;
         } catch (\Exception $e) {
             // ممكن ترجع رد مناسب:
-            return response()->json(['error' => 'Registration failed', 'details' => $e->getMessage()], 500);
+        throw new \Exception("Registration failed: " . $e->getMessage(), 500);
         }
 }
 }
