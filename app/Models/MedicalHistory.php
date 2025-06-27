@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class MedicalHistory extends Model
@@ -10,17 +11,18 @@ class MedicalHistory extends Model
     /*
    * who has my PK
   */
+    use HasFactory;
 
     protected $fillable = [
         'patient_id',
         'chronic_diseases',
-        'chronic_diseases_ar',
+        //'chronic_diseases_ar',
         'hereditary_diseases',
-        'hereditary_diseases_ar',
+        //'hereditary_diseases_ar',
         'new_diseases',
-        'new_diseases_ar',
+        //'new_diseases_ar',
         'allergies',
-        'allergies_ar',
+        //'allergies_ar',
         'blood_group',
         'weight',
         'height',

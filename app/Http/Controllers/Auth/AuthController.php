@@ -13,7 +13,7 @@ class AuthController extends Controller
     public function __construct(AuthServices $authServices){
         $this->authServices = $authServices;
     }
-Public function login(Request $request){}
+    Public function login(Request $request){}
     Public function register(RegisterRrequest $request){
         try {
             $user =   $this->authServices->register($request);

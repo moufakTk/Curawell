@@ -26,6 +26,7 @@ class CreateAdminSeeder extends Seeder
                 'first_name'=>'moufak',
                 'last_name'=>'AlTaklh',
                 'email'=>'muofak@gmail.com',
+                'phone'=>'0992721424',
                 'password'=>Hash::make('moufak123456789'),
                 'age'=>21 ,
                 'gender'=>Gender::MALE,
@@ -34,6 +35,7 @@ class CreateAdminSeeder extends Seeder
             ]);
 
         }
+
 
         if(!$admin->hasRole(UserType::Admin->defaultRole())) {
             $admin->assignRole(UserType::Admin->defaultRole());

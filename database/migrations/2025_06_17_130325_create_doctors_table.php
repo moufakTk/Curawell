@@ -17,8 +17,8 @@ return new class extends Migration
             $table->text('respective_en')->nullable();
             $table->text('respective_ar')->nullable();
             $table->integer('experience_years')->nullable();
-            $table->json('services-en')->nullable();
-            $table->json('services-ar')->nullable();
+            $table->json('services_en')->nullable();
+            $table->json('services_ar')->nullable();
             $table->string('bloodGroup')->nullable();
             $table->date('start_in')->nullable();
             $table->date('hold_end')->nullable();

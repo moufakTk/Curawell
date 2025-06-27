@@ -24,7 +24,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('address')->nullable();
-            $table->string('address_ar')->nullable();
+            //$table->string('address_ar')->nullable();
             $table->enum('gender', ['male', 'female'])->nullable();
             $table->enum('user_type',['Doctor','Patient','Nurse','Secretary','Reception','Driver','Admin'])->nullable();
             $table->Integer('verify_code')->nullable();
