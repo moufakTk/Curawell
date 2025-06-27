@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('service_id')->constrained('services')->cascadeOnDelete();
             $table->string('name_en');
             $table->string('name_ar');
-            $table->text('brief_description_en')->nullable();
-            $table->text('brief_description_ar')->nullable();
+            $table->json('brief_description_en')->nullable();
+            $table->json('brief_description_ar')->nullable();
             $table->timestamps();
         });
     }

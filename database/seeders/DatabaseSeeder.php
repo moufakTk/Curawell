@@ -26,6 +26,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CreateAdminSeeder::class,
             SectionSeeder::class,
+            ServiceSeeder::class,
+            CompetenceSeeder::class,
         ]);
 
     }

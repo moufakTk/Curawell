@@ -17,6 +17,11 @@ class Competence extends Model
 
     ];
 
+    protected $casts=[
+        'brief_description_en'=>'array',
+        'brief_description_ar'=>'array',
+    ];
+
 
     /*
      * who has my PK

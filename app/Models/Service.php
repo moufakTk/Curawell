@@ -52,4 +52,9 @@ class Service extends Model
         return $this->morphMany(Image::class,'imageable');
     }
 
+    public function work_locations()
+    {
+        return $this->morphMany(WorkLocation::class , 'locationable');
+    }
+
 }

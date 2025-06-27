@@ -32,7 +32,7 @@ class User extends Authenticatable
         'gender',
         'user_type',
         'is_active',
-'age',
+        'age',
         'birthday'
     ];
 
