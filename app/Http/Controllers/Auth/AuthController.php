@@ -16,12 +16,16 @@ class AuthController extends Controller
 Public function login(Request $request){}
     Public function register(RegisterRrequest $request){
         try {
-         $user =   $this->authServices->register($request);
-            return response()->json([
-                'message' => 'User registered successfully',
-                'data' => $user->load('patient.medical_history')
+            $user =   $this->authServices->register($request);
+            if($user){ return response()->json([
+                'message' => __('messages.register_success'),
+                'data' => $user
 
-            ]);
+            ]);}
+           return response()->json([
+               'message' => "error",
+
+           ]);
 
         }catch (\Exception $e){
             return $e->getMessage();
