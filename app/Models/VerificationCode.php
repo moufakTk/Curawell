@@ -10,6 +10,7 @@ class VerificationCode extends Model
         'code',
         'user_id',
         'type',
+        'channel',
         'expires_at'];
 
     public function user(){

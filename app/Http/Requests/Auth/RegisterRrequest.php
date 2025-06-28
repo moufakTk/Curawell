@@ -29,8 +29,8 @@ class RegisterRrequest extends FormRequest
             'last_name' => 'required|string|between:2,100',
             'birthday' => 'required|date',
             'gender' => 'required|string|in:male,female',
-//            'email' => 'required|string|email|max:100|unique:users',
-            'email' => 'required|string|email|max:100',
+            'email' => 'required|string|email|max:100|unique:users',
+//            'email' => 'required|string|email|max:100',
             'password' => 'required|string|confirmed|min:8',
             'phone' => 'required|string|between:10,20',
             'address'=> 'required|string',
@@ -39,8 +39,8 @@ class RegisterRrequest extends FormRequest
 
 
             // patient table
-//            'civil_id_number' => 'required|string|between:8,15|unique:patients,civil_id_number',
-            'civil_id_number' => 'required|string|between:8,15',
+            'civil_id_number' => 'required|string|between:8,15|unique:patients,civil_id_number',
+//            'civil_id_number' => 'required|string|between:8,15',
             'alternative_phone'=> 'required|string|between:8,15',
 
             //medical history table

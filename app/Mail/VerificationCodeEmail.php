@@ -39,11 +39,17 @@ class VerificationCodeEmail extends Mailable
      */
     public function content(): Content
     {
+        $view = match ($this->code->type) {
+            'verify' => 'emails.verification_code',
+            'reset_password' => 'emails.reset_password_code',
+            default => 'emails.default', // لو حابب تحط View افتراضي
+        };
+
         return new Content(
-            view: 'emails.verification_code', // عدل اسم الـ View حسب موقعه عندك
+            view: $view,
             with: [
                 'user' => $this->user,
-                'code' => $this->code,
+                'code' => $this->code->code,
             ],
         );
     }

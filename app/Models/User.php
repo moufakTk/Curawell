@@ -8,6 +8,7 @@ use App\Enums\Users\UserType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 use League\CommonMark\Extension\CommonMark\Node\Inline\Code;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -21,22 +22,26 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'first_name',
-        //'first_name_ar',
+        'first_name_ar',
         'last_name',
-        //'last_name_ar',
+        'last_name_ar',
         'email',
         'password',
         'phone',
         'address',
-        //'address_ar',
+        'address_ar',
         'gender',
         'user_type',
         'is_active',
         'age',
-        'birthday'
+        'birthday',
+        'reset_password_token',
+        'reset_password_token_expires_at',
+        'email_verified_at',
+        'phone_verified_at',
     ];
 
-    use HasFactory, Notifiable ,HasRoles;
+    use HasApiTokens,HasFactory, Notifiable ,HasRoles;
 
     protected $casts = [
         'gender'=>Gender::class,
