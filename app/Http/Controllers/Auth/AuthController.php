@@ -34,4 +34,8 @@ class AuthController extends Controller
     }
     Public function logout(){}
 
+
+
+
+
 }

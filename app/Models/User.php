@@ -83,7 +83,7 @@ class User extends Authenticatable
 
     public function doctor()
     {
-        return $this->hasOne(Doctor::class ,'doctor_id');
+        return $this->hasOne(Doctor::class ,'user_id');
     }
 
     public function work_location()

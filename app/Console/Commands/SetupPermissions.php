@@ -117,6 +117,7 @@ class SetupPermissions extends Command
             'Admin',
             'Doctor_clinic',
             'Doctor_lab',
+            'Doctor',
             'Patient',
             'Secretary',
             'Reception',

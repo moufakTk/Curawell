@@ -34,7 +34,7 @@ enum UserType :string
     {
         return match($this) {
             self::Admin => 'Admin',
-            //self::Doctor => 'doctor',
+            self::Doctor => 'Doctor',
             self::Nurse => 'Nurse',
             self::Secretary => 'Secretary',
             self::Driver => 'Driver',

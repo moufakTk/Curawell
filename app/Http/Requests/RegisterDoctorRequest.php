@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RegisterRrequest extends FormRequest
+class RegisterDoctorRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,6 +22,7 @@ class RegisterRrequest extends FormRequest
     public function rules(): array
     {
         return [
+            //
 
             //  user table
 
@@ -38,24 +39,16 @@ class RegisterRrequest extends FormRequest
 
 
 
-            // patient table
-//            'civil_id_number' => 'required|string|between:8,15|unique:patients,civil_id_number',
-            'civil_id_number' => 'required|string|between:8,15',
-            'alternative_phone'=> 'required|string|between:8,15',
-
-            //medical history table
-
-            //arrays
-            'chronic_diseases'    => 'sometimes|array',
-            'hereditary_diseases' => 'sometimes|array',
-            'new_diseases'        => 'sometimes|array',
-            'allergies'           => 'sometimes|array',
-
-            'blood_group'         => 'sometimes|string|between:1,15',
-            'weight'              => 'sometimes|string|between:1,15',
-            'height'              => 'sometimes|string|between:1,15',
-
-
+            //doctor table
+            'respective_en'=>'required|string|between:10,100',
+            'respective_ar'=>'required|string|between:10,100',
+            'experience_years'=>'required||integer|min:1',
+            'services_en'=>'required|array|between:1,100',
+            'services_ar'=>'required|array|between:1,100',
+            'bloodGroup'=>'sometimes|string|between:1,15',
+            'start_in'=>'required|date|date_format:Y-m-d|before:hold_end',
+            'hold_end'=>'required|date|date_format:Y-m-d|after:start_in',
+            'doctor_type'=>'required',
         ];
     }
 }

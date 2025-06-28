@@ -20,4 +20,17 @@ enum DoctorType :string
             self::Relief =>'Relief',
         };
     }
+
+
+    public function defaultRole(): string
+    {
+        return match($this) {
+            self::Clinic => 'Doctor_clinic',
+            self::Laboratory => 'Doctor_lab',
+
+        };
+    }
+
+
+
 }
