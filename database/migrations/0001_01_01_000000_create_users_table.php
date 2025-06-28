@@ -27,7 +27,7 @@ return new class extends Migration
             $table->timestamp('reset_password_token_expires_at')->nullable();
             $table->string('password');
             $table->string('address')->nullable();
-            $table->string('address_ar')->nullable();
+            //$table->string('address_ar')->nullable();
             $table->enum('gender', ['male', 'female'])->nullable();
             $table->enum('user_type',['Doctor','Patient','Nurse','Secretary','Reception','Driver','Admin'])->nullable();
             $table->boolean('is_active')->default(true);

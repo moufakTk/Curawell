@@ -3,19 +3,22 @@
 namespace App\Models;
 
 use App\Enums\Users\DoctorType;
+use Carbon\Traits\LocalFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Doctor extends Model
 {
     //
+    use HasFactory ,LocalFactory;
 
     protected $fillable =[
         'user_id',
-        'respective-en',
-        'respective-ar',
+        'respective_en',
+        'respective_ar',
         'experience_years',
-        'services-en',
-        'services-ar',
+        'services_en',
+        'services_ar',
         'bloodGroup',
         'start_in',
         'hold_end',
@@ -25,6 +28,8 @@ class Doctor extends Model
 
     protected $casts =[
         'doctor_type' =>DoctorType::class,
+        'services_en'=>'array',
+        'services_ar'=>'array',
     ];
 
 

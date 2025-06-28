@@ -15,13 +15,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
             $table->json('chronic_diseases')->nullable();
-            $table->json('chronic_diseases_ar')->nullable();
+            //$table->json('chronic_diseases_ar')->nullable();
             $table->json('hereditary_diseases')->nullable();
-            $table->json('hereditary_diseases_ar')->nullable();
+            //$table->json('hereditary_diseases_ar')->nullable();
             $table->json('new_diseases')->nullable();
-            $table->json('new_diseases_ar')->nullable();
+            //$table->json('new_diseases_ar')->nullable();
             $table->json('allergies')->nullable();
-            $table->json('allergies_ar')->nullable();
+            //$table->json('allergies_ar')->nullable();
             $table->string('blood_group')->nullable();
             $table->decimal('weight')->nullable();
             $table->decimal('height')->nullable();
