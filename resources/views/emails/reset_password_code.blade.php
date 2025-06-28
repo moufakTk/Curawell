@@ -12,7 +12,7 @@
 <body>
 <div class="container">
     <h2>Hello {{ $user->first_name }} {{ $user->last_name }} 👋</h2>
-    <p>Your verification code is:</p>
+    <p>Your reset password code is:</p>
     <div class="code">{{ $code->code }}</div>
     <p>Please use this code to complete your verification process.</p>
     <p>If you did not request a verification code, please ignore this message.</p>

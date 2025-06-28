@@ -8,6 +8,7 @@ use App\Enums\Users\UserType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 use League\CommonMark\Extension\CommonMark\Node\Inline\Code;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -32,11 +33,15 @@ class User extends Authenticatable
         'gender',
         'user_type',
         'is_active',
-'age',
-        'birthday'
+        'age',
+        'birthday',
+        'reset_password_token',
+        'reset_password_token_expires_at',
+        'email_verified_at',
+        'phone_verified_at',
     ];
 
-    use HasFactory, Notifiable ,HasRoles;
+    use HasApiTokens,HasFactory, Notifiable ,HasRoles;
 
     protected $casts = [
         'gender'=>Gender::class,

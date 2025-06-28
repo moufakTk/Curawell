@@ -69,12 +69,12 @@ public function register($request){
 //            $user->load('roles.permissions');
             return $user;
             });
-        $this->verificationService->sendCode($registered,'phone');
-        $this->verificationService->sendCode($registered,'email');
+        $this->verificationService->sendVerificationCode($registered,'phone','verify');
+        $this->verificationService->sendVerificationCode($registered,'email','verify');
         return $registered;
         } catch (\Exception $e) {
-            // ممكن ترجع رد مناسب:
-        throw new \Exception("Registration failed: " . $e->getMessage(), 500);
+
+        throw new \Exception("Registration failed : \n" . $e->getMessage(), 500);
         }
 }
 }
