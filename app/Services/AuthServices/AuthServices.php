@@ -9,8 +9,11 @@ use App\Models\MedicalHistory;
 use App\Models\Patient;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 use PhpParser\Node\Expr\FuncCall;
 use SebastianBergmann\CodeUnit\FileUnit;
 use Spatie\Permission\Models\Role;
@@ -18,7 +21,7 @@ use Spatie\Permission\Models\Role;
 class AuthServices
 {
     protected $verificationService;
-    public function __Construct(VerificationController $verificationService){
+    public function __Construct(VerificationService $verificationService){
         $this->verificationService = $verificationService;
     }
 
@@ -32,7 +35,6 @@ class AuthServices
 //'phone' => 'required|string|between:10,20',
 
 public function register($request){
-    try {
         $registered = DB::transaction(function () use ($request) {
             $birthday = Carbon::parse($request->birthday);
 
@@ -58,7 +60,7 @@ public function register($request){
             $medical_history = MedicalHistory::create([
                 'patient_id'         => $patient->id,
                 'chronic_diseases'   => $request->chronic_diseases,
-                'new_diseases'       => $request->new_diseases,
+                'hereditary_diseases'=>$request->hereditary_diseases,
                 'allergies'          => $request->allergies,
                 'blood_group'        => $request->blood_group,
                 'weight'             => $request->weight,
@@ -70,11 +72,57 @@ public function register($request){
             return $user;
             });
         $this->verificationService->sendVerificationCode($registered,'phone','verify');
-        $this->verificationService->sendVerificationCode($registered,'email','verify');
+//        $this->verificationService->sendVerificationCode($registered,'email','verify');
         return $registered;
-        } catch (\Exception $e) {
 
-        throw new \Exception("Registration failed : \n" . $e->getMessage(), 500);
-        }
 }
+    public function login( $request)
+    {
+
+            $user = User::where('email', $request->login)
+                ->orWhere('phone', $request->login)
+                ->first();
+
+            if (!$user || !Hash::check($request->password, $user->password)) {
+                throw new \Exception(__('messages.Incorrect_credentials'),401);
+            }
+
+//            if ($request->login === $user->email && !$user->email_verified_at) {
+//                throw new \Exception('Email not verified. Please verify first.',403);
+//            }
+//
+//            if ($request->login === $user->phone && !$user->phone_verified_at) {
+//                throw new \Exception('Email not verified. Please verify first.',403);
+//
+//            }
+
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return [
+                'message' => 'Login successful.',
+                'token' => $token,
+                'user' => $user->load('patient.medical_history')
+            ];
+
+
+    }
+
+    public function loginWithGoogle($googleUser)
+    {
+        $user = User::firstOrCreate(
+            ['email' => $googleUser->getEmail()],
+            [
+                'first_name' => Str::before($googleUser->getName(), ' '),
+                'last_name'  => Str::after($googleUser->getName(), ' '),
+                'age' => 0, // أو 0 إذا الحقل مش nullable
+                'email_verified_at' => now(),
+                'user_type' => UserType::Patient, // أو حسب نوع المستخدم
+                'password' => Hash::make(Str::random(16)),
+            ]
+        );
+
+        return $user;
+    }
+
 }

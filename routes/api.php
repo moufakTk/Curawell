@@ -16,14 +16,19 @@ Route::middleware(SetLocaleMiddleware::class)->group(function () {
         Route::post('/register', 'register');
         Route::post('/login', 'login');
         Route::post('/logout', 'logout');
+        Route::post('/auth/google/callback', 'loginWithGoogle');
+
     });
 
     Route::prefix('auth')->group(function () {
         Route::controller(VerificationController::class)->group(function () {
-            Route::post('/send-code', 'reSendCode');
+            Route::post('/send-code', 'sendCode');
             Route::post('/verify-code', 'verifyCode');
 
         });
         Route::post('/reset-password', [PasswordController::class,'resetPassword']);   // إعادة تعيين كلمة المرور
     });
 });
+
+
+
