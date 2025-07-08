@@ -16,7 +16,9 @@ Route::middleware(SetLocaleMiddleware::class)->group(function () {
         Route::post('/register', 'register');
         Route::post('/login', 'login');
         Route::post('/logout', 'logout');
-        Route::post('/auth/google/callback', 'loginWithGoogle');
+        Route::post('/auth/google/callback', 'loginWithGoogle')->name('loginWithGoogle');
+//        Route::get('/auth/google/callback', 'callback');
+//        Route::get('/auth/google/redirect', 'redirect');
 
     });
 

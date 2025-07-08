@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\AuthServices\AuthServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Facades\Socialite;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -23,6 +24,8 @@ class AuthController extends Controller
         $request->validate([
             'login' => 'required|string',
             'password' => 'required|string',
+        ],[
+            'login.required' => __("validation.required"),
         ]);
         try {
          $data = $this->authServices->login($request);
@@ -40,21 +43,13 @@ class AuthController extends Controller
     public function loginWithGoogle(Request $request)
     {
         $request->validate([
-            'code' => 'required|string',
+            'token' => 'required|string',
         ]);
 
         try {
-            $googleUser = Socialite::driver('google')
-                ->stateless()
-                ->getAccessTokenResponse($request->code); // أول شي منبدل الكود بالتوكن
+            $googleUser = Socialite::driver('google')->stateless()
+                ->userFromToken($request->token);
 
-            $accessToken = $googleUser['access_token'];
-
-            $googleUser = Socialite::driver('google')
-                ->stateless()
-                ->userFromToken($accessToken); // بعدين منجيب معلومات المستخدم
-
-            // هون بتحط الكود تبع إنشاء أو تسجيل الدخول للمستخدم
             $user = $this->authServices->loginWithGoogle($googleUser);
 
             return response()->json([
@@ -85,7 +80,7 @@ class AuthController extends Controller
             return response()->json([
                 'message' => __('messages.register_failed'),
                 'error'   => $e->getMessage()
-            ], $e->getCode());
+            ], $e->getCode()?0:401);
         }
 
     }
@@ -102,6 +97,20 @@ class AuthController extends Controller
                 'message' => 'فشل تسجيل الخروج: ' . $e->getMessage()
             ], 500);
         }
+    }
+    public function redirect()
+    {
+        return Socialite::driver('google')->stateless()->redirect();
+    }
+
+    public function callback(){
+        $user =Socialite::driver('google')->stateless()->user();
+
+//
+        return response()->json([
+            'adsasd'=>$user->token
+        ]);
+
     }
 
 }

@@ -20,13 +20,17 @@ class VerificationService
 
         if ($request->filled('phone')) {
             $user->where('phone', $request->phone);
+            $user = $user->first();
+
         }
 
         if ($request->filled('email')) {
             $user->orWhere('email', $request->email);
+            $user = $user->first();
+
         }
 
-        $user = $user->first();
+
 
         if (!$user) {
             throw new \Exception('User not found', 404);

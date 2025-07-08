@@ -25,8 +25,8 @@ class VerificationController extends Controller
     public function sendcode(Request $request)
     {
         $request->validate([
-            'phone' => 'sometimes|exists:users,phone',
-            'email' => 'sometimes|exists:users,email',
+            'phone' => 'nullable|exists:users,phone',
+            'email' => 'nullable|exists:users,email',
             'type' => 'required|in:verify,reset_password',
             'channel' => 'required|in:phone,email',
         ]);
@@ -37,7 +37,7 @@ class VerificationController extends Controller
         } catch (\Exception $exception) {
             return response()->json([
                 'message' => $exception->getMessage()
-            ], $exception->getCode());
+            ], $exception->getCode()??400);
         }
     }
 
