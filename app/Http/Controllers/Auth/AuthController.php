@@ -8,6 +8,10 @@ use App\Models\User;
 use App\Services\AuthServices\AuthServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use Laravel\Socialite\Facades\Socialite;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+
 
 class AuthController extends Controller
 {
@@ -20,45 +24,48 @@ class AuthController extends Controller
         $request->validate([
             'login' => 'required|string',
             'password' => 'required|string',
+        ],[
+            'login.required' => __("validation.required"),
         ]);
+        try {
+         $data = $this->authServices->login($request);
 
-        $user = User::where('email', $request->login)
-            ->orWhere('phone', $request->login)
-            ->first();
-
-        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json($data, 200);
+        }catch (\Exception $e){
+            $status = $e->getCode() ?: 400;
             return response()->json([
-                'message' => 'Incorrect credentials.'
-            ], 401);
+                'message' => $e->getMessage()
+            ], $status);
         }
 
-        if ($request->login === $user->email && !$user->email_verified_at) {
-            return response()->json([
-                'message' => 'Email not verified. Please verify first.',
-                'needs_verification' => true,
-                'channel' => 'email',
-                'type' => 'verify'
-            ], 403);
-        }
-
-        if ($request->login === $user->phone && !$user->phone_verified_at) {
-            return response()->json([
-                'message' => 'Phone number not verified. Please verify first.',
-                'needs_verification' => true,
-                'channel' => 'phone',
-                'type' => 'verify'
-            ], 403);
-        }
-
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'message' => 'Login successful.',
-            'token' => $token,
-            'user' => $user->load('patient.medical_history')
-        ]);
     }
+
+    public function loginWithGoogle(Request $request)
+    {
+        $request->validate([
+            'token' => 'required|string',
+        ]);
+
+        try {
+            $googleUser = Socialite::driver('google')->stateless()
+                ->userFromToken($request->token);
+
+            $user = $this->authServices->loginWithGoogle($googleUser);
+
+            return response()->json([
+                'user' => $user,
+                'token' => $user->createToken('google_login')->plainTextToken
+                ,'google_user'=>$googleUser
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Google login failed',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
     Public function register(RegisterRrequest $request){
         try {
 
@@ -73,7 +80,7 @@ class AuthController extends Controller
             return response()->json([
                 'message' => __('messages.register_failed'),
                 'error'   => $e->getMessage()
-            ], 500);
+            ], $e->getCode()?0:401);
         }
 
     }
@@ -90,6 +97,20 @@ class AuthController extends Controller
                 'message' => 'فشل تسجيل الخروج: ' . $e->getMessage()
             ], 500);
         }
+    }
+    public function redirect()
+    {
+        return Socialite::driver('google')->stateless()->redirect();
+    }
+
+    public function callback(){
+        $user =Socialite::driver('google')->stateless()->user();
+
+//
+        return response()->json([
+            'adsasd'=>$user->token
+        ]);
+
     }
 
 
