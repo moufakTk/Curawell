@@ -13,14 +13,19 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string('inquiry_number');
-            $table->string('phone');
-            $table->string('email');
-            $table->string('site_name_en')->nullable();
-            $table->string('site_name_ar')->nullable();
-            $table->string('address_en');
-            $table->string('address_ar');
-            $table->string('logo');
+            $table->string('inquiry_number')->nullable();
+            $table->string('complaint_number')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
+            $table->string('site_name')->nullable();
+           // $table->string('site_name_ar')->nullable();
+            $table->text('preface_en')->nullable();
+            $table->text('preface_ar')->nullable();
+            $table->text('wise_en')->nullable();
+            $table->text('wise_ar')->nullable();
+            $table->string('address_en')->nullable();
+            //$table->string('address_ar')->nullable();
+            $table->string('logo')->nullable();
             $table->timestamps();
         });
     }

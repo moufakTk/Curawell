@@ -31,6 +31,13 @@ class DatabaseSeeder extends Seeder
             SectionSeeder::class,
             ServiceSeeder::class,
             CompetenceSeeder::class,
+            ArticleSeeder::class,
+            EvaluctionSeeder::class,
+            SettingSeeder::class,
+            FrequentlyQuestionSeeder::class,
+            SmallServiceSeeder::class,
+            DivisionSeeder::class,
+            DiscountSeeder::class,
         ]);
 
     }

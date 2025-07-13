@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Enums\Users\DoctorType;
 use App\Enums\Users\UserType;
+use App\Models\Discount;
 use App\Models\Doctor;
 use App\Models\Doctor_examin;
 use App\Models\User;
@@ -20,25 +21,38 @@ class DoctorSeeder extends Seeder
     {
         //
        $users= User::where('user_type',UserType::Doctor)->get();
-        $clinic =$users->take(50);
-        $lab=$clinic->take(5);
-        $radio=$clinic->take(2);
-        $re=$clinic->take(10);
+        $clinic =$users->splice(0, 50);
+        $lab=$users->splice(0, 5);
+        $radio=$users->splice(0, 2);
+        $re=$users->splice(0, 10);
+
+
 
         $clinic->each(function ($clinic) {
            $doctor=Doctor::factory()->create([
                'user_id' => $clinic->id,
                'doctor_type' => DoctorType::Clinic,
            ]);
-           Doctor_examin::factory()->create(['doctor_id' => $doctor->id]);
+           $clinic->assignRole(DoctorType::Clinic->defaultRole());
+
+           $examin=Doctor_examin::factory()->create(['doctor_id' => $doctor->id]);
+           if($examin->is_discounted){
+               Discount::factory()->create(['discountable_type' => Doctor::class,'discountable_id' => $doctor->id ,'discount_rate'=>$examin->discount_rate]);
+           }
+
         });
+
+
 
         $lab->each(function ($lab) {
             Doctor::factory()->create([
                 'user_id' => $lab->id,
                 'doctor_type'=>DoctorType::Laboratory
             ]);
+            $lab->assignRole(DoctorType::Laboratory->defaultRole());
         });
+
+
 
         $re->each(function ($re) {
             $doctor=Doctor::factory()->create([
@@ -49,13 +63,17 @@ class DoctorSeeder extends Seeder
                 'doctor_id' => $doctor->id,
                 'is_discounted'=>false
             ]);
+            $re->assignRole(UserType::Doctor->defaultRole());
         });
+
+
 
         $radio->each(function ($radio) {
             Doctor::factory()->create([
                 'user_id' => $radio->id,
                 'doctor_type'=>DoctorType::Radiographer
             ]);
+            $radio->assignRole(UserType::Doctor->defaultRole());
         });
 
     }

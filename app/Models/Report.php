@@ -8,7 +8,10 @@ class Report extends Model
 {
     //
 
-    protected $fillable = [];
+    protected $fillable = [
+        'reportable',
+        'file_path',
+    ];
 
 
     /*

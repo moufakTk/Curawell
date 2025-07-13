@@ -8,7 +8,11 @@ class Restore extends Model
 {
     //
 
-    protected $fillable = [];
+    protected $fillable = [
+        'bill_id',
+        'restore_amount',
+        'cause',
+    ];
 
 
     /*

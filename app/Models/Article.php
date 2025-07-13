@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Article extends Model
 {
     //
+    use HasFactory;
+
 
 
     protected $fillable = [
@@ -15,6 +18,7 @@ class Article extends Model
         'brief_description_en',
         'brief_description_ar',
         'path_link',
+        'is_active',
     ];
 
 

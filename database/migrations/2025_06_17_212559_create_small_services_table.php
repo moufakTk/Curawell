@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('small_services', function (Blueprint $table) {
             $table->id();
             $table->foreignId('section_id')->constrained('sections')->cascadeOnDelete();
-            $table->string('name-en');
-            $table->string('name-ar');
+            $table->string('name_en');
+            $table->string('name_ar');
             $table->decimal('price');
             $table->text('description_en');
             $table->text('description_ar');

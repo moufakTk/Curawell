@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('patient_id')->constrained('patients')->cascadeOnDelete();
             $table->nullableMorphs('commentable');
-            $table->text('comment_en');
-            $table->text('comment_ar');
+            $table->text('comment_en')->nullable();
+            $table->text('comment_ar')->nullable();
             $table->boolean('status')->default(false);
             $table->timestamps();
         });

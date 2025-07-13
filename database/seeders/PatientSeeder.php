@@ -2,7 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Users\DoctorType;
 use App\Enums\Users\UserType;
+use App\Models\Comment;
+use App\Models\Doctor;
 use App\Models\MedicalHistory;
 use App\Models\Patient;
 use App\Models\User;
@@ -17,11 +20,26 @@ class PatientSeeder extends Seeder
     public function run(): void
     {
         //
-        User::where('user_type' ,UserType::Patient)->get()->each(function ($user) {
-            $patient =Patient::factory()->create(['user_id' => $user->id]);
+        $doctors = Doctor::where('doctor_type', DoctorType::Clinic)->pluck('id');
+
+        User::where('user_type', UserType::Patient)->get()->each(function ($user) use ($doctors) {
+            $patient = Patient::factory()->create(['user_id' => $user->id]);
+
             MedicalHistory::factory()->create(['patient_id' => $patient]);
+            $user->assignRole(UserType::Patient->defaultRole());
+
+            Comment::factory()->standalone()->create(['patient_id' => $patient->id]);
+            collect([1, 2])->each(function () use ($doctors, $patient) {
+                Comment::factory()->create([
+                    'patient_id' => $patient->id,
+                    'commentable_type' => Doctor::class,
+                    'commentable_id' => $doctors->random(),
+
+                ]);
+
+            });
+
         });
-
-
     }
+
 }

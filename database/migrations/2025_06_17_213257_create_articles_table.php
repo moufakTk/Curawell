@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('brief_description_en');
             $table->text('brief_description_ar');
             $table->string('path_link');
+            $table->boolean('is_active')->default(1);
 
             $table->timestamps();
         });
