@@ -32,9 +32,9 @@ class RegisterRrequest extends FormRequest
             'email' => 'required|string|email|max:100|unique:users',
 //            'email' => 'required|string|email|max:100',
             'password' => 'required|string|confirmed|min:8',
-            'phone' => 'required|string|between:10,20',
+            'phone' => 'required|string|between:10,20|unique:users,phone',
             'address'=> 'required|string',
-            'user_type'=>'required',
+//            'user_type'=>'required',
 
 
 

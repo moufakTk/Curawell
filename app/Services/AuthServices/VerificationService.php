@@ -108,13 +108,20 @@ class VerificationService
 
     public function sendResetPasswordWhatsappCode($user, $code)
     {
-        $response = Http::asForm()->post('https://api.ultramsg.com/instance118522/messages/chat', [
-            'token' => '1fat1jiymupty7zc',
-            'to' => '+963' . substr($user->phone, 1, 9),
-            'body' => "👋 Hello {$user->first_name} {$user->last_name},\n
+      $message =  "👋 Hello {$user->first_name} {$user->last_name},\n
              \n🔐 Your reset-password code is: *{$code}*\n
              \nPlease enter this code to complete your login.\n
-             \n✅ Thank you for using our service! 🚀"
+             \n✅ Thank you for using our service! 🚀";
+
+        $this->whatsappMessage($user->phone, $message);
+
+    }
+    public function whatsappMessage($phone, $message)
+    {
+        $response = Http::asForm()->post('https://api.ultramsg.com/instance118522/messages/chat', [
+            'token' => '1fat1jiymupty7zc',
+            'to' => '+963' . substr($phone, 1, 9),
+            'body' => $message
 
         ]);
 
@@ -128,7 +135,6 @@ class VerificationService
             ], $response->status());
         }
     }
-
 
     //verification function we compained phone and number register ande reset password
     public function verifyCode($request)

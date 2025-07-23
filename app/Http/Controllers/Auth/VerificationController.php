@@ -37,7 +37,7 @@ class VerificationController extends Controller
         } catch (\Exception $exception) {
             return response()->json([
                 'message' => $exception->getMessage()
-            ], $exception->getCode()??400);
+            ], $exception->getCode()?0:404);
         }
     }
 
