@@ -35,6 +35,13 @@ class UserInfoResource extends JsonResource
                 'name_doctor'=>$this->first_name.' '.$this->last_name,
             ],
 
+            'doctor.services'=>[
+                'user_id_of_doctor'=>$this->user_id,
+                'doctor_name'=>optional($this->doctor_user)->first_name.' '.optional($this->doctor_user)->last_name ,
+                'doctor_id'=>$this->id,
+
+            ],
+
             default => [
                 'id'   => $this->id,
                 //'name' => $this->name,

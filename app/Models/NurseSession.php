@@ -18,6 +18,7 @@ class NurseSession extends Model
 
     protected $casts = [
         'status'=>SessionNurseStatus::class,
+        'time_in'=>'datetime:H:i:s',
     ];
 
 

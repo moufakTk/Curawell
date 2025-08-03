@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('session_centers', function (Blueprint $table) {
             $table->id();
             $table->morphs('sessionable');
-            $table->text('diagnosis')->nullable();
+            $table->string('session_name')->nullable();
+            $table->json('diagnosis')->nullable();
             $table->text('symptoms')->nullable();
             $table->text('medicines')->nullable();
             $table->decimal('doctor_examination')->default(0);

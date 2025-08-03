@@ -37,6 +37,8 @@ return [
     /* comments / CenterInfoController */
     'comment_exist'=>'The center is comments have been successfully returned.',
     'comment_not_exist'=>'There are no comments for the center to display.',
+    'comment_section'=>'This section maybe not available or has no comments.',
+    'comment_doctor'=>'This doctor maybe not available or has no comments.',
 
     /* articles / CenterInfoController */
     'article_exist'=>'Articles have been returned successfully.',
@@ -48,7 +50,36 @@ return [
 
     /* frequentlyQuestion / CenterInfoController */
     'question_not_exist'=>'There are no questions currently ',
-    'question_exist'=>'Questions returned successfully'
+    'question_exist'=>'Questions returned successfully',
+
+    /* dayAndSession / AppointmentService */
+    'doctor_not_exist'=>'doctor not exist',
+    'name_day'=>'Friday and Saturday there is no work',
+    'success_return'=>'The day and its periods have been successfully returned.',
+
+    /* reserveAppointment / AppointmentService */
+    'session_not_available'=>'This period is not available',
+    'doctor_periods'=>'This period is not for this doctor',
+    'success_reserve'=>'The appointment has been booked successfully',
+
+    /* services / HomeCareService */
+    'services_not_found'=>'There are no services currently or this section dont have any services',
+    'services_found'=>'Department services have been successfully restored.',
+
+    /* nurseHomeCare / HomeCareService */
+    'nurse_not_exist'=>'There are no nurses for this service currently.',
+    'nurse_exist'=>'Nurse information has been successfully returned.',
+
+    /* periodsHomeCare / HomeCareService */
+    'date_not_found'=>'This date does not exist',
+    'period_found'=>'The periods for today have been successfully restored.',
+
+    /* reserveAppointmentHomeCare / HomeCareService */
+    'nurse_gender_not_exist'=>'There are no nurses of this gender.',
+    'period_not_for_history'=>'This period is not for this date',
+    'appointment_time'=>'This user already has a reservation for this date and time.',
+    'appointment_status'=>'Booking during this period is currently unavailable. Please choose another period or try again later.',
+    'reserve_success'=>'The appointment has been booked successfully',
 
 
 ];

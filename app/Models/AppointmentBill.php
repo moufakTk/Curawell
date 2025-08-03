@@ -10,7 +10,8 @@ class AppointmentBill extends Model
 
     protected $fillable = [
         'bill_id',
-        'appointable',
+        'appointable_type',
+        'appointable_id',
         'total_treatment_amount',
         'paid_of_amount',
     ];
@@ -35,7 +36,7 @@ class AppointmentBill extends Model
      * Morph FK
      */
 
-    public function appointmentable()
+    public function appointable()
     {
         return $this->morphTo();
     }

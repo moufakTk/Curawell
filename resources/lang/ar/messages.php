@@ -35,6 +35,8 @@ return [
     /* comments / CenterInfoController */
     'comment_exist'=>'تم ارحاع تعليقات المركز بنجاح',
     'comment_not_exist'=>'لا يوجد تعليقات على المركز لعرضها',
+    'comment_section'=>'هذا الطبيب اما غيرموجود أو لايوجد لديه تعليقات',
+    'comment_doctor'=>'هذا الطبيب اما غيرموجود أو لايوجد لديه تعليقات',
 
     /* articles / CenterInfoController */
     'article_exist'=>'تم ارحاع المقالات بنجاح',
@@ -46,6 +48,36 @@ return [
 
     /* frequentlyQuestion / CenterInfoController */
     'question_not_exist'=>'لايوجد أسئلة حاليا',
-    'question_exist'=>'تم إرجاع الأسئلة بنجاح'
+    'question_exist'=>'تم إرجاع الأسئلة بنجاح',
+
+    /* dayAndSession / AppointmentService */
+    'doctor_not_exist'=>'الطبيب غير موجود',
+    'name_day'=>'يوم الجمعة والسبت لايوجد دوام',
+    'success_return'=>'تم ارجاع اليوم وفتراته بنجاح',
+
+    /* reserveAppointment / AppointmentService */
+    'session_not_available'=>'هذه الفترة ليست متاحة',
+    'doctor_periods'=>'هذه الفترة ليست لهذا الطبيب',
+    'success_reserve'=>'تم حجز الموعد بنجاح',
+
+    /* services / HomeCareService */
+    'services_not_found'=>'لا توجد خدمات حاليًا أو لا يوجد في هذا القسم أي خدمات',
+    'services_found'=>'تم ارجاع خدمات القسم بنجاح',
+
+    /* nurseHomeCare / HomeCareService */
+    'nurse_not_exist'=>'لايوجد ممرضين لهذه الخدمة حاليا',
+    'nurse_exist'=>'تم ارجاع معلومات الممرضين بنجاح',
+
+    /* periodsHomeCare / HomeCareService */
+    'date_not_found'=>'هذا التاريخ غير موجود',
+    'period_found'=>'تم ارجاع الفترات لهذا اليوم بنجاح',
+
+
+     /* reserveAppointmentHomeCare / HomeCareService */
+    'nurse_gender_not_exist'=>'لا يوجد ممرضين من هذا الجنس',
+    'period_not_for_history'=>'هذه الفترة ليست لهذا التاريخ',
+    'appointment_time'=>'هذا المستخدم يحوي بالفعل حجز في هذا التاريخ والوقت',
+    'appointment_status'=>'الحجز في هذه الفترة غير متاح حاليا، الرجاء اختيار فترة اخرى او المحاولة في وقت لاحق',
+    'reserve_success'=>'تم حجز الموعد بنجاح',
 
 ];

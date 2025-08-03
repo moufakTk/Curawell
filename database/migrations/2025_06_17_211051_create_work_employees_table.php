@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('work_day_id')->constrained('work_days')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->boolean('status')->default(true);
+            $table->enum('status',['Active','UnActive','Forbidden'])->default('Active');
             $table->time('from');
-            $table->time('to');
+            $table->time('to')->nullable();
             $table->timestamps();
         });
     }

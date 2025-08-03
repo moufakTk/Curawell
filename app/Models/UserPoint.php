@@ -11,7 +11,8 @@ class UserPoint extends Model
     protected $fillable = [
         'patient_id',
         'point_id',
-        'pointable',
+        'pointable_type',
+        'pointable_id',
         'history',
         'point_number',
     ];

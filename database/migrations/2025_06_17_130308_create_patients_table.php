@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('civil_id_number')->unique();
             $table->string('alternative_phone')->nullable();
+            $table->decimal('totalPoints')->default(0);
             $table->timestamps();
         });
     }

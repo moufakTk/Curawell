@@ -25,12 +25,12 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             CreateAdminSeeder::class,
-            UserSeeder::class,
-            DoctorSeeder::class,
-            PatientSeeder::class,
             SectionSeeder::class,
             ServiceSeeder::class,
             CompetenceSeeder::class,
+            UserSeeder::class,
+            DoctorSeeder::class,
+            PatientSeeder::class,
             ArticleSeeder::class,
             EvaluctionSeeder::class,
             SettingSeeder::class,
@@ -38,6 +38,10 @@ class DatabaseSeeder extends Seeder
             SmallServiceSeeder::class,
             DivisionSeeder::class,
             DiscountSeeder::class,
+            WorkLocationSeeder::class,
+            WorkDaySeeder::class,
+            WorkEmployeeSeeder::class,
+            PointSeeder::class,
         ]);
 
     }

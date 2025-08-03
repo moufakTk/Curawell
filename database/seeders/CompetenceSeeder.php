@@ -16,8 +16,8 @@ class CompetenceSeeder extends Seeder
     {
         //
 
-        $competences_Dental_en = ['orthodontia','Oral and Maxillofacial Surgery','Pediatric Dentistry','Periodontics'];
-        $competences_Dental_ar =['تقويم الأسنان','جراحة الفم والفكين','طب أسنان الأطفال ',' اللثة وأمراض دواعم الأسنان'];
+        $competences_Dental_en = ['orthodontia','Oral and Maxillofacial Surgery','Pediatric Dentistry','Periodontics',"General"];
+        $competences_Dental_ar =['تقويم الأسنان','جراحة الفم والفكين','طب أسنان الأطفال ',' اللثة وأمراض دواعم الأسنان','عام'];
         $competences_Dental_details_en=[
             [
                 'description_en' => 'Orthodontics focuses on correcting misaligned teeth and jaws using braces or other appliances.',
@@ -55,6 +55,10 @@ class CompetenceSeeder extends Seeder
                     'Maintenance therapy for patients with periodontal disease.',
                 ],
             ],
+            [
+                'description_en'=>'',
+                'details_en' => '',
+            ]
 
         ];
         $competences_Dental_details_ar=[
@@ -94,6 +98,10 @@ class CompetenceSeeder extends Seeder
                     'متابعة وعلاج مستمر لمرضى اللثة المزمنين.',
                 ],
             ],
+            [
+                'description_en'=>'',
+                'details_en' => '',
+            ],
         ];
 
         $service1 =Service::where('name_en','Dental')->value('id');
@@ -116,13 +124,15 @@ class CompetenceSeeder extends Seeder
             "Facelift and Neck Lift Surgery",
             "Hair Transplantation",
             "Laser Aesthetics",
-            "Skin Care"];
+            "Skin Care",
+            'General'];
         $competences_Beauty_ar=[
             "جراحة الأنف التجميلية",
             "جراحة شد الوجه والرقبة",
             "زراعة الشعر",
             "التجميل بالليزر",
-            "العناية بالبشرة"];
+            "العناية بالبشرة",
+            'عام'];
         $competences_Beauty_details_en=[
 
 
@@ -170,7 +180,11 @@ class CompetenceSeeder extends Seeder
                         "Peeling and moisturizing sessions.",
                         "Treating acne and dark spots."
                     ]
-                ]
+                ],
+                [
+                    'description_en'=>'',
+                    'details_en' => '',
+                ],
 
 
         ];
@@ -220,6 +234,10 @@ class CompetenceSeeder extends Seeder
                   "علاج حب الشباب والبقع الداكنة."
                 ]
             ],
+            [
+                'description_en'=>'',
+                'details_en' => '',
+            ],
         ];
 
         $service2 =Service::where('name_en','Beauty')->value('id');
@@ -237,34 +255,64 @@ class CompetenceSeeder extends Seeder
 
 
 
-//        $competences_Neurology_en=['bodySuits'];
-//        $competences_Neurology_en=['bodySuits'];
+        $competences_Neurology_en=['General'];
+        $competences_Neurology_ar=['عام'];
+        $service3= Service::where('name_en','Neurology')->value('id');
+        Competence::create([
+            'service_id'=>$service3,
+            'name_en'=>$competences_Neurology_en[0],
+            'name_ar'=>$competences_Neurology_ar[0],
+        ]);
 //        $competences_Neurology_details_en=[];
 //        $competences_Neurology_details_ar=[];
 //
 //
 //
-//        $competences_Dermatology_en=[];
-//        $competences_Dermatology_ar=[];
+        $competences_Dermatology_en=['General'];
+        $competences_Dermatology_ar=['عام'];
+        $service4= Service::where('name_en','Dermatology')->value('id');
+        Competence::create([
+            'service_id'=>$service4,
+            'name_en'=>$competences_Dermatology_en[0],
+            'name_ar'=>$competences_Dermatology_ar[0],
+        ]);
 //        $competences_Dermatology_details_en=[];
 //        $competences_Dermatology_details_ar=[];
 //
 //
-//        $competences_Orthopedic_en=[];
-//        $competences_Orthopedic_ar=[];
+        $competences_Orthopedic_en=['General'];
+        $competences_Orthopedic_ar=['عام'];
+        $service5= Service::where('name_en','Orthopedic')->value('id');
+        Competence::create([
+            'service_id'=>$service5,
+            'name_en'=>$competences_Orthopedic_en[0],
+            'name_ar'=>$competences_Orthopedic_ar[0],
+        ]);
 //        $competences_Orthopedic_details_en=[];
 //        $competences_Orthopedic_details_ar=[];
 //
 //
 //
-//        $competences_ENT_en=[];
-//        $competences_ENT_ar=[];
+        $competences_ENT_en=['General'];
+        $competences_ENT_ar=['عام'];
+        $service6= Service::where('name_en','ENT')->value('id');
+        Competence::create([
+            'service_id'=>$service6,
+            'name_en'=>$competences_ENT_en[0],
+            'name_ar'=>$competences_ENT_ar[0],
+        ]);
 //        $competences_ENT_details_en=[];
 //        $competences_ENT_details_ar=[];
 //
 //
-//        $competences_Ophthalmology_en=[];
-//        $competences_Ophthalmology_ar=[];
+        $competences_Ophthalmology_en=['General'];
+        $competences_Ophthalmology_ar=['عام'];
+        $service7= Service::where('name_en','Ophthalmology')->value('id');
+        Competence::create([
+            'service_id'=>$service7,
+            'name_en'=>$competences_Ophthalmology_en[0],
+            'name_ar'=>$competences_Ophthalmology_ar[0],
+        ]);
 //        $competences_Ophthalmology_details_en=[];
 //        $competences_Ophthalmology_details_ar=[];
 

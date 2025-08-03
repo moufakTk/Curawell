@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Service;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Arr;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Discount>
@@ -16,8 +18,11 @@ class DiscountFactory extends Factory
      */
     public function definition(): array
     {
+        $service =Service::where('section_id' ,1)->pluck('id')->toArray();
         return [
             //
+
+            'service_id'=> Arr::random($service),
             'name_en' => fake()->name(),
             'name_ar' => 'لاجل عيون اب زهير خصم خصوووم',
             'description_en'=>fake()->text(),

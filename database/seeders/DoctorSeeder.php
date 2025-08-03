@@ -7,6 +7,7 @@ use App\Enums\Users\UserType;
 use App\Models\Discount;
 use App\Models\Doctor;
 use App\Models\Doctor_examin;
+use App\Models\Service;
 use App\Models\User;
 use Database\Factories\DoctorFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -21,7 +22,7 @@ class DoctorSeeder extends Seeder
     {
         //
        $users= User::where('user_type',UserType::Doctor)->get();
-        $clinic =$users->splice(0, 50);
+        $clinic =$users->splice(0, 64);
         $lab=$users->splice(0, 5);
         $radio=$users->splice(0, 2);
         $re=$users->splice(0, 10);
@@ -35,9 +36,11 @@ class DoctorSeeder extends Seeder
            ]);
            $clinic->assignRole(DoctorType::Clinic->defaultRole());
 
+
+            //$service=Service::first();
            $examin=Doctor_examin::factory()->create(['doctor_id' => $doctor->id]);
            if($examin->is_discounted){
-               Discount::factory()->create(['discountable_type' => Doctor::class,'discountable_id' => $doctor->id ,'discount_rate'=>$examin->discount_rate]);
+               Discount::factory()->create(['service_id'=>1,'discountable_type' => Doctor::class,'discountable_id' => $doctor->id ,'discount_rate'=>$examin->discount_rate]);
            }
 
         });

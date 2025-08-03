@@ -33,6 +33,7 @@ class User extends Authenticatable
         'gender',
         'user_type',
         'is_active',
+        'num_patients',
         'age',
         'birthday',
         'reset_password_token',
@@ -91,11 +92,7 @@ class User extends Authenticatable
         return $this->hasOne(Doctor::class ,'user_id');
     }
 
-    public function work_location()
-    {
-        return $this->hasOne(WorkLocation::class ,'work_location_id');
 
-    }
 
     public function team_one()
     {
@@ -119,8 +116,16 @@ class User extends Authenticatable
         return $this->hasMany(WorkEmployee::class ,'user_id');
     }
 
+    public function work_location()
+    {
+        return $this->hasMany(WorkLocation::class ,'user_id');
 
+    }
 
+    public function work_day_time()
+    {
+        return $this->hasMany(UserDayTime::class,'user_id');
+    }
 
 
     /*
@@ -135,7 +140,7 @@ class User extends Authenticatable
 
     public function assigned()
     {
-        return $this->morphMany(Assigned::class ,'assignable');
+        return $this->morphMany(Assigned::class ,'assignedable');
     }
 
 

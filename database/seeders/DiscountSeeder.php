@@ -6,6 +6,7 @@ use App\Models\Discount;
 use App\Models\Division;
 use App\Models\Doctor;
 use App\Models\Doctor_examin;
+use App\Models\Service;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -19,6 +20,7 @@ class DiscountSeeder extends Seeder
         //
         $de =Doctor_examin::where('is_discounted' ,1)->pluck('id');
         $di =Division::where('is_discounted' ,1)->pluck('id');
+
 
 
         collect(range(1, 2))->each(function () use ($de) {

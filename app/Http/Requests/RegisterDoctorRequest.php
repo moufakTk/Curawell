@@ -30,7 +30,7 @@ class RegisterDoctorRequest extends FormRequest
             'last_name' => 'required|string|between:2,100',
             'birthday' => 'required|date',
             'gender' => 'required|string|in:male,female',
-//            'email' => 'required|string|email|max:100|unique:users',
+//           'email' => 'required|string|email|max:100|unique:users',
             'email' => 'required|string|email|max:100',
             'password' => 'required|string|confirmed|min:8',
             'phone' => 'required|string|between:10,20',

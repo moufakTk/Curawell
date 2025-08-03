@@ -12,6 +12,7 @@ class Discount extends Model
 
 
     protected $fillable = [
+        'service_id',
         'name_en',
         'name_ar',
         'description_en',
@@ -39,6 +40,11 @@ class Discount extends Model
      * my FK belongs to
     */
 
+    public function discount_service()
+    {
+        return $this->belongsTo(Service::class ,'service_id');
+    }
+
 
     /*
      * Morph FK
@@ -48,6 +54,7 @@ class Discount extends Model
     {
         return $this->morphTo();
     }
+
 
     /*
      * Morph PK

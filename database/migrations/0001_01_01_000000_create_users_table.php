@@ -31,6 +31,7 @@ return new class extends Migration
             $table->enum('gender', ['male', 'female'])->nullable();
             $table->enum('user_type',['Doctor','Patient','Nurse','Secretary','Reception','Driver','Admin'])->nullable();
             $table->boolean('is_active')->default(true);
+            $table->integer('num_patients')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

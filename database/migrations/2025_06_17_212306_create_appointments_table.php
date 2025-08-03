@@ -20,7 +20,7 @@ return new class extends Migration
             $table->enum('status',['Confirmed','Occur','Don','Cancel']);
             $table->boolean('delivery')->default(false);
             $table->string('delivery_location_en')->nullable();
-            $table->string('delivery_location_ar')->nullable();
+            //$table->string('delivery_location_ar')->nullable();
             $table->enum('appointment_type',['Electronically','FaceToFace','Point']);
             $table->timestamps();
         });

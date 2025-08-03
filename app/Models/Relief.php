@@ -59,7 +59,7 @@ class Relief extends Model
 
     public function appointment_bills()
     {
-        return $this->morphMany(AppointmentBill::class , 'appointmentable');
+        return $this->morphMany(AppointmentBill::class , 'appointable');
     }
 
 

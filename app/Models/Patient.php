@@ -14,6 +14,7 @@ class Patient extends Model
         'user_id',
         'civil_id_number',
         'alternative_phone',
+        'totalPoints',
     ];
 
 
@@ -101,6 +102,16 @@ class Patient extends Model
     public function assigneds()
     {
         return $this->hasMany(Assigned::class ,'patient_id');
+    }
+
+    public function orderTaxis()
+    {
+        return $this->hasMany(OrderTaxi::class ,'patient_id');
+    }
+
+    public function complaints()
+    {
+        return $this->hasMany(Complaint::class ,'patient_id');
     }
 
 

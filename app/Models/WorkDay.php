@@ -16,6 +16,8 @@ class WorkDay extends Model
     ];
 
 
+
+
     /*
      * who has my PK
     */
@@ -26,7 +28,12 @@ class WorkDay extends Model
     //hasMany
     public function work_employees()
     {
-        return $this->hasMany(WorkImployee::class , 'work_day_id');
+        return $this->hasMany(WorkEmployee::class , 'work_day_id');
+    }
+
+    public function periods()
+    {
+        return $this->hasMany(PeriodHomeCare::class , 'work_day_id');
     }
 
 

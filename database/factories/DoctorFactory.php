@@ -26,7 +26,7 @@ class DoctorFactory extends Factory
 
         $fakerAr = FakerFactory::create('ar_SA');
         $fakerEn= FakerFactory::create('en_SA');
-        $date =fake()->date('Y-m-d');
+        //$date =fake()->date('Y-m-d');
 
         $a =rand(3,6);
        // dd($fakerAr->text());
@@ -39,8 +39,11 @@ class DoctorFactory extends Factory
             'services_en'=>$fakerEn->sentences($a),
             'services_ar'=>$fakerAr->sentences($a),
             'bloodGroup'=>fake()->randomElement(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
-            'start_in'=>$date,
-            'hold_end'=>$date,
+            'start_in'=>today(),
+            'hold_end'=>fake()->dateTimeBetween(
+                now()->addDays(30),
+                now()->addDays(45)
+            )->format('Y-m-d'),
             'evaluation'=>rand(1, 5),
             'doctor_type'=>fake()->randomElement(DoctorType::cases())->value,
 

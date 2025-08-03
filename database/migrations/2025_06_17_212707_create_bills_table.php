@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('doctor_id')->constrained('doctors')->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained('patients')->cascadeOnDelete();
-            $table->string('private_num');
-            $table->decimal('total_bill');
-            $table->decimal('paid_of_bill');
+            $table->string('private_num')->nullable();
+            $table->decimal('total_bill')->default(0);
+            $table->decimal('paid_of_bill')->default(0);
             $table->enum('status',['Complete','Incomplete','Canceled'])->default('Incomplete');
             $table->timestamps();
         });

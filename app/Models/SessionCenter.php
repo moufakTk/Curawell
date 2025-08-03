@@ -9,7 +9,9 @@ class SessionCenter extends Model
 {
     //
     protected $fillable = [
-    'sessionable',
+    'sessionable_type',
+    'sessionable_id',
+    'session_name',
     'diagnosis',
     'symptoms',
     'medicines',
@@ -21,6 +23,7 @@ class SessionCenter extends Model
 
     protected $casts = [
         'session_type'=>SessionCenterType::class,
+        'diagnosis'=>'array',
     ];
     /*
      * who has my PK

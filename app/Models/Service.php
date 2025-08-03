@@ -34,6 +34,11 @@ class Service extends Model
         return $this->hasMany(Competence::class , 'service_id');
     }
 
+    public function discounts()
+    {
+        return $this->hasMany(Discount::class , 'service_id');
+    }
+
     /*
      * my FK belongs to
     */

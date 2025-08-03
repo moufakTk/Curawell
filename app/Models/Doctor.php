@@ -110,7 +110,7 @@ class Doctor extends Model
 
     public function assigned()
     {
-        return $this->morphMany(Assigned::class ,'assignable');
+        return $this->morphMany(Assigned::class ,'assignedable');
     }
 
 }

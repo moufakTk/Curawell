@@ -10,7 +10,9 @@ class WorkLocation extends Model
 
     protected $fillable =[
         'user_id',
-        'locationable',
+        'locationable_type',
+        'locationable_id',
+        'active'
 
 
     ];

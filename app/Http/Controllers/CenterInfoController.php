@@ -21,6 +21,7 @@ use App\Models\Service;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CenterInfoController extends Controller
 {
@@ -31,14 +32,8 @@ class CenterInfoController extends Controller
     }
 
     //
-    public function getInfo(Request $request)
+    public function getInfo()
     {
-
-//       $setting =Setting::select( 'id' ,
-//                        'site_name',
-//                        'preface_'.$this->locale ,
-//                        'wise_'.$this->locale ,
-//            )->first();
 
         return response()->json([
             'success'=>true ,
@@ -49,7 +44,7 @@ class CenterInfoController extends Controller
     }
 
 
-    public function contactUs(Request $request){
+    public function contactUs(){
 
         return response()->json([
             'success'=>true,
@@ -59,7 +54,7 @@ class CenterInfoController extends Controller
         ]);
     }
 
-    public function getRecords(Request $request){
+    public function getRecords(){
 
         $massages=[];
 
@@ -87,7 +82,7 @@ class CenterInfoController extends Controller
     }
 
 
-    public function getSections(Request $request)
+    public function getSections()
     {
 
         $section = Section::select('id',
@@ -112,7 +107,7 @@ class CenterInfoController extends Controller
 
     }
 
-    public function getClinics(Request $request)
+    public function getClinics()          //ايضا لصفحة أقسام العيادات
     {
         $section=Section::where('section_type',sectionType::Clinics)->value('id');
         if($section==null){
@@ -143,35 +138,8 @@ class CenterInfoController extends Controller
         ]);
     }
 
-    public function frequentlyQuestion(Request $request)
-    {
 
-        $questions =FrequentlyQuestion::where('status' ,1)
-                          ->select('id',
-                                   'question_'.$this->locale,
-                                   'answer_'.$this->locale,
-                                   'status'
-                          )
-                          ->get();
-
-
-        if($questions->isNotEmpty()){
-            return response()->json([
-                'success' => true,
-                'message' =>__('messages.question_exist'),
-                'data'=>$questions
-            ]);
-        }
-
-        return response()->json([
-            'success' => false,
-            'message'=>__('messages.question_not_exist'),
-            'data'=>[]
-        ]);
-    }
-
-
-    public function doctorTop(Request $request)
+    public function doctorTop()
     {
         $doctor_evaluation=Doctor::where([['doctor_type','=',DoctorType::Clinic] ,['evaluation','!=',0]])
                                 ->with('doctor_user')->orderBy('evaluation' ,'desc')
@@ -195,8 +163,42 @@ class CenterInfoController extends Controller
 
     public function comments(Request $request)
     {
+        $request->validate([
+            'comment_type' => 'nullable|in:Section,Doctor',
+            'id'=>'required_if:comment_type,Doctor,Section',
+        ]);
 
-        $comments = Comment::where([['commentable_type','=',null],['status','=',1]])->with('comment_patient','comment_patient.patient_user')->get();
+        $model_comment = match ($request->comment_type) {
+            'Doctor' =>Doctor::class,
+            'Section' => Section::class,
+            default => null,
+        };
+
+        if($request->comment_type=="Doctor"){
+            if(!Comment::where(["commentable_type"=>$model_comment ,'commentable_id'=>$request->id])->exists()){
+                return response()->json([
+                    'success' => false,
+                    'message'=>__('messages.comment_doctor'),
+                ]);
+            }
+        }elseif ($request->comment_type=="Section"){
+            if(!Comment::where(["commentable_type"=>$model_comment ,'commentable_id'=>$request->id])->exists()){
+                return response()->json([
+                    'success' => false,
+                    'message'=>__('messages.comment_section'),
+                ]);
+            }
+        }
+
+        $comments = Comment::where('status', 1)
+            ->when(is_null($model_comment), function ($q) {
+                $q->whereNull('commentable_type');
+            }, function ($q) use ($model_comment, $request) {
+
+                $q->where(['commentable_type'=> $model_comment ,"commentable_id" => $request->id]);
+            })
+            ->orderBy('id')
+            ->get();
 
         if($comments->isNotEmpty()){
             return response()->json([
@@ -209,9 +211,9 @@ class CenterInfoController extends Controller
             'success' => false,
             'message'=>__('messages.comment_not_exist'),
         ]);
-    }
+    }                       //لكافة مصاد التعليقات
 
-    public function articles(Request $request)
+    public function articles()
     {
 
         $articles=Article::where("is_active",1)
@@ -235,7 +237,7 @@ class CenterInfoController extends Controller
         ]);
     }
 
-    public function offers(Request $request)
+    public function offers()
     {
 
         $discounts=Discount::where('active' ,1)
@@ -258,6 +260,40 @@ class CenterInfoController extends Controller
             'data'=>[]
         ]);
     }
+
+
+    /*  clinics page  */
+
+    public function frequentlyQuestion()
+    {
+
+        $questions =FrequentlyQuestion::where('status' ,1)
+            ->select('id',
+                'question_'.$this->locale,
+                'answer_'.$this->locale,
+                'status'
+            )
+            ->get();
+
+
+        if($questions->isNotEmpty()){
+            return response()->json([
+                'success' => true,
+                'message' =>__('messages.question_exist'),
+                'data'=>$questions
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message'=>__('messages.question_not_exist'),
+            'data'=>[]
+        ]);
+    }
+
+
+
+
 
 
 }

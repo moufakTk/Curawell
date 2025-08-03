@@ -17,12 +17,12 @@ return new class extends Migration
             $table->foreignId('nurse_session_id')->constrained('nurse_sessions')->cascadeOnDelete();
             $table->enum('type',['CheckOut','Physical','Sample']);
             $table->enum('gender',['Male','Female']);
-            $table->string('location_en')->nullable();
-            $table->string('location_ar')->nullable();
+            $table->string('location')->nullable();
+            //$table->string('location_ar')->nullable();
             $table->string('phone_number');
             $table->text('notes')->nullable();
-            $table->decimal('price');
-            $table->text('explain');
+            $table->decimal('price')->default(0);
+            $table->text('explain')->nullable();
             $table->timestamps();
         });
     }

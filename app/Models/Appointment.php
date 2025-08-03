@@ -18,7 +18,7 @@ class Appointment extends Model
         'status',
         'delivery',
         'delivery_location_en',
-        'delivery_location_ar',
+        //'delivery_location_ar',
         'appointment_type',
     ];
 
@@ -64,7 +64,7 @@ class Appointment extends Model
 
     public function appointment_balls()
     {
-        return $this->morphMany(AppointmentBill::class , 'appointmentable');
+        return $this->morphMany(AppointmentBill::class , 'appointable');
     }
 
     public function user_points ()            // (nullable  Morph)

@@ -55,7 +55,7 @@ class Waiting extends Model
 
     public function appointment_balls()
     {
-        return $this->morphMany(AppointmentBill::class , 'appointmentable');
+        return $this->morphMany(AppointmentBill::class , 'appointable');
     }
 
 

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('discounts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('service_id')->constrained('services')->cascadeOnDelete();
             $table->string('name_en');
             $table->string('name_ar');
             $table->text('description_en');

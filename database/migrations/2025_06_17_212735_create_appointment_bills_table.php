@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('bill_id')->constrained('bills')->cascadeOnDelete();
             $table->morphs('appointable');
-            $table->decimal('total_treatment_amount');
-            $table->decimal('paid_of_amount');
+            $table->decimal('total_treatment_amount')->default(0);
+            $table->decimal('paid_of_amount')->default(0);
             $table->timestamps();
         });
     }

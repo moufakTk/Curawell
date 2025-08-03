@@ -10,7 +10,8 @@ class Assigned extends Model
 
     protected $fillable =[
         'patient_id',
-        'assignedable',
+        'assignedable_id',
+        'assignedable_type',
         'active',
 
     ];

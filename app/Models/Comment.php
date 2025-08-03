@@ -12,7 +12,8 @@ class Comment extends Model
     //
     protected $fillable = [
         'patient_id',
-        'commentable',
+        'commentable_type',
+        'commentable_id',
         'comment_en',
         'comment_ar',
         'status',

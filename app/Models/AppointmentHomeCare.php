@@ -15,9 +15,10 @@ class AppointmentHomeCare extends Model
         'nurse_session_id',
         'type',
         'gender',
-        'location_en',
-        'location_ar',
+        'location',
+        //'location_ar',
         'phone_number',
+        'notes',
         'price',
         'explain',
     ];
@@ -45,4 +46,15 @@ class AppointmentHomeCare extends Model
     public function appointment_home_session_nurse(){
         return $this->belongsTo(NurseSession::class , 'nurse_session_id');
     }
+
+
+    /*
+     * Morph   PK
+     */
+
+    public function user_points ()            // (nullable  Morph)
+    {
+        return $this->morphMany(UserPoint::class , 'pointable');
+    }
+
 }

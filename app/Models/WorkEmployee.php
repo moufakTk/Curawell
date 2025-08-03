@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Enums\WorkStatus\PeriodStatus;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class WorkEmployee extends Model
 {
     //
+    use HasFactory;
 
     protected $fillable =[
         'work_day_id',
@@ -14,6 +17,12 @@ class WorkEmployee extends Model
         'status',
         'from',
         'to',
+    ];
+
+    protected $casts=[
+        'status'=>PeriodStatus::class,
+        'from' => 'datetime:H:i:s',
+        'to' => 'datetime:H:i:s',
     ];
 
 
