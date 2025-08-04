@@ -118,7 +118,7 @@ public function register($request){
                 'age' => 0, // أو 0 إذا الحقل مش nullable
                 'email_verified_at' => now(),
                 'user_type' => UserType::Patient, // أو حسب نوع المستخدم
-                'password' => Hash::make(Str::random(r)),
+                'password' => Hash::make(Str::random(8)),
             ]
         );
 

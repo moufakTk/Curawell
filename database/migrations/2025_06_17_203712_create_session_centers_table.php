@@ -19,7 +19,8 @@ return new class extends Migration
             $table->text('symptoms')->nullable();
             $table->text('medicines')->nullable();
             $table->decimal('doctor_examination')->default(0);
-            $table->decimal('discount')->nullable(0);
+            $table->decimal('doctor_examination_discount')->default(0);
+            $table->decimal('all_discount')->default(0);
             $table->enum('session_type',['Relief','Clinic']);
             $table->timestamps();
         });

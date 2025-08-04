@@ -16,6 +16,11 @@ class DashpordPatientController extends Controller
     }
 
 
+    public function myDoctors()
+    {
 
+        $re = $this->dashpordPatientService->myDoctors();
+        return response()->json($re);
+    }
 
 }

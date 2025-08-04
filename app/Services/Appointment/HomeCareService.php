@@ -114,7 +114,7 @@ class HomeCareService
 
             $period=PeriodHomeCare::where('id',$request->period_id)->whereHas('period_work_day', function ($q) use ($request) {
                 $q->where('history', $request->date);
-            })->first();
+            })->with('period_work_day')->first();
             if(!$period){
                 return [
                     'success'=>false,
@@ -122,6 +122,20 @@ class HomeCareService
                     'data'=>[]
                 ];
             }
+
+
+            $date=$period->period_work_day->history;
+            $time=$period->date->format('H:i:s');
+            $periodDateTime = Carbon::parse("$date $time");
+
+            if(now()->greaterThanOrEqualTo($periodDateTime)){
+                return [
+                    'success' => false,
+                    'message' =>"منذورة سلبينا الوقت قطع الفترة يعني قحط من هووون شبنا قياساتي؟؟ ",
+                    'data' => []
+                ];
+            }
+
 
             $app = AppointmentHomeCare::where('patient_id', $user->patient->id)
                 ->whereHas('appointment_home_session_nurse', function ($q) use ($period, $request) {
@@ -216,6 +230,8 @@ class HomeCareService
 
 
     }
+
+
 
 
 

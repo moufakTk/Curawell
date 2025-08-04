@@ -16,7 +16,8 @@ class SessionCenter extends Model
     'symptoms',
     'medicines',
     'doctor_examination',
-    'discount',
+    'doctor_examination_discount',
+    'all_discount',
     'session_type',
     ];
 

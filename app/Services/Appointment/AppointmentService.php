@@ -195,6 +195,9 @@ class AppointmentService
             $doctor=Doctor::where('id', $request->doctor_id)->with('doctor_user','doctor_examination')->first();
             $doctor_session = DoctorSession::where('id', $request->doctor_session_id)->with('session_doctor.work_employee_Day')->first();
 
+
+
+
             if(!($doctor_session->session_doctor->user_id === $doctor->doctor_user->id)){
                 return ['success' => false,
                     'message' => __('messages.doctor_periods'),
@@ -206,6 +209,19 @@ class AppointmentService
                 return ['success' => false,
                     'message' => __('messages.session_not_available'),
                     'data' => [],
+                ];
+            }
+
+            $date =$doctor_session->session_doctor->work_employee_Day->history;
+            $time =$doctor_session->from;
+
+            $sessionDateTime = Carbon::parse("$date $time");
+
+            if(now()->greaterThanOrEqualTo($sessionDateTime)){
+                return [
+                    'success' => false,
+                    'message' =>"حمودة سلبينا الوقت قطع الفترة يعني هوينا ",
+                    'data' => []
                 ];
             }
 
@@ -279,12 +295,16 @@ class AppointmentService
             }
 
 
+
+
+
             $session =SessionCenter::create([
                 'sessionable_type'=>Appointment::class,
                 'sessionable_id'=>$appointment->id,
                 'session_type'=>SessionCenterType::Clinic,
-                'doctor_examination'=>($doctor->doctor_examination->price)-($doctor->doctor_examination->discount_rate),
-                'discount'=>$doctor->doctor_examination->discount_rate,
+                'doctor_examination'=>$doctor->doctor_examination->price,
+                'doctor_examination_discount'=>$doctor->doctor_examination->discount_rate,
+
             ]);
 
             $bill=Bill::where([ 'doctor_id'=>$doctor->id,

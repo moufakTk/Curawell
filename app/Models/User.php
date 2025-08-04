@@ -109,7 +109,10 @@ class User extends Authenticatable
     }
 
 
-
+    public function active_work_location()
+    {
+        return $this->hasOne(WorkLocation::class , 'user_id')->where('active', 1);
+    }
     //hasMany
     public function work_employees()
     {

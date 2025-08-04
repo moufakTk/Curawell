@@ -13,6 +13,7 @@ class Treatment extends Model
         'division_id',
         'small_service_price',
         'small_service_num',
+        'discount_price',
         'total',
     ];
 

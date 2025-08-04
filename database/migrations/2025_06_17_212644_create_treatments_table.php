@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('division_id')->constrained('divisions')->cascadeOnDelete();
             $table->decimal('small_service_price');
             $table->integer('small_service_num');
+            $table->decimal('discount_price')->default(0);
             $table->decimal('total');
 
             $table->timestamps();

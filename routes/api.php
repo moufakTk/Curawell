@@ -44,6 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post("/reserve_appointment" ,[\App\Http\Controllers\Appointment\AppointmentController::class,'reserveAppointment']);
     Route::post('/reserve_appointment_HC' ,[\App\Http\Controllers\Appointment\HomeCareController::class,'reserveAppointmentHomeCare']);
     Route::get('profile',[\App\Http\Controllers\Dashpords\ForAllController::class,'profile']);
+    Route::get("/myDoctors" ,[\App\Http\Controllers\Dashpords\DashpordPatientController::class,'myDoctors']);
 });
                                     /* home page & landing page  */
 Route::get('/Info-center' ,[\App\Http\Controllers\CenterInfoController::class ,'getInfo'])->name('settings.Info');
