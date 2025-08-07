@@ -24,7 +24,8 @@ class ForAllService
     {
 
         $user= auth()->user();
-
+ if (!$user)
+     return response()->json(['error' => 'asdasdaskdljasdkl'], 401);
         return match ($user->user_type){
 
             UserType::Patient => $this->dashpordPatientService->profilePatient($user),

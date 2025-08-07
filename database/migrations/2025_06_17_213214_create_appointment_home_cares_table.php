@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('patient_id')->constrained('patients')->cascadeOnDelete();
             $table->foreignId('nurse_session_id')->constrained('nurse_sessions')->cascadeOnDelete();
             $table->enum('type',['CheckOut','Physical','Sample']);
+            $table->enum('status', ['Scheduled', 'Completed', 'InProgress','Cancelled', 'Missed'])->default('Scheduled');
             $table->enum('gender',['Male','Female']);
             $table->string('location')->nullable();
             //$table->string('location_ar')->nullable();

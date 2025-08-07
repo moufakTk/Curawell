@@ -197,7 +197,8 @@ class HomeCareService
                         'point_number'=>$point->point_number,
                     ]);
                     $user->patient->update(["totalPoints"=>$user->patient->totalPoints + $userPoint->point_number]);
-                    $nurse_choice=$nurse->select('id','first_name','last_name','gender','phone')->first();
+//                    $nurse_choice=$nurse->select('id','first_name','last_name','gender','phone')->first();
+                    $nurse_choice=$nurse;
                     $busy=true;
                     break;
                 }

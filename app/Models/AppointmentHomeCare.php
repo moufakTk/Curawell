@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\Appointments\AppointmentHomeCareType;
 use App\Enums\Gender;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class AppointmentHomeCare extends Model
@@ -22,7 +23,7 @@ class AppointmentHomeCare extends Model
         'price',
         'explain',
     ];
-
+protected $hidden=['gender'];
     protected $casts =[
         'type'=>AppointmentHomeCareType::class,
         'gender'=>Gender::class,
@@ -56,5 +57,17 @@ class AppointmentHomeCare extends Model
     {
         return $this->morphMany(UserPoint::class , 'pointable');
     }
+
+
+// scope
+
+
+    public function scopeOwnedByNurse(Builder $query, User $nurse): Builder
+    {
+        return $query->whereHas('appointment_home_session_nurse.nurse', function ($q) use ($nurse) {
+            $q->where('users.id', $nurse->id);
+        });
+    }
+
 
 }

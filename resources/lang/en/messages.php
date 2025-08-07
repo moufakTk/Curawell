@@ -81,5 +81,12 @@ return [
     'appointment_status'=>'Booking during this period is currently unavailable. Please choose another period or try again later.',
     'reserve_success'=>'The appointment has been booked successfully',
 
+    /*  dashboardNurseController*/
+    'all_sessions' => 'All sessions with details have been returned.',
+    'session' => 'session details have been returned.',
+    'appointment_HomeCare_updated'=>'Appointment HomeCare updated successfully.',
+    'all_appointments' => 'All appointments have been returned. ',
+
+
 
 ];

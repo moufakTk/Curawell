@@ -43,4 +43,26 @@ class NurseSession extends Model
     {
         return $this->belongsTo(WorkEmployee::class ,'work_employee_id');
     }
+    public function nurse(){
+        return $this->hasOneThrough(
+            User::class,
+            WorkEmployee::class,
+            'id',
+            'id',
+        'work_employee_id',
+        'user_id');
+    }
+ public function session_day(){
+        return $this->hasOneThrough(
+            workDay::class
+            ,WorkEmployee::class,
+        'id',
+        'id',
+        'work_employee_id',
+        'work_day_id',
+        );
+ }
+
+
+
 }

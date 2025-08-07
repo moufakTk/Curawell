@@ -3,6 +3,8 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\Dashpords\DashpordNurseController;
+use App\Http\Controllers\Dashpords\ForAllController;
 use App\Http\Middleware\Language\SetLocaleMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -74,8 +76,32 @@ Route::get("/nurses_homeCare" ,[\App\Http\Controllers\Appointment\HomeCareContro
 Route::post('/period_homeCare',[\App\Http\Controllers\Appointment\HomeCareController::class,'periodsHomeCare'])->name('period_to_patient');
 
 
-                                    /* Dashpords patient */
+                                        /* Dashboards */
+Route::prefix('/dashboard')->middleware(['auth:sanctum',SetLocaleMiddleware::class])->group( function () {
 
+                            /* admin dashboard */
+    Route::prefix('/admin')->group( function () {
+    });
+
+                            /* Doctor dashboard */
+    Route::prefix('/doctor')->group( function () {
+    });
+
+                            /* Nurse dashboard */
+    Route::controller(DashpordNurseController::class)->prefix('/nurse')->group( function () {
+             Route::get('/profile',[ForAllController::class,'profile']);
+             Route::get('/sessions','sessions')->name('nurse.sessions');
+             Route::get('/session','showSession')->name('nurse.show.sessions');
+             Route::post('/update-appointment','updateAppointment');
+             Route::get('/appointments','appointments');
+
+    });
+
+
+
+
+
+});
 
 
 

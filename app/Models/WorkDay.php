@@ -35,6 +35,7 @@ class WorkDay extends Model
     {
         return $this->hasMany(PeriodHomeCare::class , 'work_day_id');
     }
+// في موديل User (أو الممرض)
 
 
     /*

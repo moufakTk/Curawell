@@ -80,4 +80,10 @@ return [
     'appointment_status'=>'الحجز في هذه الفترة غير متاح حاليا، الرجاء اختيار فترة اخرى او المحاولة في وقت لاحق',
     'reserve_success'=>'تم حجز الموعد بنجاح',
 
+    /*  dashboardNurseController*/
+    'all_sessions' => ' كل جلسات الممرض مع التفاصيل',
+    'session' => 'تم عرض تفاصيل الجلسة',
+    'appointment_HomeCare_updated'=>'تم تعديل معلومات الحجز',
+    'all_appointments' => 'كل الحجوزات مع التفاصيل '
+
 ];
