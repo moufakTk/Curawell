@@ -91,9 +91,9 @@ Route::prefix('/dashboard')->middleware(['auth:sanctum',SetLocaleMiddleware::cla
     Route::controller(DashpordNurseController::class)->prefix('/nurse')->group( function () {
              Route::get('/profile',[ForAllController::class,'profile']);
              Route::get('/sessions','sessions')->name('nurse.sessions');
-             Route::get('/session','showSession')->name('nurse.show.sessions');
+             Route::get('/session','showSession')->name('nurse.show.session');
              Route::post('/update-appointment','updateAppointment');
-             Route::get('/appointments','appointments');
+             Route::get('/appointments','appointments')->name('nurse.appointments');
 
     });
 

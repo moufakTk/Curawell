@@ -5,10 +5,12 @@ namespace App\Models;
 use App\Enums\Appointments\AppointmentHomeCareType;
 use App\Enums\Gender;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class AppointmentHomeCare extends Model
 {
+    use HasFactory;
     //
 
     protected $fillable = [
@@ -23,7 +25,7 @@ class AppointmentHomeCare extends Model
         'price',
         'explain',
     ];
-protected $hidden=['gender'];
+protected $hidden=['gender','created_at','updated_at'];
     protected $casts =[
         'type'=>AppointmentHomeCareType::class,
         'gender'=>Gender::class,

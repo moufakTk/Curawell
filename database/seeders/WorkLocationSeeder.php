@@ -44,7 +44,7 @@ class WorkLocationSeeder extends Seeder
         });
 
         $locationable_id=Section::where('section_type',SectionType::HomeCare)->value('id');
-        $nurse=User::where('user_type',UserType::Nurse)->limit(4)->get()->each(function ($user) use($locationable_id) {
+        $nurse=User::where('user_type',UserType::Nurse)->limit(2)->get()->each(function ($user) use($locationable_id) {
             WorkLocation::create([
                 'user_id'=>$user->id,
                 'locationable_type'=>Section::class,
