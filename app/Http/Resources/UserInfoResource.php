@@ -15,11 +15,8 @@ class UserInfoResource extends JsonResource
      * @return array<string, mixed>
      */
 
-    public function __construct($resource)
-    {
-        parent::__construct($resource);
-        //$this->locale=app()->getLocale();
-    }
+    
+
 
     public function toArray(Request $request): array
     {
