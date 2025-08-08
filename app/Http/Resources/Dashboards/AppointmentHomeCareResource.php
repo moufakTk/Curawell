@@ -14,7 +14,6 @@ class AppointmentHomeCareResource extends JsonResource
         $appointment = $this->appointments_home;
 
         return match ($routeName)  {
-//            'nurse.appointments.grouped' => $this->formatForGrouped(),
             'nurse.show.session' =>   [
         'id'         => $appointment?->id,
         'session_id' => $appointment?->nurse_session_id,
@@ -31,9 +30,32 @@ class AppointmentHomeCareResource extends JsonResource
         'time'=>$this?->time_in->format('h:i A'),
 //            'message'    => $appointment? 'this session is available':'this session is available'
     ],
-//            default => $this->formatDefault(),
+            'nurse.appointments' => [
+                'id'         => $this?->id,
+                'session_id' => $this?->nurse_session_id,
+                'patient'    => optional($this?->appointment_home_patient?->patient_user)->full_name
+                    ?? 'Unknown Patient',
+                'service'    => $this?->type,
+                'day' => $this?->appointment_home_session_nurse?->session_day?->{'day_' . app()->getLocale()},
+                'history' => $this?->appointment_home_session_nurse?->session_day?->history,
+                'time'=>$this?->appointment_home_session_nurse?->time_in->format('h:i A'),
+
+            ]
+
         };
     }
 
+public  static  function appointment($appointment): array{
+        return[
+            'id'         => $appointment?->id,
+            'session_id' => $appointment?->nurse_session_id,
+//            'patient'    => optional($appointment?->appointment_home_patient?->patient_user)->full_name
+//                ?? 'Unknown Patient',
+            'service'    => $appointment?->type,
+            'day' => $appointment?->appointment_home_session_nurse?->session_day?->{'day_' . app()->getLocale()},
+            'history' => $appointment?->appointment_home_session_nurse?->session_day?->history,
+            'time'=>$appointment?->appointment_home_session_nurse?->time_in->format('h:i A'),
 
+        ];
+}
 }

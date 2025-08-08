@@ -94,6 +94,7 @@ Route::prefix('/dashboard')->middleware(['auth:sanctum',SetLocaleMiddleware::cla
              Route::get('/session','showSession')->name('nurse.show.session');
              Route::post('/update-appointment','updateAppointment');
              Route::get('/appointments','appointments')->name('nurse.appointments');
+             Route::get('/patients','patients')->name('nurse.patients');
 
     });
 

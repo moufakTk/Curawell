@@ -84,6 +84,7 @@ return [
     'all_sessions' => ' كل جلسات الممرض مع التفاصيل',
     'session' => 'تم عرض تفاصيل الجلسة',
     'appointment_HomeCare_updated'=>'تم تعديل معلومات الحجز',
-    'all_appointments' => 'كل الحجوزات مع التفاصيل '
+    'all_appointments' => 'كل الحجوزات مع التفاصيل ',
+    'all_patients'=> 'كل المرضى يلي عند هاد الحجي يلي تعالجو من قبل ويلي لح يتعالجو لقدام '.auth()->user()->full_name
 
 ];

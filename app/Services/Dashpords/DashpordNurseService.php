@@ -2,17 +2,22 @@
 
 namespace App\Services\Dashpords;
 
+use App\Enums\Appointments\appointment\AppointmentHomeCareStatus;
+use App\Enums\Appointments\appointment\AppointmentStatus;
+use App\Enums\Sessions\SessionNurseStatus;
 use App\Http\Resources\Dashboards\AppointmentHomeCareResource;
 use App\Http\Resources\Dashboards\NurseResource;
 use App\Models\Appointment;
 use App\Models\AppointmentHomeCare;
 use App\Models\NurseSession;
+use App\Models\Patient;
 use App\Models\Section;
 use App\Models\User;
 use App\Models\WorkDay;
 use App\Models\WorkLocation;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class DashpordNurseService
@@ -52,6 +57,7 @@ class DashpordNurseService
     }
 
     public function showSession(int $id)
+
     {
         $session = NurseSession::with([
             'nurse',
@@ -82,7 +88,9 @@ $appointment->update([
     'price'=>$request->cost??$appointment->price,
     'explain'=>$request->report??$appointment->explain,
 ]);
-
+$appointment->appointment_home_session_nurse->update([
+    'status'=>SessionNurseStatus::Reserved,
+]);
 
 return $appointment;
 
@@ -94,12 +102,43 @@ return $data;
 
     public function appointments()
     {
-        $appointments = AppointmentHomeCare::ownedByNurse(auth()->user())->get();
+        $appointments = AppointmentHomeCare::AppointmentsOwnedByNurse(auth()->user())
+                ->where('status',AppointmentHomeCareStatus::Scheduled)
+            ->with('appointment_home_session_nurse.session_day',
+                'appointment_home_patient.patient_user')->get();
+$appointments = $appointments->map(function($appointment){
+    return new AppointmentHomeCareResource($appointment);
+});
+$completeAppointmentCount =AppointmentHomeCare::where('status',AppointmentHomeCareStatus::Completed)->count(); ;
 
-        $grouped = $appointments->groupBy('type');
+        return [
+            'scheduled_appointments'=>$appointments,
+            'scheduled_appointments_count'=>$appointments->count(),
+            'complete_appointment_count'=>$completeAppointmentCount,
 
-        return $grouped;
+            ];
     }
+
+public function patients(){
+
+    $appointment =  AppointmentHomeCare::AppointmentsOwnedByNurse(auth()->user())
+        ->with(['patient_user'])->get();
+    $patientIds = $appointment->pluck('patient_id')->unique();
+
+          $patients =  Patient::whereIn('id',$patientIds)->get();
+          $patients = $patients->map(function($patient){
+
+              return[
+                  'id'=>$patient->id,
+                  'name'=>$patient->full_name,
+                  'age'=>$patient->patient_user->age,
+                  'last_appointment'=> AppointmentHomeCareResource::appointment($patient->last_appointment) ,
+                  'next_appointment'=> AppointmentHomeCareResource::appointment($patient->next_appointment),
+              ];
+          });
+        return $patients;
+//        return $patientIds;
+}
 
 
 

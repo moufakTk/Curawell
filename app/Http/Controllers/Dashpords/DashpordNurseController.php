@@ -64,7 +64,7 @@ return ApiResponse::success($data,__('messages.appointment_HomeCare_updated'),20
         return ApiResponse::error($exception->getMessage(),$exception->getCode()??500);
     }
 }
-
+// منعرض المواعيد القادمة مع الاعداد
 public function appointments(){
     try {
         $data =  $this->dashpordNurseService->appointments();
@@ -74,5 +74,15 @@ public function appointments(){
         return ApiResponse::error($exception->getMessage(),$exception->getCode()??500);
     }
 
+}
+// منعرضلو المرضي يلي عندو وعمرهم واخر زيارة وان في عندو زيارة قادمة
+public function patients(){
+    try {
+        $data = $this->dashpordNurseService->patients();
+        return  ApiResponse::success($data,__('messages.all_patients'),200);
+
+    }catch (\Exception $exception){
+        return ApiResponse::error($exception->getMessage(),$exception->getCode()??500);
+    }
 }
 }

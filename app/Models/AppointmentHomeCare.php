@@ -7,6 +7,7 @@ use App\Enums\Gender;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class AppointmentHomeCare extends Model
 {
@@ -24,6 +25,7 @@ class AppointmentHomeCare extends Model
         'notes',
         'price',
         'explain',
+        'status'
     ];
 protected $hidden=['gender','created_at','updated_at'];
     protected $casts =[
@@ -64,11 +66,22 @@ protected $hidden=['gender','created_at','updated_at'];
 // scope
 
 
-    public function scopeOwnedByNurse(Builder $query, User $nurse): Builder
+    public function scopeAppointmentsOwnedByNurse(Builder $query, User $nurse): Builder
     {
         return $query->whereHas('appointment_home_session_nurse.nurse', function ($q) use ($nurse) {
             $q->where('users.id', $nurse->id);
         });
+    }
+    public function patient_user(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            User::class ,
+            Patient::class,
+            'id',
+            'id',
+            'patient_id',
+            'user_id'
+        );
     }
 
 

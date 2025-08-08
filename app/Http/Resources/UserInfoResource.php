@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\Appointments\appointment\AppointmentHomeCareStatus;
+use App\Http\Resources\Dashboards\AppointmentHomeCareResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -39,6 +41,18 @@ class UserInfoResource extends JsonResource
                 'user_id_of_doctor'=>$this->user_id,
                 'doctor_name'=>optional($this->doctor_user)->first_name.' '.optional($this->doctor_user)->last_name ,
                 'doctor_id'=>$this->id,
+
+            ],
+            'nurse.patients'=> [
+                $this->patients->map(function ($patient) {
+                    return [
+                        'patient_id'=>$patient?->id,
+                        'name'=>$patient?->full_name,
+                        'age'=>$patient?->patient_user->age,
+                        'last_appointment'=>AppointmentHomeCareResource::appointment($patient?->appointment_homes()->where('status',AppointmentHomeCareStatus::Scheduled)->first()),
+                        'next_appointment'=>$patient?->patient_user->next_appointment,
+                    ];
+                }),
 
             ],
 

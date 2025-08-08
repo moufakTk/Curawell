@@ -149,11 +149,11 @@ class User extends Authenticatable
     public function nurse_sessions()
     {
         return $this->hasManyThrough(
-            workDay::class,     // الهدف النهائي (C)
-            WorkEmployee::class,     // الجدول الوسيط (B)
-            'user_id',               // المفتاح الأجنبي في WorkEmployee يلي بيربطه بـ User
-            'id',      // المفتاح الأجنبي في NurseSession يلي بيربطه بـ WorkEmployee
-            'id',                    // المفتاح الأساسي في User
+            workDay::class,                    // الهدف النهائي (C)
+            WorkEmployee::class,     // الجدول الوسيط (B    )
+            'user_id',                  // المفتاح الأجنبي في WorkEmployee يلي بيربطه بـ User
+            'id',                                       // المفتاح الأجنبي في NurseSession يلي بيربطه بـ     WorkEmployee
+            'id',                               // المفتاح الأساسي في User
             'id'                     // المفتاح الأساسي في WorkEmployee
         );
     }

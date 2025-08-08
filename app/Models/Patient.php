@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Appointments\appointment\AppointmentHomeCareStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -132,5 +133,19 @@ class Patient extends Model
     {
         return $this->morphMany(Image::class,'imageable');
     }
+    public function getFullNameAttribute()
+    {
+         return $this->patient_user->full_name;
 
+    }
+    public function getLastAppointmentAttribute()
+    {
+        return $this->appointment_homes()->where('status','!=',AppointmentHomeCareStatus::Scheduled)->latest()->first();
+
+    }
+    public function getNextAppointmentAttribute()
+    {
+        return $this->appointment_homes()->where('status','=',AppointmentHomeCareStatus::Scheduled)->first();
+
+    }
 }
