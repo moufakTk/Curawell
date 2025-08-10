@@ -86,7 +86,7 @@ return [
     'session' => 'session details have been returned.',
     'appointment_HomeCare_updated'=>'Appointment HomeCare updated successfully.',
     'all_appointments' => 'All appointments have been returned. ',
-    'all_patients'=> 'All patients who is treatment by this nurse '.auth()->user()->full_name,
+    'all_patients'=> 'All patients who is treatment by this nurse ',
 
 
 

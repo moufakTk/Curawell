@@ -15,6 +15,6 @@ class SmallServiceSeeder extends Seeder
     {
         //
 
-        SmallService::factory()->count(10)->create();
+        SmallService::factory()->count(100)->create();
     }
 }

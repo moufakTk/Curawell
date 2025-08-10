@@ -30,6 +30,11 @@ class Analyze extends Model
         return $this->hasMany(WhatAnalyze::class , 'analyze_id');
     }
 
+    public function AnalyzeRelated()
+    {
+        return $this->hasMany(AnalyzesRelated::class, 'analyze_id');
+    }
+
 
     /*
      * my FK belongs to

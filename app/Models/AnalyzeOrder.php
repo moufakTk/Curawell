@@ -12,14 +12,12 @@ class AnalyzeOrder extends Model
     protected $fillable = [
         'patient_id',
         'doctor_id',
-        'doctor_name_ar',
-        'doctor_name_en',
+        'name',
+        'doctor_name',
         'status',
         'price',
-        'analyzed_ordering_ar',
-        'analyzed_ordering_en',
         'sample_type',
-        'sample_num',
+
     ];
 
     protected $casts =[
@@ -35,6 +33,19 @@ class AnalyzeOrder extends Model
     {
         return $this->hasMany(WhatAnalyze::class ,'analyze_order_id');
     }
+
+    public function AnalyzeRelated()
+    {
+        return $this->hasMany(AnalyzesRelated::class,'analyze_order_id');
+    }
+
+    public function samplesRelated()
+    {
+        return $this->hasMany(SamplsRelated::class,'analyze_order_id');
+    }
+
+
+
 
     /*
      * my FK belongs to
@@ -56,5 +67,9 @@ class AnalyzeOrder extends Model
     {
         return $this->morphMany(Report::class, 'reportable');
     }
+
+
+
+
 
 }

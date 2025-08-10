@@ -3,11 +3,15 @@
 namespace App\Models;
 
 use App\Enums\Sessions\SessionCenterType;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class SessionCenter extends Model
 {
     //
+    use HasFactory;
+
+
     protected $fillable = [
     'sessionable_type',
     'sessionable_id',
@@ -35,7 +39,7 @@ class SessionCenter extends Model
     //hasMany
     public function treatments()
     {
-        return $this->hasMany(Treatment::class , 'session_id');
+        return $this->hasMany(Treatment::class , 'session_center_id');
     }
 
 

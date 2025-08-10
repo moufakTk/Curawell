@@ -20,15 +20,26 @@ class DivisionSeeder extends Seeder
     {
         //
 
-        $doctors =Doctor::where('doctor_type',DoctorType::Clinic)->pluck('id')->toArray();
         $small_services =SmallService::pluck('id')->toArray();
 
-        collect(range(1, 10))->each(function () use ($doctors, $small_services) {
-            Division::factory()->create([
-                'doctor_id' => Arr::random($doctors),
-                'small_service_id' => Arr::random($small_services),
-            ]);
+
+        $doctors =Doctor::where('doctor_type',DoctorType::Clinic)->pluck('id')->each(function ($doctorId) use ($small_services) {
+
+            for($i=0 ; $i<10 ; $i++){
+                Division::factory()->create([
+                    'doctor_id' => $doctorId,
+                    'small_service_id' => Arr::random($small_services),
+                ]);
+            }
         });
+
+
+//        collect(range(1, 100))->each(function () use ($doctors, $small_services) {
+//
+//        });
+
+
+
 
 
 

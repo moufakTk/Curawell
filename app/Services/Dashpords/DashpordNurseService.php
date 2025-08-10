@@ -79,7 +79,7 @@ class DashpordNurseService
     public function updateAppointment($request){
 
         $data = DB::transaction(function () use ($request) {
-            $appointment=AppointmentHomeCare::OwnedByNurse(auth()->user())->where('id',$request->id)->first();
+            $appointment=AppointmentHomeCare::AppointmentsOwnedByNurse(auth()->user())->where('id',$request->id)->first();
             if(!$appointment){
                 throw new \Exception('Unauthorized access to session',401);
             }

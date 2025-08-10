@@ -26,7 +26,10 @@ class Sample extends Model
    * who has my PK
   */
 
-
+    public function samplesRelated()
+    {
+        return $this->hasMany(SamplsRelated::class ,'sample_id');
+    }
 
     /*
     * my FK belongs to

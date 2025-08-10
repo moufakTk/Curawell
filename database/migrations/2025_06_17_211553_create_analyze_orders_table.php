@@ -15,14 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('patient_id')->constrained('patients')->cascadeOnDelete();
             $table->foreignId('doctor_id')->nullable()->constrained('doctors')->cascadeOnDelete();
-            $table->string('doctor_name_ar');
-            $table->string('doctor_name_en');
-            $table->enum('status', ['InProgress', 'InPreparation','Prepared','Canceled'])->default('InProgress');
-            $table->decimal('price');
-            $table->json('analyzed_ordering_ar');
-            $table->json('analyzed_ordering_en');
-            $table->string('sample_type');
-            $table->integer('sample_num');
+            $table->string('doctor_name');
+            $table->string('name');
+            $table->enum('status', ['Pending', 'Accepted','Prepared','Completed','Canceled'])->default('Pending');
+            $table->decimal('price')->default(0);
+            $table->string('sample_type')->nullable();
+
             //$table->boolean('bay');
             $table->timestamps();
         });
