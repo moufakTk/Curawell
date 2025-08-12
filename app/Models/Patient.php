@@ -140,7 +140,7 @@ class Patient extends Model
     }
     public function getLastAppointmentAttribute()
     {
-        return $this->appointment_homes()->where('status','!=',AppointmentHomeCareStatus::Scheduled)->latest()->first();
+        return $this->appointment_homes()->where('status','=',AppointmentHomeCareStatus::Completed)->latest()->first();
 
     }
     public function getNextAppointmentAttribute()

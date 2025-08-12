@@ -41,7 +41,7 @@ public function showSession(Request $request){
     try {
 
         $data = $this->dashpordNurseService->showSession($request->id);
-      return ApiResponse::success($data,__('messages.session'),200);
+      return ApiResponse::success($data['data'],$data['message'],200);
 
 
     }catch (\Exception $exception){
@@ -75,6 +75,30 @@ public function appointments(){
     }
 
 }
+
+// منعرض كل المواعيد يلي ساواها
+public function completedAppointments(){
+    try {
+        $data =  $this->dashpordNurseService->completedAppointments();
+        return ApiResponse::success($data,__('messages.all_appointments'),200);
+
+    }catch (\Exception $exception){
+        return ApiResponse::error($exception->getMessage(),$exception->getCode()??500);
+    }
+
+}
+
+public function appointmentsCount(){
+    try {
+        $data =  $this->dashpordNurseService->appointmentsCount();
+        return ApiResponse::success($data,__('messages.all_appointments'),200);
+
+    }catch (\Exception $exception){
+        return ApiResponse::error($exception->getMessage(),$exception->getCode()??500);
+    }
+
+}
+
 // منعرضلو المرضي يلي عندو وعمرهم واخر زيارة وان في عندو زيارة قادمة
 public function patients(){
     try {

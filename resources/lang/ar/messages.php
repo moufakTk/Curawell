@@ -85,6 +85,8 @@ return [
     'session' => 'تم عرض تفاصيل الجلسة',
     'appointment_HomeCare_updated'=>'تم تعديل معلومات الحجز',
     'all_appointments' => 'كل الحجوزات مع التفاصيل ',
-    'all_patients'=> 'كل المرضى يلي عند هاد الحجي يلي تعالجو من قبل ويلي لح يتعالجو لقدام '.auth()->user()->full_name
+    'all_patients'=> 'كل المرضى يلي عند هاد الحجي يلي تعالجو من قبل ويلي لح يتعالجو لقدام '.auth()->user()->full_name,
+    'null_appointments_home'=>'هذه الفترة غير محجوزة'
+
 
 ];

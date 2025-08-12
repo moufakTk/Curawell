@@ -26,7 +26,7 @@ class NurseResource extends JsonResource
                         'day' => $day['day_'.app()->getLocale()],
                         'day_sessions' => collect($day['work_employees'])->map(function ($work) {
                             return [
-                                'day_id' => $work['id'],
+                                'day_id' => $work->work_employee_Day->id,
                                 'sessions' => collect($work['nurse_sessions'])->map(function ($session) {
                                     return [
                                         'id' => $session['id'],

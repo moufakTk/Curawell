@@ -27,7 +27,7 @@ class AppointmentHomeCare extends Model
         'explain',
         'status'
     ];
-protected $hidden=['gender','created_at','updated_at'];
+protected $hidden=['created_at','updated_at'];
     protected $casts =[
         'type'=>AppointmentHomeCareType::class,
         'gender'=>Gender::class,

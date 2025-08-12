@@ -43,6 +43,7 @@ class NurseSession extends Model
     {
         return $this->belongsTo(WorkEmployee::class ,'work_employee_id');
     }
+    // منجيب معلومات الممرض من جدول اليوزر
     public function nurse(){
         return $this->hasOneThrough(
             User::class,
@@ -52,6 +53,8 @@ class NurseSession extends Model
         'work_employee_id',
         'user_id');
     }
+
+    // منجيب اليوم المربوط بالسيشن يلي فيه التاريخ النظامي
  public function session_day(){
         return $this->hasOneThrough(
             workDay::class
