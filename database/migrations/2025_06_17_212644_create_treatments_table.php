@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('session_center_id')->constrained('session_centers')->cascadeOnDelete();
             $table->foreignId('division_id')->constrained('divisions')->cascadeOnDelete();
-            $table->decimal('small_service_price');
-            $table->integer('small_service_num');
+            $table->decimal('small_service_price')->default(0);
+            $table->integer('small_service_num')->default(1);
             $table->decimal('discount_price')->default(0);
-            $table->decimal('total');
+            $table->decimal('total')->default(0);
 
             $table->timestamps();
         });

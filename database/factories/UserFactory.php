@@ -97,6 +97,7 @@ class UserFactory extends Factory
     {
         return $this->state(fn () => [
             'user_type' => UserType::Secretary->value,
+            'password'=>'12345678',
         ]);
     }
 

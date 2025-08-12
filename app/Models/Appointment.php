@@ -4,11 +4,14 @@ namespace App\Models;
 
 use App\Enums\Appointments\appointment\AppointmentStatus;
 use App\Enums\Appointments\appointment\AppointmentType;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Appointment extends Model
 {
     //
+
+    use HasFactory;
 
     protected $fillable =[
         'patient_id',

@@ -5,17 +5,19 @@ namespace App\Enums\Orders;
 enum AnalyzeOrderStatus :string
 {
     //
-    case InProgress = "InProgress";
-    case InPreparation = "InPreparation";
-    case Prepared = "Prepared";
+    case Pending = "Pending";
+    case Accepted = "Accepted";
+    case InProgress = "Prepared";
+    case Completed = "Completed";
     case Canceled = "Canceled";
 
     public function label(): string
     {
         return match ($this) {
             self::InProgress =>'InProgress' ,
-            self::InPreparation =>'InPreparation' ,
-            self::Prepared =>'Prepared' ,
+            self::Pending =>'Pending' ,
+            self::Accepted =>'Accepted' ,
+            self::Completed =>'Completed',
             self::Canceled =>'Canceled',
         };
     }
