@@ -6,7 +6,7 @@ enum SkiagraphOrderStatus:string
 {
     //
 
-    case InPreparation = 'Inpreparation';
+    case InPreparation = 'InPreparation';
     case Prepared     = 'Prepared';
     case Canceled       = 'Canceled';
 

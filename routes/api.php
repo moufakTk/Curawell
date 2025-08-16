@@ -3,14 +3,16 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\Dashpords\DashpordLabDoctorController;
 use App\Http\Controllers\Dashpords\DashpordNurseController;
+use App\Http\Controllers\Dashpords\DashpordReceptionController;
 use App\Http\Controllers\Dashpords\ForAllController;
 use App\Http\Middleware\Language\SetLocaleMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
+Route::get('/user/{user}', function (\App\Models\User $user) {
+    return $user;
 })->middleware('auth:sanctum');
 Route::middleware(SetLocaleMiddleware::class)->group(function () {
 
@@ -90,8 +92,19 @@ Route::prefix('/dashboard')->middleware(['auth:sanctum',SetLocaleMiddleware::cla
     Route::prefix('/doctor')->group( function () {
     });
 
+    Route::controller(DashpordLabDoctorController::class)->middleware(['role:Doctor_lab'])->prefix('/lab-doctor')->group( function () {
+
+
+        Route::get('/pending-analyses','pendingAnalyses');
+        Route::get('/analyses','Analyses');
+        Route::get('/complete-analyses','completeAnalyses');
+        Route::get('/count-analyses','countAnalyses');
+        Route::post('/update-analyses/{analyzeOrder}','updateAnalyses');
+
+    });
+
                             /* Nurse dashboard */
-    Route::controller(DashpordNurseController::class)->prefix('/nurse')->group( function () {
+    Route::controller(DashpordNurseController::class)->middleware(['role:Nurse'])->prefix('/nurse')->group( function () {
              Route::get('/profile',[ForAllController::class,'profile']);
              Route::get('/sessions','sessions')->name('nurse.sessions');
              Route::get('/session','showSession')->name('nurse.show.session');
@@ -103,6 +116,49 @@ Route::prefix('/dashboard')->middleware(['auth:sanctum',SetLocaleMiddleware::cla
 
     });
 
+                            /* reception dashboard*/
+    Route::controller(DashpordReceptionController::class)->prefix('/reception')->middleware(['role:Reception'])->group( function () {
+
+                            /*  register a new Patient  */
+        // 1. تسجيل مريض جديد
+        Route::post('/patients', 'registerPatient');
+
+// 2. البحث عن مريض (مثلاً باستخدام ?patient_num=)
+        Route::get('/patients', 'searchPatient');
+
+
+        // 3. إنشاء نموذج لعينة جديدة
+        Route::get   ('/analyses', 'showAnalyses');
+
+        // انشاء العينات
+        Route::post  ('/patients/{patient}/samples/create',            'createSample');
+        Route::get   ('/patients/{patient}/samples',                    'showSamples');
+        Route::post  ('/patients/{patient}/samples/{sample}/update',   'updateSample');
+        Route::delete('/patients/{patient}/samples/{sample}/delete', 'deleteSample');
+//انشاء التحاليل
+        Route::get   ('/patients/analyze-orders',          'showPatientsAnalyses');
+        Route::get   ('/patients/{patient}/analyze-orders',          'showPatientAnalyses');
+        Route::post  ('/patients/{patient}/analyze-orders',          'createPatientAnalyse');
+        Route::get   ('/patients/{patient}/analyze-orders/{order}',  'showPatientAnalyse' );
+        Route::post  ('/patients/{patient}/analyze-orders/{order}',  'updatePatientAnalyse' );
+        Route::delete('/patients/{patient}/analyze-orders/{order}',  'deletePatientAnalyse' );
+
+        //انشاء التصوير
+        Route::get('/radiology/services',  'radiologyServices' );
+        Route::get('/radiology/services/{service}',  'showRadiologyServices' );
+
+        Route::get('patients/skiagraph_orders/count','countSkiagraphOrders');
+        Route::get('patients/skiagraph_orders','showSkiagraphOrders');
+        // patients CRUD
+        Route::get('patients/{patient}/skiagraph_orders','showPatientSkiagraphOrders');
+        Route::get('patients/{patient}/skiagraph_orders/{order}','showPatientSkiagraphOrder');
+        Route::post('patients/{patient}/skiagraph_orders/create','createPatientSkiagraphOrder');
+        Route::post('patients/{patient}/skiagraph_orders/{order}/update','updatePatientSkiagraphOrder');
+        Route::delete('patients/{patient}/skiagraph_orders/{order}/delete','deletePatientSkiagraphOrder');
+
+
+
+    });
 
 
 

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('sampls_related', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('analyze_order_id')->constrained('analyze_orders');
+            $table->foreignId('analyze_order_id')->constrained('analyze_orders')->cascadeOnDelete();
             $table->foreignId('sample_id')->constrained('samples');
             $table->timestamps();
         });

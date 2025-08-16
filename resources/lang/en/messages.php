@@ -89,6 +89,68 @@ return [
     'all_patients'=> 'All patients who is treatment by this nurse ',
 
 
+    /*  dashboardReceptionController*/
+    'reception_create_patient'=>'a new patient has been created.',
+    'reception_search_patient'=>'patient information has been returned.',
+    'reception_create_sample'=>'sample has been created.',
+    'reception.patient.samples.empty'=>'there is no samples for this patient.',
+    'reception.patient.samples'=>'all samples have been returned by this patient.',
+    'reception.patient.samples.not'=>'this sample has not been returned by this patient. .',
+    'reception.patient.sample.update'=>'sample has been updated .',
+    'reception.patient.samples.deleted'=>'sample has been deleted .',
+
+    'reception' => [
+        'analyze_orders' => [
+            'list'    => 'Analyze orders retrieved successfully.',
+            'show'    => 'Analyze order retrieved successfully.',
+            'created' => 'Analyze order created successfully.',
+            'updated' => 'Analyze order updated successfully.',
+            'deleted' => 'Analyze order deleted successfully.',
+        ],
+        'radiology' =>[
+            'services' => [
+                'list'    => 'Imaging services retrieved successfully.',
+                'show'    => 'Imaging service retrieved successfully.',
+                'created' => 'Imaging service created successfully.',
+                'updated' => 'Imaging service updated successfully.',
+                'deleted' => 'Imaging service deleted successfully.',
+                'not' => 'This service is not available for this Section.',
+
+            ],
+            'doctors' => [
+                'list' => 'تم جلب دكاترة التصوير الشعاعي .'
+            ],
+            'patients' => [
+                'orderList' => 'All orders retrieved successfully for this patient .',
+                'orderListNot' => 'this patient does not have any orders.',
+                'not' => 'This order is not for this patient.',
+                'created' => 'order created successfully.',
+                'updated' => 'order updated successfully.',
+                'deleted' => 'order deleted successfully.',
+            ]
+        ]
+    ],
+
+
+    'DoctorLab' => [
+        'analyze_orders' => [
+            'status'    => 'Analyze orders status has been changed successfully.',
+            'show'    => 'تم جلب طلب التحليل بنجاح.',
+            'created' => 'تم إنشاء طلب التحليل بنجاح.',
+            'updated' => 'تم تحديث طلب التحليل بنجاح.',
+            'deleted' => 'تم حذف طلب التحليل بنجاح.',
+            'deleted_missing_reports' => 'Cannot delete this report because it does not belong to this analysis. Report ID: ',
+
+        ],
+    ],
+
+
+
+    'reception.analyses'=>'all analyses have been returned.',
+
+
+
+
 
 
 

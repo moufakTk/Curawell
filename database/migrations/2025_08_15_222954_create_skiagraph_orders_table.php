@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('skiagraph_orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('patient_id')->constrained('patients')->cascadeOnDelete();
-            $table->foreignId('doctor_id')->constrained('doctors')->cascadeOnDelete();
+            $table->foreignId('small_service_id')->constrained('small_services')->cascadeOnDelete();
             $table->string('doctor_name');
             $table->decimal('price');
             $table->enum('status', ['InPreparation', 'Prepared','Canceled'])->default('InPreparation');

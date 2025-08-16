@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('doctor_id')->nullable()->constrained('doctors')->cascadeOnDelete();
             $table->string('doctor_name');
             $table->string('name');
-            $table->enum('status', ['Pending', 'Accepted','Prepared','Completed','Canceled'])->default('Pending');
+            $table->enum('status', ['Pending', 'Accepted','InProgress','Completed','Canceled'])->default('Pending');
             $table->decimal('price')->default(0);
             $table->string('sample_type')->nullable();
 

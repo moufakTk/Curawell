@@ -106,7 +106,7 @@ public function patients(){
         return  ApiResponse::success($data,__('messages.all_patients'),200);
 
     }catch (\Exception $exception){
-        return ApiResponse::error($exception->getMessage(),$exception->getCode()??500);
+        return ApiResponse::error(null,$exception->getMessage(),$exception->getCode()??500);
     }
 }
 }

@@ -55,6 +55,7 @@ public function register($request){
                 'user_id'            => $user->id,
                 'civil_id_number'    => $request->civil_id_number,
                 'alternative_phone'  => $request->alternative_phone,
+                'patient_num'=>str_pad(Patient::max('id')??0 + 1, 8, '0', STR_PAD_LEFT)
             ]);
 
             $medical_history = MedicalHistory::create([

@@ -18,7 +18,7 @@ class SmallServiceFactory extends Factory
     {
         return [
             //
-            'section_id'=>1,
+            'section_id'=>fake()->numberBetween(1 ,5),
             'name_en'=>'zezo al mistro',
             'name_ar'=>'خدمة الحمودة',
             'price'=>fake()->numberBetween(200 ,1000),

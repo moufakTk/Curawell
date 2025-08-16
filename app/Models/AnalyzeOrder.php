@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Enums\Orders\AnalyzeOrderStatus;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class AnalyzeOrder extends Model
 {
+    use HasFactory;
     //
 
     protected $fillable = [

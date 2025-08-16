@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('analyzes_related', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('analyze_order_id')->constrained('analyze_orders');
+            $table->foreignId('analyze_order_id')->constrained('analyze_orders')->cascadeOnDelete();
             $table->foreignId('analyze_id')->constrained('analyzes')->cascadeOnDelete();
             $table->decimal('price');
+//            $table->string('name');
+//            $table->
             $table->timestamps();
         });
     }

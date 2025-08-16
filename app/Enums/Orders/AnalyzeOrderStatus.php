@@ -14,7 +14,7 @@ enum AnalyzeOrderStatus :string
     public function label(): string
     {
         return match ($this) {
-            self::InProgress =>'InProgress' ,
+            self::InProgress =>'Prepared' ,
             self::Pending =>'Pending' ,
             self::Accepted =>'Accepted' ,
             self::Completed =>'Completed',

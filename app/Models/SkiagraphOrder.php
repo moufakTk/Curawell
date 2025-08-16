@@ -3,15 +3,19 @@
 namespace App\Models;
 
 use App\Enums\Orders\SkiagraphOrderStatus;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class SkiagraphOrder extends Model
 {
+    use HasFactory;
     //
+
 
     protected $fillable = [
         'patient_id',
         'doctor_id',
+        'small_service_id',
         'doctor_name',
         'price',
         'status',
@@ -41,7 +45,9 @@ class SkiagraphOrder extends Model
     {
         return $this->belongsTo(Doctor::class, 'doctor_id');
     }
-
+public function skaigraph_small_service(){
+        return $this->belongsTo(SmallService::class, 'small_service_id');
+}
     /*
      * Morph PK
      */

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\SkiagraphOrder;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -44,6 +45,8 @@ class DatabaseSeeder extends Seeder
             PointSeeder::class,
             AppointmentSeeder::class,
             AppointmentHomeCareSeeder::class,
+            SkiagraphOrder::class,
+            AnalysesOrdersSeeder::class,
         ]);
 
     }

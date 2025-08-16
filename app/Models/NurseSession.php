@@ -46,12 +46,13 @@ class NurseSession extends Model
     // منجيب معلومات الممرض من جدول اليوزر
     public function nurse(){
         return $this->hasOneThrough(
-            User::class,
-            WorkEmployee::class,
-            'id',
-            'id',
-        'work_employee_id',
-        'user_id');
+            User::class,//الجدول النهائي يلي بدي جيب منو المعلومات
+            WorkEmployee::class,   // الجدول الوسيط يلي عن طريقو بدي وصل للجدول النهائي
+            'id',//ال PK المفتاح الاساسي بجدول الوسيط (WorkEmployee.id)
+            'id',              //ال PK المفتاح الاساسي بالجدول النهائي (user.id)
+        'work_employee_id',//ال FK الموجود بالجدول يلي انا واقف عندو(NurseSession.work_employee_id)
+            // يلي مربوط بالجدول الوسيط (WorkEmployee)
+        'user_id');//ال FK الموجود بالجدول الوسيط(WorkEmployee.user_id) يلي مربوط بالجدول النهائي(user)
     }
 
     // منجيب اليوم المربوط بالسيشن يلي فيه التاريخ النظامي

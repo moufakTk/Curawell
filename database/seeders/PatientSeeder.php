@@ -24,10 +24,19 @@ class PatientSeeder extends Seeder
         //
         $doctors = Doctor::where('doctor_type', DoctorType::Clinic)->pluck('id');
 
-        User::where('user_type', UserType::Patient)->get()->each(function ($user) use ($doctors) {
-            $patient = Patient::factory()->create(['user_id' => $user->id]);
+        User::where('user_type', UserType::Patient)
+            ->get()
+            ->each(function ($user) use ($doctors) {
+                $lastNum = Patient::max('id') ?? 0; // أو max('patient_num') إذا بدك تبني عليه
+                $patientNum = str_pad($lastNum + 1, 8, '0', STR_PAD_LEFT);
 
-            MedicalHistory::factory()->create(['patient_id' => $patient]);
+            $patient =Patient::factory()->create([
+                    'user_id'     => $user->id,
+                    'patient_num' => $patientNum,
+                ]);
+
+
+        MedicalHistory::factory()->create(['patient_id' => $patient]);
             $user->assignRole(UserType::Patient->defaultRole());
 
             Comment::factory()->standalone()->create(['patient_id' => $patient->id]);
