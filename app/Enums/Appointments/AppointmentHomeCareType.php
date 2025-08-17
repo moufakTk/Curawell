@@ -5,17 +5,17 @@ namespace App\Enums\Appointments;
 enum AppointmentHomeCareType :string
 {
     //
-    case CheckOut = 'CheckOut';
-    case Physical = 'Physical';
-    case Sample   = 'Sample';
+    case CheckOut = 'General Medical Checkup';
+    case Physical = 'Physical Therapy';
+    case Sample   = 'Sample Collection';
 
 
     public function label(): string
     {
         return match ($this) {
-            self::CheckOut   => 'CheckOut' ,
-            self::Physical => 'Physical' ,
-            self::Sample     => 'Sample',
+            self::CheckOut   => 'General Medical Checkup' ,
+            self::Physical => 'Physical Therapy' ,
+            self::Sample     => 'Sample Collection',
         };
     }
 

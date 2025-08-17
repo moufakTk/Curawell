@@ -22,11 +22,13 @@ use App\Models\Doctor_examin;
 use App\Models\DoctorSession;
 use App\Models\OrderTaxi;
 use App\Models\Point;
+use App\Models\Replacement;
 use App\Models\Service;
 use App\Models\SessionCenter;
 use App\Models\User;
 use App\Models\UserDayTime;
 use App\Models\UserPoint;
+use App\Models\UserReplacement;
 use App\Models\WorkDay;
 use App\Models\WorkEmployee;
 use App\Models\WorkLocation;
@@ -91,7 +93,6 @@ class AppointmentService
 
         }
 
-
         $users=User::where('user_type',UserType::Doctor)
             ->whereHas('doctor' ,function($query) use($request){
                 $query->where('doctor_type',DoctorType::Clinic);
@@ -100,7 +101,9 @@ class AppointmentService
                     'locationable_type'=>Competence::class,
                     //'locationable_id'=>$request->competence_id,
                     'active'=>1
-                ]);
+                ])->whereHasMorph('locationable', [Competence::class], function($q) use($request){
+                    $q->where('service_id', $request->service_id);
+                });
             })->with(['doctor','work_day_time' ,'work_employees' => function ($q) use($request){
                 $q->where('work_day_id' ,WorkDay::where('history',$request->date)->value('id'));
             }])->get()->each(function ($user) use($request){
@@ -111,34 +114,6 @@ class AppointmentService
             });
 
         return $users;
-
-//        $competence_name = Competence::where('id', $competence_id)->select('id', 'name_en', "name_ar")->get();
-//        $user_doctor = [];
-//        WorkLocation::with('work_location_user')->get()->each(function ($location) use (&$user_doctor) {
-//            $user = $location->work_location_user;
-//            if ($user && $user->user_type === UserType::Doctor) {
-//                $user_doctor[] = $user->id;
-//            }
-//        });
-//
-//
-//        $location_doctor = WorkLocation::where('locationable_id', $competence_id)->whereHas('work_location_user', function ($query) use ($user_doctor) {
-//            $query->whereIn('id', $user_doctor);
-//        })->with('work_location_user.doctor', 'work_location_user.work_day_time')->get();
-//
-//
-//        $workDay_id = WorkDay::where('history', now()->toDateString())->value('id');
-//        $status_now = $location_doctor->map(function ($location) use ($workDay_id) {
-//            return WorkEmployee::where(['user_id' => $location->user_id, 'work_day_id' => $workDay_id])->value('status');
-//        });
-//
-//        return
-//            [
-//                'infoDoctor' => $location_doctor,
-//                'competence_name' => $competence_name,
-//                'status_now' => $status_now
-//            ];
-
 
     }
 
@@ -192,11 +167,21 @@ class AppointmentService
         $registered = DB::transaction(function () use ($request) {
 
             $user=User::where('id',auth()->user()->id)->with('patient')->first();
+
             $doctor=Doctor::where('id', $request->doctor_id)->with('doctor_user','doctor_examination')->first();
+            $department=$doctor->doctor_user->active_work_location->locationable->competence_services->name_en;
             $doctor_session = DoctorSession::where('id', $request->doctor_session_id)->with('session_doctor.work_employee_Day')->first();
+            $rep=Replacement::where('name_en',$department)->first();
 
+            if($request->mode ==="Point"){
+                if($user->patient->totalPoints < $rep->replace_point_num){
+                    return [
+                        'success' => false,
+                        'message' => 'منذورة ما معك نقاط تكفي درمل من هون',
+                        'data' => []
+                    ];}
 
-
+            }
 
             if(!($doctor_session->session_doctor->user_id === $doctor->doctor_user->id)){
                 return ['success' => false,
@@ -217,6 +202,8 @@ class AppointmentService
 
             $sessionDateTime = Carbon::parse("$date $time");
 
+
+
             if(now()->greaterThanOrEqualTo($sessionDateTime)){
                 return [
                     'success' => false,
@@ -234,23 +221,27 @@ class AppointmentService
                 'status' => AppointmentStatus::Confirmed,
                 'delivery' => $request->taxi_order,
                 'delivery_location_en' =>($request->taxi_order == true)?$request->location_order :null,
-                'appointment_type' => AppointmentType::Electronically,
-            ]);
-
-            $point = Point::where('name_en','Book an appointment online')->first();
-
-            $userPoint=UserPoint::create([
-                'patient_id'=>$user->patient->id,
-                'point_id'=>$point->id ,
-                'pointable_type'=>Appointment::class,
-                'pointable_id'=>$appointment->id,
-                'history'=>Carbon::today(),
-                'point_number'=>$point->point_number,
+                'appointment_type' => $request->mode,
             ]);
 
             DoctorSession::where('id', $request->doctor_session_id)->update(['status' => SessionDoctorStatus::UnAvailable]);
 
-            $user->patient->update(["totalPoints"=>$user->patient->totalPoints + $userPoint->point_number]);
+            if($request->mode =="Electronically")
+            {
+                $point = Point::where('name_en','Book an appointment online')->first();
+
+                $userPoint=UserPoint::create([
+                    'patient_id'=>$user->patient->id,
+                    'point_id'=>$point->id ,
+                    'pointable_type'=>Appointment::class,
+                    'pointable_id'=>$appointment->id,
+                    'history'=>Carbon::today(),
+                    'point_number'=>$point->point_number,
+                ]);
+
+                $user->patient->update(["totalPoints"=>$user->patient->totalPoints + $userPoint->point_number]);
+            }
+
 
             if($request->taxi_order == true){
                 $fullDateTime = Carbon::parse(
@@ -296,8 +287,6 @@ class AppointmentService
 
 
 
-
-
             $session =SessionCenter::create([
                 'sessionable_type'=>Appointment::class,
                 'sessionable_id'=>$appointment->id,
@@ -307,14 +296,35 @@ class AppointmentService
 
             ]);
 
-            $bill=Bill::where([ 'doctor_id'=>$doctor->id,
-                'patient_id'=>$user->patient->id,
-                'status'=>BallStatus::Incomplete
-            ])->first();
-            if($bill){
-                $appointment->appointment_balls()->create(['bill_id'=>$bill->id]);
-            }else{
-                $bill=Bill::create([
+            if($request->mode ==='Electronically'){
+                $bill=Bill::where([ 'doctor_id'=>$doctor->id,
+                    'patient_id'=>$user->patient->id,
+                    'status'=>BallStatus::Incomplete
+                ])->first();
+                if($bill){
+                    $appointment->appointment_balls()->create(['bill_id'=>$bill->id]);
+                }else{
+                    $bill=Bill::create([
+                        'doctor_id'=>$doctor->id,
+                        'patient_id'=>$user->patient->id,
+                        'status'=>BallStatus::Incomplete,
+                    ]);
+                    $bill->update(['private_num'=>'#001-'.$bill->id,]);
+                    $appointment->appointment_balls()->create(['bill_id'=>$bill->id]);
+                }
+            }elseif ($request->mode ==='Point') {
+
+
+                $ure=UserReplacement::create([
+                    'patient_id'=>$user->patient->id,
+                    'replacement_id'=>$rep->id,
+                    'appointment_id'=>$appointment->id,
+                    "replace_point_num"=>$rep->replace_point_num,
+                ]);
+
+                $user->patient->update(["totalPoints"=>$user->patient->totalPoints-$ure->replace_point_num]);
+
+                $bill =Bill::create([
                     'doctor_id'=>$doctor->id,
                     'patient_id'=>$user->patient->id,
                     'status'=>BallStatus::Incomplete,
@@ -324,16 +334,20 @@ class AppointmentService
             }
 
 
+
             return ['success'=>true,
                 'message'=>__('messages.success_reserve'),
                 'data'=>$appointment,
             ];
+
 
         });
 
         return $registered;
 
     }
+
+
 
 }
 

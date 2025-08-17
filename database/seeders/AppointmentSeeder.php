@@ -10,11 +10,14 @@ use App\Models\Division;
 use App\Models\Doctor;
 use App\Models\Patient;
 
+use App\Models\Point;
 use App\Models\SessionCenter;
 use App\Models\Treatment;
 use App\Models\User;
+use App\Models\UserPoint;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 
 class AppointmentSeeder extends Seeder
 {
@@ -31,8 +34,8 @@ class AppointmentSeeder extends Seeder
         })->with('doctor','work_employees.doctor_sessions')
          ->get();
 
-
-        $user->each(function ($user) use ($patient){
+        $point = Point::where('name_en','Book an appointment online')->first();
+        $user->each(function ($user) use ($patient ,$point){
 
             $sessions = $user->work_employees->flatMap(fn($emp) => $emp->doctor_sessions);
             $appointment =Appointment::factory()->create([
@@ -40,6 +43,18 @@ class AppointmentSeeder extends Seeder
                 'doctor_id' =>  $user->doctor->id,
                 'doctor_session_id' =>$sessions->random()->id,
             ]);
+
+
+
+            $userPoint=UserPoint::create([
+                'patient_id'=>$patient->id,
+                'point_id'=>$point->id ,
+                'pointable_type'=>Appointment::class,
+                'pointable_id'=>$appointment->id,
+                'history'=>Carbon::today(),
+                'point_number'=>$point->point_number,
+            ]);
+
 
             $session =SessionCenter::factory()->create([
                 'sessionable_type'=>Appointment::class,

@@ -8,6 +8,7 @@ enum AppointmentStatus :string
     case Confirmed ='Confirmed';
     case Occur     ='Occur';
     case Don       ='Don';
+    case Missed     ='Missed';
     case Cancel    ='Cancel';
 
 
@@ -17,6 +18,7 @@ enum AppointmentStatus :string
             self::Confirmed => 'مؤكد',
             self::Occur => 'جاري',
             self::Don => 'انتهى',
+            self::Missed=>"ضاع",
             self::Cancel=>'ألغي',
         };
     }

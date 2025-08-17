@@ -2,13 +2,20 @@
 
 namespace App\Services\Dashpords;
 
+use App\DTO\PointsDTO;
 use App\Enums\Appointments\appointment\AppointmentHomeCareStatus;
 use App\Enums\Appointments\appointment\AppointmentStatus;
 use App\Http\Resources\AppointmentResource;
+use App\Http\Resources\PointsResource;
 use App\Models\Appointment;
 use App\Models\AppointmentHomeCare;
+use App\Models\Bill;
 use App\Models\Competence;
+use App\Models\Doctor;
+use App\Models\Evaluction;
 use App\Models\User;
+use App\Models\UserPoint;
+use App\Models\UserReplacement;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 
@@ -104,7 +111,7 @@ class DashpordPatientService
             return 'مافي قيم ';
         }
         return $appointment->map(function ($item) {
-            return new AppointmentResource($item, 'Clinic');
+            return new AppointmentResource($item, 'Clinic',false);
         });
 
     }
@@ -128,7 +135,7 @@ class DashpordPatientService
             return 'مافي قيم ';
         }
         return $appointment->map(function ($item) {
-            return new AppointmentResource($item, 'Clinic');
+            return new AppointmentResource($item, 'Clinic' ,false);
         });
     }
 
@@ -147,7 +154,7 @@ class DashpordPatientService
             return 'مافي قيم ';
         }
         return $appointment->map(function ($item) {
-            return new AppointmentResource($item, 'HomeCare');
+            return new AppointmentResource($item, 'HomeCare' ,false);
         });
     }
 
@@ -164,14 +171,119 @@ class DashpordPatientService
             return 'مافي قيم ';
         }
         return $appointment->map(function ($item) {
-            return new AppointmentResource($item, 'HomeCare');
+            return new AppointmentResource($item, 'HomeCare' ,false);
+        });
+
+    }
+
+    public function  all_app_clinic()
+    {
+        $appointment =Appointment::where('patient_id',auth()->user()->patient->id)
+            ->with('appointment_doctor.doctor_user','sesstions' )
+            ->get()->each(function ($appointment) {
+                $location_id=$appointment->appointment_doctor->doctor_user->active_work_location->locationable_id;
+                $competence_name=Competence::where('id',$location_id)->value('name_'.$this->locale);
+                $appointment->department=$competence_name;
+
+                $appointment->date =$appointment->appointment_doctor_session->session_doctor->work_employee_Day->history;
+                $appointment->time =$appointment->appointment_doctor_session->from;
+                $appointment->type_serv ='Clinic';
+        });
+
+        if($appointment->isEmpty()){
+            return 'ما في قيم';
+        }
+
+        return $appointment->map(function ($item) {
+            return new AppointmentResource($item, 'Clinic' ,true);
+        });
+
+        }
+
+    public function all_app_homeCare()
+    {
+        $appointment =AppointmentHomeCare::where('patient_id',auth()->user()->patient->id)
+            ->with('appointment_home_session_nurse.nurse','appointment_home_session_nurse.session_day')
+            ->get()
+            ->each(function ($q){
+                $q->type_serv ='HomeCare';
+            });
+        if($appointment->isEmpty()){
+            return ' ما في قيم';
+        }
+
+        return $appointment->map(function ($item) {
+            return new AppointmentResource($item, 'HomeCare' ,true);
         });
 
     }
 
 
+    public function my_points()
+    {
+
+        $sum=0;
+        $sum_re=0;
+
+        $all_poitns=UserPoint::where('patient_id',auth()->user()->patient->id)->with('point_point')->get()->each(function ($q) use(&$sum){
+            $sum+=$q->point_number;
+        });
+        //$all_poitns->sum_points=$sum;
 
 
+        $all_re_points=UserReplacement::where('patient_id',auth()->user()->patient->id)->with('user_rep_appointment','user_rep_replacement')->get()->each(function ($q) use(&$sum_re){
+            $sum_re+=$q->replace_point_num;
+        });
+
+        $dto=new PointsDTO(sum_points: $sum,sum_point_replaced: $sum_re,points: $all_poitns,points_replaced: $all_re_points);
+
+        return new PointsResource($dto);
+
+
+    }
+
+    public function evaluction($request)
+    {
+        $patient = auth()->user()->patient->id;
+
+        $evalution = Evaluction::where(['patient_id' => $patient, 'doctor_id' => $request->doctor_id])->first();
+        if (!$evalution) {
+             Evaluction::create([
+                'doctor_id' => $request->doctor_id,
+                'patient_id' => $patient,
+                'stars_number' => $request->number,
+            ]);
+
+        }else{
+            $evalution->update(['stars_number'=>$request->number]);
+        }
+
+        $eva = Evaluction::where('doctor_id', $request->doctor_id)->get();
+        $sum_evalution = $eva->sum('stars_number');
+        $count = $eva->whereNotNull('id')->count();
+        $des=$sum_evalution / $count;
+        $intPart =floor($des);
+        $decimalPart =$des-$intPart;
+        $doctor=Doctor::where('id',$request->doctor_id)->first();
+
+        if ($decimalPart < 0.5) {
+            $final = $intPart;
+        } else {
+            $final = $intPart + 0.5;
+        }
+
+        $doctor->update(['evaluation'=>$final]);
+
+        return [
+            'success'=>true,
+            'message'=>'تم التقييم بنجاح',
+            //'1'=>$sum_evalution,
+            //'2'=>$count,
+            'data'=>$final
+        ];
+
+
+    }
 
 
 

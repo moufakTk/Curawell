@@ -11,6 +11,7 @@ class UserReplacement extends Model
     protected $fillable = [
         'patient_id',
         'replacement_id',
+        "appointment_id",
         'replacement_time',
         'replace_point_num',
 
@@ -35,4 +36,11 @@ class UserReplacement extends Model
     {
         return $this->belongsTo(Replacement::class, 'replacement_id');
     }
+
+
+    public function user_rep_appointment()
+    {
+        return $this->belongsTo(Appointment::class, 'appointment_id');
+    }
+
 }

@@ -35,6 +35,10 @@ class Appointment extends Model
      * who has my PK
     */
 
+    public function user_rep()
+    {
+        return $this->hasOne(UserReplacement::class , 'appointment_id');
+    }
 
     /*
      * my FK belongs to
@@ -74,6 +78,8 @@ class Appointment extends Model
     {
         return $this->morphMany(UserPoint::class , 'pointable');
     }
+
+
 
 
 }

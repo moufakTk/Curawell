@@ -40,7 +40,7 @@ class DoctorSeeder extends Seeder
             //$service=Service::first();
            $examin=Doctor_examin::factory()->create(['doctor_id' => $doctor->id]);
            if($examin->is_discounted){
-               Discount::factory()->create(['service_id'=>1,'discountable_type' => Doctor::class,'discountable_id' => $doctor->id ,'discount_rate'=>$examin->discount_rate]);
+               Discount::factory()->create(['service_id'=>1,'discountable_type' => Doctor_examin::class,'discountable_id' => $examin->id ,'discount_rate'=>$examin->discount_rate]);
            }
 
         });

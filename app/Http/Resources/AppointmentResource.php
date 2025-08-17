@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\Appointments\appointment\AppointmentHomeCareStatus;
+use App\Enums\Appointments\appointment\AppointmentStatus;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,11 +18,13 @@ class AppointmentResource extends JsonResource
 
     protected $locale;
     protected $case;
-    public function __construct($resource ,$case)
+    protected $rel;
+    public function __construct($resource ,$case ,$rel)
     {
         parent::__construct($resource);
         $this->locale=app()->getLocale();
         $this->case=$case;
+        $this->rel=$rel;
     }
 
 
@@ -29,38 +33,75 @@ class AppointmentResource extends JsonResource
 
         return match ($this->case) {
 
-            'HomeCare'=>$this->appointment_homeCare(),
+            'HomeCare'=>$this->appointment_homeCare($this->rel),
 
-            'Clinic'=>$this->appointment_clinic(),
+
+            'Clinic'=> $this->appointment_clinic($this->rel),
+
+
+
 
         };
 
     }
 
 
-    public function appointment_clinic():array
+    public function appointment_clinic($rel):array
     {
-        return [
+
+        $return=[
             'date'=>$this->date,
             'time'=>$this->time,
             'type'=>$this->type_serv,
             'department'=>$this->department,
             'status'=>$this->status,
+            'mode'=>$this->appointment_type,
             'doctor'=>$this->appointment_doctor->doctor_user->getFullNameAttribute(),
         ];
+
+        if($rel && $this->status ==AppointmentStatus::Don ){
+
+            $return =array_merge($return,[
+                'info session' =>$this->sesstions->map(function ($session) {
+                    return [
+                        'session_name'=>$session->session_name,
+                        'diagnosis'=>$session->diagnosis,
+                        'symptoms'=>$session->symptoms,
+                        'medicines'=>$session->medicines,
+                        ];
+                })
+            ]);
+        }
+
+        return $return ;
     }
 
-    public function appointment_homeCare():array
+    public function appointment_homeCare($rel):array
     {
-        return [
+
+        $return =[
             "date"=>$this->appointment_home_session_nurse->session_day->history,
             'time'=>$this->appointment_home_session_nurse->time_in->format('H:i:s'),
             'type'=>$this->type_serv,
             'department'=>$this->type,
             'status'=>$this->status,
+            'mode'=>$this->style,
             'nurse'=>$this->appointment_home_session_nurse->nurse->getFullNameAttribute(),
 
         ];
+
+        if($rel && $this->status == AppointmentHomeCareStatus::Completed){
+            $return =array_merge($return,[
+                'info session'=>[
+                    'your_phone_number'=>$this->phone_number,
+                    'notes'=>$this->notes,
+                    'price'=>$this->price,
+                    'diagnoses'=>$this->explain
+                ]
+            ]);
+        }
+
+        return $return ;
     }
 
 }

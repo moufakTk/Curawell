@@ -23,6 +23,7 @@ class AppointmentRequest extends FormRequest
     {
         return [
             //
+            'mode'=>'required|string|in:Electronically,FaceToFace,Point',
             'doctor_id'=>'required|exists:doctors,id',
             'doctor_session_id'=>'required|exists:doctor_sessions,id',
             'phone'=>'required',

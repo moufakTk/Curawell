@@ -66,7 +66,7 @@ class HomeCareController extends Controller
             'period_id'=>'required|exists:period_home_cares,id',
             'location'=>'required|string',
             'phone'=>'required|string',
-            'service_type'=>'required|string|in:CheckOut,Physical,Sample',
+            'service_type'=>'required|string|in:General Medical Checkup,Physical Therapy,Sample Collection',
             'gender'=>'required|string|in:male,female',
             'date'=>'required|date_format:Y-m-d',
             'note'=>'nullable|string'

@@ -107,8 +107,12 @@ class CenterInfoController extends Controller
 
     }
 
-    public function getClinics()          //ايضا لصفحة أقسام العيادات
+    public function getClinics(Request $request)          //ايضا لصفحة أقسام العيادات
     {
+        $request->validate([
+            'homeCare'=>'nullable|string',
+        ]);
+
         $section=Section::where('section_type',sectionType::Clinics)->value('id');
         if($section==null){
             return response()->json([
@@ -131,10 +135,22 @@ class CenterInfoController extends Controller
                 'data'=>[]
             ]);
         }
+
+        if (!is_null($request->input('homeCare'))) {
+            return response()->json([
+                'success' => true,
+                'message'=>'عيادات وخدمة منزلية',
+                'data'=>[
+                    'clinics'=>$services->select('id','name_'.$this->locale),
+                    'homeCare_id'=>Section::where('section_type',sectionType::HomeCare)->value('id'),
+                ]
+            ]);
+        }
         return response()->json([
             'success' => true,
             'message'=>__('messages.Clinics_exist'),
-            'data'=>$services
+            'data'=>$services,
+
         ]);
     }
 

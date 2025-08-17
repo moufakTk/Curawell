@@ -19,6 +19,8 @@ return new class extends Migration
             $table->text('description_en');
             $table->text('description_ar');
             $table->morphs('discountable');
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
             $table->decimal('discount_rate');
             $table->boolean('active')->default(true);
             $table->timestamps();

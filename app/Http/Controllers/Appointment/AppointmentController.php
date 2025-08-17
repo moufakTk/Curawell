@@ -42,6 +42,7 @@ class AppointmentController extends Controller
 
         $request->validate([
             'competence_id'=>'nullable|exists:competences,id',
+            'service_id'=>'nullable|exists:services,id',
             'date'=>'required|date',
         ]);
         $re = $this->appointmentService->competenceDoctors($request);
@@ -94,7 +95,6 @@ class AppointmentController extends Controller
     public function reserveAppointment(AppointmentRequest $request)
     {
         return response()->json($this->appointmentService->reserveAppointment($request));
-
     }
 
 

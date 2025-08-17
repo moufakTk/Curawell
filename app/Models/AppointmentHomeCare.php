@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Appointments\appointment\AppointmentHomeCareStatus;
+use App\Enums\Appointments\appointment\AppointmentHomeCareStyle;
 use App\Enums\Appointments\AppointmentHomeCareType;
 use App\Enums\Gender;
 use Illuminate\Database\Eloquent\Builder;
@@ -32,6 +33,7 @@ class AppointmentHomeCare extends Model
     protected $casts =[
         'type'=>AppointmentHomeCareType::class,
         'status'=>AppointmentHomeCareStatus::class,
+        'style'=>AppointmentHomeCareStyle::class,
         'gender'=>Gender::class,
     ];
 

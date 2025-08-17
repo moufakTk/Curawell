@@ -18,6 +18,8 @@ class Discount extends Model
         'description_en',
         'description_ar',
         'discountable',
+        'start_date',
+        'end_date',
         'discount_rate',
         'active',
     ];

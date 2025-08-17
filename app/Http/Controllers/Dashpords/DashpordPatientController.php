@@ -58,4 +58,47 @@ class DashpordPatientController extends Controller
 
     }
 
+    public function allAppointments()
+    {
+        $re1 =$this->dashpordPatientService->all_app_clinic();
+        $re2 =$this->dashpordPatientService->all_app_homeCare();
+
+        return response()->json([
+            'success' => true,
+            'message'=>'success',
+            'appointments' =>[
+                'clinic'=>$re1,
+                'homeCare'=>$re2,
+            ]
+        ]);
+
+    }
+
+    public function my_points()
+    {
+        return response()->json($this->dashpordPatientService->my_points());
+    }
+
+
+    public function evaluction(Request $request)
+    {
+
+        $request->validate([
+            'doctor_id' => 'required|exists:doctors,id',
+            'number'=>'required|integer|between:1,5',
+        ]);
+
+        $re=$this->dashpordPatientService->evaluction($request);
+
+        return response()->json($re);
+
+
+
+
+    }
+
+
+
+
+
 }
