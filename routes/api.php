@@ -45,15 +45,35 @@ Route::post('create/user',[\App\Http\Controllers\Admin\CRUDController::class, 'c
 
 
 Route::middleware('auth:sanctum')->group(function () {
+
+                                       //  Patient
     Route::post("/reserve_appointment" ,[\App\Http\Controllers\Appointment\AppointmentController::class,'reserveAppointment']);
     Route::post('/reserve_appointment_HC' ,[\App\Http\Controllers\Appointment\HomeCareController::class,'reserveAppointmentHomeCare']);
     Route::get('profile',[\App\Http\Controllers\Dashpords\ForAllController::class,'profile']);
     Route::get("/myDoctors" ,[\App\Http\Controllers\Dashpords\DashpordPatientController::class,'myDoctors']);
     Route::get('/sessions',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,'sessions']);
-    Route::get("/appointments",[\App\Http\Controllers\Dashpords\DashpordPatientController::class,'appointments']);
-    Route::get('/all_appointments',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,'allAppointments']);
+    Route::get("/appointments",[\App\Http\Controllers\Dashpords\DashpordPatientController::class,'appointments'])->name('patient_appointments');
+    Route::get('/all_appointments',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,'allAppointments'])->name('patient_appointments');
     Route::get('/get_points',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,'my_points']);
     Route::post('/evaluction',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,'evaluction']);
+    Route::post('/updateProfilePatient',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,'updateProfile']);
+    Route::post('/addComment',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,'addComment']);
+    Route::post('/updateComment',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,'updateComment']);
+    Route::post('/deleteComment',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,'deleteComment']);
+    Route::post('/complaint',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,'complaint']);
+
+
+
+                                        // Doctor
+
+    Route::get('/treatmentDoctor',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'treatments']);
+    Route::post('/addTreatmentDoctor',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'addTreatmentTOSession']);
+    Route::post("/addEdit",[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'addEdit']);
+    Route::post('/updateEdit',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'updateEdit']);
+    Route::post('/deleteEdit',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'deleteEdit']);
+
+    Route::get('/reserved_sessions',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'reserved_sessions'])->name('doctor_appointments');
+    Route::get('/num_patients',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'num_all_patients']);
 
 });
                                     /* home page & landing page  */
@@ -87,6 +107,12 @@ Route::post('/period_homeCare',[\App\Http\Controllers\Appointment\HomeCareContro
                                         /* Dashboards */
 Route::prefix('/dashboard')->middleware(['auth:sanctum',SetLocaleMiddleware::class])->group( function () {
 
+    Route::get('patients/{patient}/skiagraph_orders',[DashpordReceptionController::class,'showPatientSkiagraphOrders']);
+    Route::get('patients/skiagraph_orders', [DashpordReceptionController::class,'showPatientSkiagraphOrders']);
+
+    Route::get('/patient/{patient}/analyses',[DashpordLabDoctorController::class,'patientAnalyses']);
+    Route::get('/patient/analyses',[DashpordLabDoctorController::class,'patientAnalyses']);
+
                             /* admin dashboard */
     Route::prefix('/admin')->group( function () {
     });
@@ -116,6 +142,7 @@ Route::prefix('/dashboard')->middleware(['auth:sanctum',SetLocaleMiddleware::cla
              Route::get('/completed-Appointments','completedAppointments')->name('nurse.completed.appointments');
              Route::get('/appointments-count','appointmentsCount')->name('nurse.completed.appointments');
              Route::get('/patients','patients')->name('nurse.patients');
+
 
     });
 
@@ -153,7 +180,7 @@ Route::prefix('/dashboard')->middleware(['auth:sanctum',SetLocaleMiddleware::cla
         Route::get('patients/skiagraph_orders/count','countSkiagraphOrders');
         Route::get('patients/skiagraph_orders','showSkiagraphOrders');
         // patients CRUD
-        Route::get('patients/{patient}/skiagraph_orders','showPatientSkiagraphOrders');
+       // Route::get('patients/{patient?}/skiagraph_orders','showPatientSkiagraphOrders');
         Route::get('patients/{patient}/skiagraph_orders/{order}','showPatientSkiagraphOrder');
         Route::post('patients/{patient}/skiagraph_orders/create','createPatientSkiagraphOrder');
         Route::post('patients/{patient}/skiagraph_orders/{order}/update','updatePatientSkiagraphOrder');

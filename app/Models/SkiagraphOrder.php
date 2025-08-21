@@ -13,6 +13,7 @@ class SkiagraphOrder extends Model
 
 
     protected $fillable = [
+        'bill_num',
         'patient_id',
         'doctor_id',
         'small_service_id',

@@ -14,10 +14,13 @@ class Comment extends Model
         'patient_id',
         'commentable_type',
         'commentable_id',
-        'comment_en',
-        'comment_ar',
+        'comment',
         'status',
+        //'comment_ar',
+
     ];
+
+
 
     /*
      * who has my PK

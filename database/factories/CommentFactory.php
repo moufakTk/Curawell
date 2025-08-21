@@ -25,8 +25,8 @@ class CommentFactory extends Factory
         return [
 
             //
-            'comment_ar'=>'أحلا أبو محمد كروكودايلو 100 وردة -_- ',
-            'comment_en'=>$fakerEn->text(),
+           // 'comment_ar'=>'أحلا أبو محمد كروكودايلو 100 وردة -_- ',
+            'comment'=>$fakerEn->text(),
             'status'=>fake()->boolean(),
 
         ];

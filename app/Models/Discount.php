@@ -12,12 +12,13 @@ class Discount extends Model
 
 
     protected $fillable = [
-        'service_id',
+        //'service_id',
         'name_en',
         'name_ar',
         'description_en',
         'description_ar',
-        'discountable',
+       // 'discountable_type',
+       // 'discountable_id',
         'start_date',
         'end_date',
         'discount_rate',
@@ -35,6 +36,16 @@ class Discount extends Model
     public function user_discounts()
     {
         return $this->hasMany(UserDiscount::class ,'discount_id');
+    }
+
+    public function discountDivisions()
+    {
+        return $this->hasMany(DiscountDivision::class ,'discount_id');
+    }
+
+    public function discountDoctors()
+    {
+        return $this->hasMany(DiscountDoctor::class ,'discount_id');
     }
 
 

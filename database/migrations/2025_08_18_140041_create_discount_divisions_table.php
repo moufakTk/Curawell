@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comments', function (Blueprint $table) {
+        Schema::create('discount_divisions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('patient_id')->constrained('patients')->cascadeOnDelete();
-            $table->nullableMorphs('commentable');
-            $table->text('comment')->nullable();
-           // $table->text('comment_ar')->nullable();
-            $table->boolean('status')->default(false);
+            $table->foreignId('discount_id')->constrained('discounts');
+            $table->foreignId('division_id')->constrained('divisions');
+            $table->decimal('discount_amount', 8, 2)->default(0);
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comments');
+        Schema::dropIfExists('discount_divisions');
     }
 };

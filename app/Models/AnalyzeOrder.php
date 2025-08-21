@@ -12,6 +12,7 @@ class AnalyzeOrder extends Model
     //
 
     protected $fillable = [
+        'bill_num',
         'patient_id',
         'doctor_id',
         'name',

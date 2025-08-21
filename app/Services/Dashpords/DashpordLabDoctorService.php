@@ -15,6 +15,31 @@ use function Laravel\Prompts\select;
 
 class DashpordLabDoctorService
 {
+
+
+        public function patientAnalyses($patient)
+        {
+
+            $analyses = AnalyzeOrder::where("patient_id",$patient->id,)
+                ->with([
+                    'analyzed_order_patient.patient_user',
+                    'AnalyzeRelated.analyzesRelated_analyze',
+                    'samplesRelated.SamplesRelated_sample',
+                    'reports'
+                ])->get();
+            $analyses =AnalyzeOrderResource::collection($analyses);
+            $analyses=$analyses->groupBy('status');
+            return [
+                'data'=>$analyses,
+                'message'=>('messages.reception.analyze_orders.list'),
+            ];
+
+        }
+
+
+
+
+
 public function pendingAnalyses(){
 
     $analyses = AnalyzeOrder::where('status', AnalyzeOrderStatus::Pending)

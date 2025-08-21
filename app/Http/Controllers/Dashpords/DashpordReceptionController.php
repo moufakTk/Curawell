@@ -135,6 +135,9 @@ class DashpordReceptionController extends Controller
 
     // -------------------- analyses --------------------
 
+
+
+
     public function showPatientsAnalyses()
     {
         try {
@@ -228,8 +231,25 @@ class DashpordReceptionController extends Controller
             return ApiResponse::error([], $exception->getMessage(), $exception->getCode() == 0 | null ? 500 : $exception->getCode());
         }
     }
-     public function showPatientSkiagraphOrders(Patient $patient){
+     public function showPatientSkiagraphOrders(Patient $patient=null){
          try {
+
+             $user = auth()->user();
+
+             if ($patient) {
+                 if (!$user->hasRole('Reception')) {
+                     throw new \Exception(__('messages.auth.unauthorized'), 403);
+                 }
+             }
+
+             else {
+
+                 if (!$user->hasRole('Patient') ) {
+                     throw new \Exception(__('messages.auth.unauthorized'), 403);
+                 }
+             }
+
+
              $data = $this->dashpordReceptionService->showPatientSkiagraphOrders($patient);
              return ApiResponse::success($data['data'], $data['message'], 200);
 

@@ -53,7 +53,7 @@ class Waiting extends Model
         return $this->morphMany(SessionCenter::class , 'sessionable');
     }
 
-    public function appointment_balls()
+    public function appointment_bills()
     {
         return $this->morphMany(AppointmentBill::class , 'appointable');
     }

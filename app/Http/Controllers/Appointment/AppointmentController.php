@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Appointment;
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Appointment\AppointmentRequest;
 use App\Http\Resources\CompetencesResource;
@@ -94,7 +95,26 @@ class AppointmentController extends Controller
 
     public function reserveAppointment(AppointmentRequest $request)
     {
+
+        try {
+        $user=auth()->user();
+
+        if($request->mode=='FaceToFace'){
+            if(!$user->hasRole('Secretary'))
+            {
+                throw new \Exception(__('messages.auth.unauthorized'), 403);
+            }
+        }else{
+            if(!$user->hasRole('Patient')){
+                throw new \Exception(__('messages.auth.unauthorized'), 403);
+            }
+        }
+
         return response()->json($this->appointmentService->reserveAppointment($request));
+
+        }catch (\Exception $exception){
+            return ApiResponse::error([],$exception->getMessage(),$exception->getCode() == 0 | null ? 500 : $exception->getCode());
+        }
     }
 
 

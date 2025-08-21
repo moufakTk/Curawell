@@ -19,7 +19,7 @@ class AppointmentResource extends JsonResource
     protected $locale;
     protected $case;
     protected $rel;
-    public function __construct($resource ,$case ,$rel)
+    public function __construct($resource ,$case=null ,$rel=null)
     {
         parent::__construct($resource);
         $this->locale=app()->getLocale();
@@ -31,17 +31,22 @@ class AppointmentResource extends JsonResource
     public function toArray(Request $request): array
     {
 
-        return match ($this->case) {
+        return match ($request->route()->getName()) {
 
-            'HomeCare'=>$this->appointment_homeCare($this->rel),
+            'patient_appointments'=>match ($this->case) {
+
+                'HomeCare'=>$this->appointment_homeCare($this->rel),
 
 
-            'Clinic'=> $this->appointment_clinic($this->rel),
+                'Clinic'=> $this->appointment_clinic($this->rel),
 
+            },
 
+            'doctor_appointments'=>$this->appointment_for_doctor(),
 
 
         };
+
 
     }
 
@@ -102,6 +107,26 @@ class AppointmentResource extends JsonResource
         }
 
         return $return ;
+    }
+
+
+
+    public function appointment_for_doctor()
+    {
+
+        return [
+
+            'time'=>$this->from,
+            'phone_number'=>optional($this->appointments)->phone_number,
+            'status'=>optional($this->appointments)->status,
+            'type'=>optional($this->appointments)->appointment_type,
+            'patient_num'=>optional(optional($this->appointments)->appointment_patient)->patient_num,
+            'patient name'=> optional(optional(optional($this->appointments)->appointment_patient)->patient_user)->getFullNameAttribute(),
+            'patient_photo'=>'',
+
+
+        ];
+
     }
 
 }

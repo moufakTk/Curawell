@@ -30,6 +30,11 @@ class Division extends Model
         return $this->hasMany(Treatment::class , 'division_id');
     }
 
+    public function discountDivisions()
+    {
+        return $this->hasMany(DiscountDivision::class ,'division_id');
+    }
+
 
     /*
      * my FK belongs to

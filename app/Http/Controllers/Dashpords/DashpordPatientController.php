@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashpords;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateProfilePatientRequest;
 use App\Http\Resources\SessionsResource;
 use App\Services\Dashpords\DashpordPatientService;
 use Illuminate\Http\Request;
@@ -79,7 +80,6 @@ class DashpordPatientController extends Controller
         return response()->json($this->dashpordPatientService->my_points());
     }
 
-
     public function evaluction(Request $request)
     {
 
@@ -96,6 +96,121 @@ class DashpordPatientController extends Controller
 
 
     }
+
+    public function updateProfile(UpdateProfilePatientRequest $request)
+    {
+
+    $re=$this->dashpordPatientService->updateProfile($request);
+    return response()->json($re);
+
+    }
+
+    public function addComment(Request $request)
+    {
+        $request->validate([
+            'comment_type' => 'required|in:HomeCare,Doctor,Center',
+            'id' => 'required_if:comment_type,Doctor',
+            'comment'=>'required|string',
+
+        ]);
+
+        $re=$this->dashpordPatientService->addComment($request);
+        return response()->json([
+            'success' => true,
+            'message'=>"تم إضافة التعليق بنجاح",
+            'data'=>$re
+        ]);
+
+    }
+
+    public function updateComment(Request $request)
+    {
+
+        $request->validate([
+            'comment_id'=>'required|exists:comments,id',
+            'comment'=>'required|string',
+        ]);
+
+        $re=$this->dashpordPatientService->updateComment($request);
+
+        if(is_null($re)){
+            return response()->json([
+                'success' => false,
+                'message'=>'هذا التعليق غير موجود عند هذا المستخدم',
+                'data'=>[]
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message'=>'تم تعدبل التعليق بنجاح',
+            'data'=>$re
+        ]);
+
+    }
+
+    public function deleteComment(Request $request)
+    {
+
+        $request->validate([
+            'comment_id'=>'required|exists:comments,id',
+        ]);
+
+        $re =$this->dashpordPatientService->deleteComment($request);
+
+        if(is_null($re)){
+            return response()->json([
+                'success' => false,
+                'message'=>'هذا التعليق غير موجود عند هذا المستخدم',
+                'data'=>[]
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message'=>'تم حذف العنصر بنجاح',
+            'data'=>$re
+        ]);
+
+    }
+
+    public function complaint(Request $request)
+    {
+
+        $request->validate([
+            'complaint'=>'required|string',
+            'type'  => 'required|in:email,phone',
+            'value' => [
+                'required',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($request->type === 'email' && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
+                        $fail(__('validation.email', ['attribute' => $attribute]));
+                    }
+                    if ($request->type === 'phone' && !preg_match('/^[0-9]+$/', $value)) {
+                        $fail(__('validation.numeric', ['attribute' => $attribute]));
+                    }
+                }
+            ],
+
+        ]);
+
+        $re=$this->dashpordPatientService->complaint($request);
+        return response()->json([
+            'success' => true,
+            'message'=>'تم ارسال الشكوى بنجاح',
+            'data'=>$re
+        ]);
+
+
+    }
+
+
+
+//    public function ()
+//    {
+//
+//    }
+
 
 
 

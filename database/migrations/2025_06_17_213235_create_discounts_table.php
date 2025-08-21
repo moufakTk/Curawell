@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('discounts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('service_id')->constrained('services')->cascadeOnDelete();
+            //$table->foreignId('service_id')->constrained('services')->cascadeOnDelete();
             $table->string('name_en');
             $table->string('name_ar');
             $table->text('description_en');
             $table->text('description_ar');
-            $table->morphs('discountable');
+            //$table->morphs('discountable');
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->decimal('discount_rate');

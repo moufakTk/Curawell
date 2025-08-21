@@ -127,6 +127,7 @@ return [
                 'created' => 'order created successfully.',
                 'updated' => 'order updated successfully.',
                 'deleted' => 'order deleted successfully.',
+                'notPatient'=>'The current user is not a patient. This action cannot be performed.'
             ]
         ]
     ],
@@ -149,7 +150,9 @@ return [
     'reception.analyses'=>'all analyses have been returned.',
 
 
-
+    'auth' => [
+        'unauthorized' => 'You are not authorized to perform this action.',
+    ],
 
 
 

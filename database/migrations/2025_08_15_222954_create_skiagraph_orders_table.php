@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('skiagraph_orders', function (Blueprint $table) {
             $table->id();
+            $table->string('bill_num')->default('');
             $table->foreignId('patient_id')->constrained('patients')->cascadeOnDelete();
             $table->foreignId('small_service_id')->constrained('small_services')->cascadeOnDelete();
             $table->string('doctor_name');

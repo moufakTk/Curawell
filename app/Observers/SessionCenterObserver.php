@@ -17,13 +17,11 @@ class SessionCenterObserver
     {
         //
 
-
         $doctor_id =$sessionCenter->sessionable->doctor_id;
         $de=Doctor_examin::where('doctor_id', $doctor_id)->first();
         $sessionCenter->doctor_examination=$de->price;
         $sessionCenter->doctor_examination_discount=$de->discount_rate;
         $sessionCenter->save();
-
 
 
     }

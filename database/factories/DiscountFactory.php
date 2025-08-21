@@ -22,7 +22,7 @@ class DiscountFactory extends Factory
         return [
             //
 
-            'service_id'=> Arr::random($service),
+            //'service_id'=> Arr::random($service),
             'name_en' => fake()->name(),
             'name_ar' => 'لاجل عيون اب زهير خصم خصوووم',
             'description_en'=>fake()->text(),

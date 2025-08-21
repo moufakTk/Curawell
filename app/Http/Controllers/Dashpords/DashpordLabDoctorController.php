@@ -6,6 +6,7 @@ use App\Enums\Orders\AnalyzeOrderStatus;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\AnalyzeOrder;
+use App\Models\Patient;
 use App\Services\Dashpords\DashpordLabDoctorService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -20,6 +21,32 @@ class DashpordLabDoctorController extends Controller
         $this->dashpordLabDoctorService = $dashpordLabDoctorService;
     }
 
+
+
+    public function patientAnalyses(Patient $patient=null)
+    {
+        try {
+            if (!$patient) {
+                $user = auth()->user(); // يلي معه التوكن الحالي
+                if (!$user->hasRole('Patient')) {
+                    throw new \Exception('You must be a patient to access your own analyses', 403);
+                }
+                $patient = $user->patient; // العلاقة One-to-One بين user و patient
+            } else {
+                // إذا في باراميتر → لازم يكون المستخدم الحالي Doctor_lab
+                if (!auth()->user()->hasRole('Doctor_lab')) {
+                    throw new \Exception('Only lab doctors can access patient analyses', 403);
+                }
+            }
+
+            $data = $this->dashpordLabDoctorService->patientAnalyses($patient);
+            return ApiResponse::success($data['data'], $data['message'], 200);
+
+        } catch (\Exception $exception) {
+            return ApiResponse::error([], $exception->getMessage(), $exception->getCode() == 0 | 1 ? 500 : $exception->getCode());
+        }
+
+    }
     public function pendingAnalyses()
     {
         try {

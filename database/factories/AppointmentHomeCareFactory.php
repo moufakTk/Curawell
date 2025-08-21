@@ -21,12 +21,12 @@ class AppointmentHomeCareFactory extends Factory
             ->orderBy('id')
             ->first();
 
-        if ($session) {
-            // تعديل حالتها إلى Unavailable (أو Reserved مثلاً)
-            $session->update([
-                'status' => SessionNurseStatus::Reserved,
-            ]);
-        }
+//        if ($session) {
+//            // تعديل حالتها إلى Unavailable (أو Reserved مثلاً)
+//            $session->update([
+//                'status' => SessionNurseStatus::Reserved,
+//            ]);
+//        }
 
         return [
             'patient_id'       => Patient::inRandomOrder()->first()?->id,

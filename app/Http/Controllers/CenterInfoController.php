@@ -229,6 +229,8 @@ class CenterInfoController extends Controller
         ]);
     }                       //لكافة مصاد التعليقات
 
+
+
     public function articles()
     {
 
@@ -261,7 +263,34 @@ class CenterInfoController extends Controller
                                      'name_'.$this->locale,
                                      'description_'.$this->locale,
                                      'discount_rate','active')
-                            ->get();
+                            ->with('discountDivisions','discountDoctors')
+                            ->get()
+                            ->map(function($discount){
+                                return[
+                                    'name_'.$this->locale=>$discount->{"name_".$this->locale},
+                                    'description_'.$this->locale=>$discount->{"description_".$this->locale},
+                                    'discount_rate'=>$discount->discount_rate,
+                                    'start_date'=>$discount->start_date,
+                                    'end_date'=>$discount->end_date,
+                                    'active'=>$discount->active,
+                                    'Divisions'=>$discount->discountDivisions->map(function($division){
+                                        return[
+                                            'id'=>$division->discountDivision_division->id,
+                                            'name'=> $division->discountDivision_division->division_small_service->{"name_".$this->locale},
+                                            'discount_amount'=>$division->discount_amount
+                                        ];
+                                    }),
+                                   'Doctors'=>$discount->discountDoctors->map(function($doctor){
+                                       return[
+                                           'id'=>optional($doctor->discountDoctor_doctor)->id,
+                                           'name'=>optional(optional($doctor->discountDoctor_doctor)->doctor_user)->getFullNameAttribute(),
+                                       ];
+                                   })
+
+
+
+                                ];
+                            });
         if($discounts->isNotEmpty()){
             return response()->json([
                 'success' => true,

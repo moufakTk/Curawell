@@ -13,8 +13,8 @@ class Bill extends Model
         'doctor_id',
         'patient_id',
         'private_num',
-        'total_ball',
-        'paid_of_ball',
+        'total_bill',
+        'paid_of_bill',
         'status',
     ];
 
@@ -39,6 +39,10 @@ class Bill extends Model
         return $this->hasMany(Restore::class , 'bill_id');
     }
 
+    public function doctorEdits()
+    {
+        return $this->hasMany(DoctorEdit::class,'bill_id');
+    }
 
     /*
     * my FK belongs to

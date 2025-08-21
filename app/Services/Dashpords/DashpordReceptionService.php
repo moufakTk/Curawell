@@ -386,8 +386,18 @@ class DashpordReceptionService
 
     }
 
-    public function showPatientSkiagraphOrders($patient)
+    public function showPatientSkiagraphOrders($patient =null)
     {
+
+        if (is_null($patient)) {
+            $user = auth()->user();
+
+            if (!$user || !$user->patient) {
+                throw new \Exception(__('messages.reception.radiology.patients.notPatient'), 403);
+            }
+
+            $patient = $user->patient;
+        }
 
         $orders = $patient->skiagraph_Orders()->get();
         if ($orders->isEmpty()) {
@@ -401,6 +411,8 @@ class DashpordReceptionService
                 'price' => $item->price,
                 'status' => $item->status,
                 'radiology_image_name' => $item->skaigraph_small_service->{'name_' . app()->getLocale()},
+                'date'=>$item->created_at->format('Y-m-d'),
+                'bill_number'=>$item->bill_num,
                 'reports' => $item->reports->map(function ($item) {
                     return [
                         'id' => $item->id,
@@ -554,7 +566,7 @@ class DashpordReceptionService
             'message' => __('messages.reception.radiology.patients.deleted'),
         ];
     }
-    
+
     public function storeeReportFile($file, $orderId)
     {
         // اسم أساس نظيف

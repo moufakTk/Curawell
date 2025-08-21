@@ -9,7 +9,7 @@ class Treatment extends Model
     //
 
     protected $fillable = [
-        'session_id',
+        'session_center_id',
         'division_id',
         'small_service_price',
         'small_service_num',

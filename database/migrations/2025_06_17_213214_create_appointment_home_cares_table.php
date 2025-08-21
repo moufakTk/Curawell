@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('appointment_home_cares', function (Blueprint $table) {
             $table->id();
+            $table->string('bill_num')->default('');
             $table->foreignId('patient_id')->constrained('patients')->cascadeOnDelete();
             $table->foreignId('nurse_session_id')->constrained('nurse_sessions')->cascadeOnDelete();
             $table->enum('type',['General Medical Checkup','Physical Therapy','Sample Collection']);

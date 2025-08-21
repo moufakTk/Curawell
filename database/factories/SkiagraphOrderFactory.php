@@ -6,6 +6,7 @@ use App\Enums\Orders\AnalyzeOrderStatus;
 use App\Enums\Orders\SkiagraphOrderStatus;
 use App\Enums\Services\SectionType;
 use App\Models\Section;
+use App\Models\SkiagraphOrder;
 use App\Models\SmallService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -19,6 +20,9 @@ class SkiagraphOrderFactory extends Factory
      *
      * @return array<string, mixed>
      */
+
+
+
     public function definition(): array
     {
         $section=  Section::where('section_type',SectionType::Radiography)->first();

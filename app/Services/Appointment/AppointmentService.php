@@ -21,6 +21,7 @@ use App\Models\Doctor;
 use App\Models\Doctor_examin;
 use App\Models\DoctorSession;
 use App\Models\OrderTaxi;
+use App\Models\Patient;
 use App\Models\Point;
 use App\Models\Replacement;
 use App\Models\Service;
@@ -166,7 +167,15 @@ class AppointmentService
     {
         $registered = DB::transaction(function () use ($request) {
 
-            $user=User::where('id',auth()->user()->id)->with('patient')->first();
+
+            if($request->mode=='FaceToFace'){
+                $patient=Patient::where('patient_num' ,$request->number_patient)->first();
+                $user = $patient->patient_user;
+            }else{
+                $user=User::where('id',auth()->user()->id)->with('patient')->first();
+            }
+
+
 
             $doctor=Doctor::where('id', $request->doctor_id)->with('doctor_user','doctor_examination')->first();
             $department=$doctor->doctor_user->active_work_location->locationable->competence_services->name_en;
@@ -224,7 +233,7 @@ class AppointmentService
                 'appointment_type' => $request->mode,
             ]);
 
-            DoctorSession::where('id', $request->doctor_session_id)->update(['status' => SessionDoctorStatus::UnAvailable]);
+            DoctorSession::where('id', $request->doctor_session_id)->update(['status' => SessionDoctorStatus::Reserved]);
 
             if($request->mode =="Electronically")
             {
@@ -269,6 +278,7 @@ class AppointmentService
             }
 
 
+
             $assigned=Assigned::where([
                 'assignedable_id' => $doctor->id,
                 'assignedable_type' => Doctor::class,
@@ -296,13 +306,13 @@ class AppointmentService
 
             ]);
 
-            if($request->mode ==='Electronically'){
+            if($request->mode ==='Electronically' ||$request->mode ==='FaceToFace'){
                 $bill=Bill::where([ 'doctor_id'=>$doctor->id,
                     'patient_id'=>$user->patient->id,
                     'status'=>BallStatus::Incomplete
                 ])->first();
                 if($bill){
-                    $appointment->appointment_balls()->create(['bill_id'=>$bill->id]);
+                    $appointment->appointment_bills()->create(['bill_id'=>$bill->id]);
                 }else{
                     $bill=Bill::create([
                         'doctor_id'=>$doctor->id,
@@ -310,7 +320,7 @@ class AppointmentService
                         'status'=>BallStatus::Incomplete,
                     ]);
                     $bill->update(['private_num'=>'#001-'.$bill->id,]);
-                    $appointment->appointment_balls()->create(['bill_id'=>$bill->id]);
+                    $appointment->appointment_bills()->create(['bill_id'=>$bill->id]);
                 }
             }elseif ($request->mode ==='Point') {
 
@@ -330,8 +340,10 @@ class AppointmentService
                     'status'=>BallStatus::Incomplete,
                 ]);
                 $bill->update(['private_num'=>'#001-'.$bill->id,]);
-                $appointment->appointment_balls()->create(['bill_id'=>$bill->id]);
+                $appointment->appointment_bills()->create(['bill_id'=>$bill->id]);
             }
+
+
 
 
 

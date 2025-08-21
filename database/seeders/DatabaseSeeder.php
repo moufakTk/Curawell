@@ -45,7 +45,7 @@ class DatabaseSeeder extends Seeder
             PointSeeder::class,
             AppointmentSeeder::class,
             AppointmentHomeCareSeeder::class,
-            SkiagraphOrder::class,
+            SkiagraphOrdersSeeder::class,
             AnalysesOrdersSeeder::class,
         ]);
 

@@ -27,7 +27,7 @@ class CommentResource extends JsonResource
         return [
 
             'comment_id'=>$this->id,
-            'comment_'.$this->locale =>$this->getLocalized('comment'),
+            'comment' =>$this->comment,
             'status'=>$this->status,
             'patient' => new UserInfoResource(optional(optional($this->comment_patient)->patient_user)),
 

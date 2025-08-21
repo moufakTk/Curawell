@@ -100,7 +100,7 @@ class HomeCareService
                         'locationable_type' => Section::class,
                         'locationable_id' => Section::where('section_type', SectionType::HomeCare)->value('id')
                     ]);
-                })->with(['work_employees'=>function($q)use($request){$q->where('work_day_id',WorkDay::where('history' ,$request->date)->value('id')) ->with('nurse_sessions');}])
+                })->with(['work_employees'=>function($q)use($request){$q->where('work_day_id',WorkDay::where('history' ,$request->date)->value('id'))->with('nurse_sessions');}])
                 ->orderBy('num_patients')
                 ->get();
 
@@ -197,8 +197,8 @@ class HomeCareService
                         'point_number'=>$point->point_number,
                     ]);
                     $user->patient->update(["totalPoints"=>$user->patient->totalPoints + $userPoint->point_number]);
-//                    $nurse_choice=$nurse->select('id','first_name','last_name','gender','phone')->first();
-                    $nurse_choice=$nurse;
+                    $nurse_choice=$nurse->select('id','first_name','last_name','gender','phone')->first();
+                   // $nurse_choice=$nurse;
                     $busy=true;
                     break;
                 }

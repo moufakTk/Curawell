@@ -42,7 +42,7 @@ class PatientSeeder extends Seeder
             Comment::factory()->standalone()->create(['patient_id' => $patient->id]);
             Comment::factory()->create([
                 'patient_id' => $patient->id,
-                'comment_ar'=>'أبو ابراهيم الطير ريتك تملط العير ءءء',
+                //'comment_ar'=>'أبو ابراهيم الطير ريتك تملط العير ءءء',
                 'commentable_type'=>Section::class,
                 'commentable_id'=>Section::where('section_type',SectionType::HomeCare)->value('id'),
                 ]);

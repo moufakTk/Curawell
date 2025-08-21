@@ -5,17 +5,22 @@ namespace App\Services\Dashpords;
 use App\DTO\PointsDTO;
 use App\Enums\Appointments\appointment\AppointmentHomeCareStatus;
 use App\Enums\Appointments\appointment\AppointmentStatus;
+use App\Enums\Services\SectionType;
 use App\Http\Resources\AppointmentResource;
 use App\Http\Resources\PointsResource;
 use App\Models\Appointment;
 use App\Models\AppointmentHomeCare;
 use App\Models\Bill;
+use App\Models\Comment;
 use App\Models\Competence;
+use App\Models\Complaint;
 use App\Models\Doctor;
 use App\Models\Evaluction;
+use App\Models\Section;
 use App\Models\User;
 use App\Models\UserPoint;
 use App\Models\UserReplacement;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 
@@ -218,7 +223,6 @@ class DashpordPatientService
 
     }
 
-
     public function my_points()
     {
 
@@ -284,6 +288,115 @@ class DashpordPatientService
 
 
     }
+
+    public function updateProfile($request)
+    {
+
+        $user=User::where('id',auth()->user()->id)->first();
+        $user->update([
+            'first_name'=>$request->first_name??$user->first_name,
+            'last_name'=>$request->last_name??$user->last_name,
+            'address'=>$request->address??$user->address,
+            'gender'=>$request->gender??$user->gender,
+            'birthday'=>$request->birthday??$user->birthday,
+        ]);
+
+        $m_h=$user->patient->medical_history;
+        $m_h->update([
+            'chronic_diseases'=>$request->chronic_diseases??$m_h->chronic_diseases,
+            'hereditary_diseases'=>$request->hereditary_diseases??$m_h->hereditary_diseases,
+            'new_diseases'=>$request->new_diseases??$m_h->new_diseases,
+            'allergies'=>$request->allergies??$m_h->allergies,
+            'blood_group'=>$request->blood_group??$m_h->blood_group,
+            'weight'=>$request->weight??$m_h->weight,
+            'height'=>$request->height??$m_h->height,
+        ]);
+
+
+        return $user->load('patient.medical_history');
+
+    }
+
+    public function addComment($request)
+    {
+
+        if($request->comment_type =='HomeCare') {
+            $comment=Comment::create([
+                'patient_id'=>auth()->user()->patient->id,
+                'commentable_type'=>Section::class,
+                'commentable_id'=>Section::where('section_type',sectionType::HomeCare)->value('id'),
+                'comment'=>$request->comment
+            ]);
+        }
+        elseif ($request->comment_type=="Center"){
+            $comment=Comment::create([
+                'patient_id'=>auth()->user()->patient->id,
+                'commentable_type'=>null,
+                'commentable_id'=>null,
+                'comment'=>$request->comment
+            ]);
+        }else{
+            $comment=Comment::create([
+                'patient_id'=>auth()->user()->patient->id,
+                'commentable_type'=>Doctor::class,
+                'commentable_id'=>$request->id,
+                'comment'=>$request->comment
+            ]);
+        }
+
+        return $comment;
+
+    }
+
+    public function updateComment($request)
+    {
+
+        $comment =Comment::where(['id'=>$request->comment_id ,'patient_id'=>auth()->user()->patient->id])->first();
+        if(!$comment){
+            return $comment ;
+        }
+
+        $comment->update([
+            'comment'=>$request->comment,
+            'status'=>false
+        ]);
+
+        return $comment;
+    }
+
+    public function deleteComment($request)
+    {
+
+        $comment =Comment::where(['id'=>$request->comment_id ,'patient_id'=>auth()->user()->patient->id])->first();
+        if(!$comment){
+            return $comment ;
+        }
+
+        $comment->delete();
+        return $comment;
+    }
+
+    public function complaint($request)
+    {
+
+       $competence= Complaint::create([
+           'patient_id'=>auth()->user()->patient->id ,
+           'complaint'=>$request->complaint,
+           'styl_reply'=>$request->type,
+           'email'=>$request->type=='email' ? $request->value :null,
+           'phone'=>$request->type=='phone' ? $request->value :null,
+       ]);
+
+       return $competence;
+
+    }
+
+
+
+//    public function ()
+//    {
+//
+//    }
 
 
 

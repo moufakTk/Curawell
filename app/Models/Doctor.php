@@ -84,6 +84,17 @@ class Doctor extends Model
         return $this->hasMany(Division::class,'doctor_id');
     }
 
+
+    public function discountDoctors()
+    {
+        return $this->hasMany(DiscountDoctor::class ,'doctor_id');
+    }
+
+    public function doctorEdits()
+    {
+        return $this->hasMany(DoctorEdit::class,'doctor_id');
+    }
+
     /*
      * my FK belongs to
     */

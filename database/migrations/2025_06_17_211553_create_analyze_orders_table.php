@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('analyze_orders', function (Blueprint $table) {
             $table->id();
+            $table->string('bill_num')->default('');
             $table->foreignId('patient_id')->constrained('patients')->cascadeOnDelete();
             $table->foreignId('doctor_id')->nullable()->constrained('doctors')->cascadeOnDelete();
             $table->string('doctor_name');

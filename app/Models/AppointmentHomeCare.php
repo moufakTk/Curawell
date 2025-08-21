@@ -17,6 +17,7 @@ class AppointmentHomeCare extends Model
     //
 
     protected $fillable = [
+        'bill_num',
         'patient_id',
         'nurse_session_id',
         'type',

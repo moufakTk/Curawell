@@ -29,8 +29,9 @@ class AppointmentRequest extends FormRequest
             'phone'=>'required',
             'taxi_order'=>'required|boolean',
             'location_order'=>'required_if:taxi_order,true|string',
-
-
+            'name_patient'=>'required_if:mode,FaceToFace|string',
+            'number_patient'=>'required_if:mode,FaceToFace|string',
+            'type_waiting'=>'required|string',
         ];
     }
 }
