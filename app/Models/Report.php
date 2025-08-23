@@ -14,13 +14,13 @@ class Report extends Model
         'file_path',
     ];
 
+
     protected function filePath(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => $value ? asset('storage/' . $value) : null,
-           );
+            );
         }
-
 
 
     /*

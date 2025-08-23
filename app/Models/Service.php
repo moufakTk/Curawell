@@ -57,6 +57,19 @@ class Service extends Model
         return $this->morphMany(Image::class,'imageable');
     }
 
+    public function image()
+    {
+        return $this->morphOne(Image::class, 'imageable')
+            ->where('type','image')
+            ->latestOfMany();
+    }
+
+    public function video()
+    {
+        return $this->morphOne(Image::class, 'imageable')
+            ->where('type','video')
+            ->latestOfMany();
+    }
     public function work_locations()
     {
         return $this->morphMany(WorkLocation::class , 'locationable');

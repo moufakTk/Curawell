@@ -26,6 +26,15 @@ return Application::configure(basePath: dirname(__DIR__))
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
     })
+    ->withSchedule(function (\Illuminate\Console\Scheduling\Schedule $schedule) {
+        // مثال: كل يوم الساعة 02:00 فجراً
+        $schedule->command('workday:auto --days=45 --threshold=10')->dailyAt('02:00');
+
+        // مثال آخر: كل ساعة (للتجربة)
+        // $schedule->command('workday:auto --days=45 --threshold=10')->hourly();
+    })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
+
+

@@ -58,6 +58,17 @@ class DashpordLabDoctorController extends Controller
         }
 
     }
+//    public function patientAnalyses(Patient $patient)
+//    {
+//        try {
+//            $data = $this->dashpordLabDoctorService->patientAnalyses($patient);
+//            return ApiResponse::success($data['data'], $data['message'], 200);
+//
+//        } catch (\Exception $exception) {
+//            return ApiResponse::error([], $exception->getMessage(), $exception->getCode() == 0 | 1 ? 500 : $exception->getCode());
+//        }
+//
+//    }
     public function Analyses()
     {
         try {

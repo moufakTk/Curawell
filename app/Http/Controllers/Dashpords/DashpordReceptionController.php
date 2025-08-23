@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashpords;
 use App\Enums\Orders\SkiagraphOrderStatus;
 use App\Enums\ProcessTakeSample;
 use App\Enums\SampleType;
+use App\Enums\Services\SectionType;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Analyses\StoreAnalyzeOrderRequest;
@@ -13,12 +14,14 @@ use App\Models\Analyze;
 use App\Models\AnalyzeOrder;
 use App\Models\Patient;
 use App\Models\Sample;
+use App\Models\Section;
 use App\Models\SkiagraphOrder;
 use App\Models\SmallService;
 use App\Models\User;
 use App\Services\Dashpords\DashpordReceptionService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\App;
 use Illuminate\Validation\Rule;
 use mysql_xdevapi\Exception;
 use phpseclib3\File\ASN1\Maps\Attribute;
@@ -55,17 +58,22 @@ class DashpordReceptionController extends Controller
             $data = $this->dashpordReceptionService->registerPatient($request);
             return ApiResponse::success($data, __('messages.reception_create_patient'), 200);
         } catch (\Exception $exception) {
-            return ApiResponse::error($exception->getMessage(), $exception->getCode() ?? 500);
+            $code = (int)$exception->getCode();
+            if ($code < 100 || $code > 599) {
+                $code = 500;
+            }
+
+            return ApiResponse::error([], $exception->getMessage(), $code);
         }
     }
 
     public function searchPatient(Request $request)
     {
         $request->validate([
-            'patient_num' => 'nullable'
+            'search' => 'nullable'
         ]);
         try {
-            $data = $this->dashpordReceptionService->searchPatient($request->patient_num);
+            $data = $this->dashpordReceptionService->searchPatient($request->search);
             return ApiResponse::success($data, __('messages.reception_search_patient'), 200);
 
         } catch (\Exception $exception) {
@@ -73,6 +81,81 @@ class DashpordReceptionController extends Controller
         }
 
     }
+
+    // -------------------- patient profile --------------------
+    public function getSection()
+    {
+        $section_type = [SectionType::HomeCare, SectionType::Clinics];
+        $sections = Section::whereIn('section_type', $section_type)->with(['services' => function ($query) {
+            $query->where('section_id', section::where('section_type', SectionType::Clinics)->first()->id);
+
+        }])->get();
+        $sections = $sections->map(function ($section) {
+            return [
+                'id' => $section->id,
+                'section_type' => $section->section_type,
+                'services' => $section->services->map(function ($service) {
+                    return [
+                        'id' => $service->id,
+                        'section_id' => $service->section_id,
+                        'name' => $service->{'name_' . App::getLocale()},
+                    ];
+                })
+            ];
+        });
+
+        return ApiResponse::success($sections, 'تم عرض الداتا', 200);
+    }
+
+    public function patientInformation(Patient $patient)
+    {
+        try {
+            $data = $this->dashpordReceptionService->patientInformation($patient);
+            return ApiResponse::success($data, 'كل معلومات المريض هاد ' . $patient->patient_user->full_name, 200);
+
+        } catch (\Exception $exception) {
+            $code = (int)$exception->getCode();
+            if ($code < 100 || $code > 599) {
+                $code = 500;
+            }
+
+            return ApiResponse::error([], $exception->getMessage(), $code);
+        }
+    }
+
+    public function all_app_Homecare(Patient $patient)
+    {
+        try {
+            $data = $this->dashpordReceptionService->all_app_Homecare($patient);
+            return ApiResponse::success($data, 'كل حجوزات المريض هاد ' . $patient->patient_user->full_name, 200);
+
+        } catch (\Exception $exception) {
+            $code = (int)$exception->getCode();
+            if ($code < 100 || $code > 599) {
+                $code = 500;
+            }
+
+            return ApiResponse::error([], $exception->getMessage(), $code);
+        }
+    }
+
+    public function all_app_clinic(Patient $patient)
+    {
+        try {
+            $data = $this->dashpordReceptionService->all_app_clinic($patient);
+            return ApiResponse::success($data, 'كل حجوزات المريض هاد ' . $patient->patient_user->full_name, 200);
+
+        } catch (\Exception $exception) {
+            $code = (int)$exception->getCode();
+            if ($code < 100 || $code > 599) {
+                $code = 500;
+            }
+
+            return ApiResponse::error([], $exception->getMessage(), $code);
+        }
+    }
+
+    // -------------------- patient profile --------------------
 
     // -------------------- samples --------------------
     public function createSample(Request $request, Patient $patient)
@@ -90,17 +173,57 @@ class DashpordReceptionController extends Controller
             return ApiResponse::success($data, __('messages.reception_create_sample'), 200);
 
         } catch (\Exception $exception) {
-            return ApiResponse::error($exception->getMessage(), $exception->getCode() ?? 500);
+            $code = (int)$exception->getCode();
+            if ($code < 100 || $code > 599) {
+                $code = 500;
+            }
+
+            return ApiResponse::error([], $exception->getMessage(), $code);
         }
     }
 
+    public function showSamplesType()
+    {
+        try {
+            $data = $this->dashpordReceptionService->showSamplesType();
+            return ApiResponse::success($data['data'], $data['message'], 200);
+        } catch (\Exception $exception) {
+            $code = (int)$exception->getCode();
+            if ($code < 100 || $code > 599) {
+                $code = 500;
+            }
+
+            return ApiResponse::error([], $exception->getMessage(), $code);
+        }
+
+    }
     public function showSamples(Patient $patient)
     {
         try {
             $data = $this->dashpordReceptionService->showSamples($patient);
             return ApiResponse::success($data['data'], $data['message'], 200);
         } catch (\Exception $exception) {
-            return ApiResponse::error($exception->getMessage(), $exception->getCode() ?? 500);
+            $code = (int)$exception->getCode();
+            if ($code < 100 || $code > 599) {
+                $code = 500;
+            }
+
+            return ApiResponse::error([], $exception->getMessage(), $code);
+        }
+
+    }
+    public function showPatientSamples(Patient $patient)
+    {
+        try {
+            $data = $this->dashpordReceptionService->showPatientSamples($patient);
+            return ApiResponse::success($data['data'], $data['message'], 200);
+        } catch (\Exception $exception) {
+            $code = (int)$exception->getCode();
+            if ($code < 100 || $code > 599) {
+                $code = 500;
+            }
+
+            return ApiResponse::error([], $exception->getMessage(), $code);
         }
 
     }
@@ -135,9 +258,6 @@ class DashpordReceptionController extends Controller
 
     // -------------------- analyses --------------------
 
-
-
-
     public function showPatientsAnalyses()
     {
         try {
@@ -145,7 +265,12 @@ class DashpordReceptionController extends Controller
             return ApiResponse::success($data['data'], $data['message'], 200);
 
         } catch (\Exception $exception) {
-            return ApiResponse::error([], $exception->getMessage(), $exception->getCode()==0|null? 500:$exception->getCode());
+            $code = (int)$exception->getCode();
+            if ($code < 100 || $code > 599) {
+                $code = 500;
+            }
+
+            return ApiResponse::error([], $exception->getMessage(), $code);
         }
     }
 
@@ -156,7 +281,12 @@ class DashpordReceptionController extends Controller
             return ApiResponse::success($data['data'], $data['message'], 200);
 
         } catch (\Exception $exception) {
-            return ApiResponse::error([], $exception->getMessage(), $exception->getCode()==0|null? 500:$exception->getCode());
+            $code = (int)$exception->getCode();
+            if ($code < 100 || $code > 599) {
+                $code = 500;
+            }
+
+            return ApiResponse::error([], $exception->getMessage(), $code);
         }
     }
 
@@ -172,9 +302,23 @@ class DashpordReceptionController extends Controller
         }
     }
 
-    public function showPatientAnalyse()
+    public function showPatientAnalyse(Patient $patient,AnalyzeOrder $order)
+
     {
+        try {
+            $data = $this->dashpordReceptionService->showPatientAnalyse($patient,$order);
+            return ApiResponse::success($data, 'كل معلومات المريض هاد ' . $patient->patient_user->full_name, 200);
+
+        } catch (\Exception $exception) {
+            $code = (int)$exception->getCode();
+            if ($code < 100 || $code > 599) {
+                $code = 500;
+            }
+
+            return ApiResponse::error([], $exception->getMessage(), $code);
+        }
     }
+
 
 //    public function updatePatientAnalyse(){}
     public function deletePatientAnalyse(Patient $patient, AnalyzeOrder $order)
@@ -183,13 +327,19 @@ class DashpordReceptionController extends Controller
         return ApiResponse::success(__('messages.reception.analyze_orders.deleted'), 200);
 
     }
+
     public function showAnalyses()
     {
         try {
             $data = $this->dashpordReceptionService->showAnalyses();
             return ApiResponse::success($data['data'], $data['message'], 200);
         } catch (\Exception $exception) {
-            return ApiResponse::error($exception->getMessage(), $exception->getCode() ?? 500);
+            $code = (int)$exception->getCode();
+            if ($code < 100 || $code > 599) {
+                $code = 500;
+            }
+
+            return ApiResponse::error([], $exception->getMessage(), $code);
         }
 
     }
@@ -197,7 +347,8 @@ class DashpordReceptionController extends Controller
     // -------------------- analyses --------------------
 
     // -------------------- radiology --------------------
-    public function radiologyServices(){
+    public function radiologyServices()
+    {
         try {
 
             $data = $this->dashpordReceptionService->radiologyServices();
@@ -209,104 +360,128 @@ class DashpordReceptionController extends Controller
         }
     }
 
-    public function showRadiologyServices(SmallService $service){
+    public function showRadiologyServices(SmallService $service)
+    {
         try {
 
             $data = $this->dashpordReceptionService->showRadiologyservices($service);
             return ApiResponse::success($data['data'], $data['message'], 200);
 
-        }
-        catch (\Exception $exception){
-            return ApiResponse::error([], $exception->getMessage(), $exception->getCode() == 0 | null ? 500 : $exception->getCode());
+        } catch (\Exception $exception) {
+            $code = (int)$exception->getCode();
+            if ($code < 100 || $code > 599) {
+                $code = 500;
+            }
+
+            return ApiResponse::error([], $exception->getMessage(), $code);
         }
     }
-    public function radiologyDoctors(){
+
+    public function radiologyDoctors()
+    {
         try {
 
             $data = $this->dashpordReceptionService->radiologyDoctors();
             return ApiResponse::success($data['data'], $data['message'], 200);
 
-        }
-        catch (\Exception $exception){
-            return ApiResponse::error([], $exception->getMessage(), $exception->getCode() == 0 | null ? 500 : $exception->getCode());
-        }
-    }
-     public function showPatientSkiagraphOrders(Patient $patient=null){
-         try {
-
-             $user = auth()->user();
-
-             if ($patient) {
-                 if (!$user->hasRole('Reception')) {
-                     throw new \Exception(__('messages.auth.unauthorized'), 403);
-                 }
-             }
-
-             else {
-
-                 if (!$user->hasRole('Patient') ) {
-                     throw new \Exception(__('messages.auth.unauthorized'), 403);
-                 }
-             }
-
-
-             $data = $this->dashpordReceptionService->showPatientSkiagraphOrders($patient);
-             return ApiResponse::success($data['data'], $data['message'], 200);
-
-         }catch (\Exception $exception){
-             return ApiResponse::error([],$exception->getMessage(),$exception->getCode() == 0 | null ? 500 : $exception->getCode());
-         }
-
-     }
-     public function showSkiagraphOrders(){
-         try {
-             $data = $this->dashpordReceptionService->showSkiagraphOrders();
-             return ApiResponse::success($data['data'], $data['message'], 200);
-         }catch (\Exception $exception){
-             $code = (int) $exception->getCode();
-             if ($code < 100 || $code > 599) {
-                 $code = 500;
-             }
-
-             return ApiResponse::error([], $exception->getMessage(), $code);         }
-     }
-     public function countSkiagraphOrders(){
-         try {
-             $data = $this->dashpordReceptionService->countSkiagraphOrders();
-             return ApiResponse::success($data['data'], $data['message'], 200);
-         }catch (\Exception $exception){
-             $code = (int) $exception->getCode();
-             if ($code < 100 || $code > 599) {
-                 $code = 500;
-             }
-
-             return ApiResponse::error([], $exception->getMessage(), $code);         }
-     }
-    public function showPatientSkiagraphOrder(Patient $patient, SkiagraphOrder $order){
-        try {
-            $data = $this->dashpordReceptionService->showPatientSkiagraphOrder($patient,$order);
-            return ApiResponse::success($data['data'], $data['message'], 200);
-
-        }catch (\Exception $exception){
-            $code = (int) $exception->getCode();
+        } catch (\Exception $exception) {
+            $code = (int)$exception->getCode();
             if ($code < 100 || $code > 599) {
                 $code = 500;
             }
 
-            return ApiResponse::error([], $exception->getMessage(), $code);        }
-
+            return ApiResponse::error([], $exception->getMessage(), $code);
+        }
     }
-    public function createPatientSkiagraphOrder(Patient $patient,Request $request){
-        $request->validate([
-            'doctor_name'=>['nullable'],
-            'small_service_id'=>['nullable'],
-        ]);
+    public function showPatientSkiagraphOrders(Patient $patient=null){
         try {
-            $data = $this->dashpordReceptionService->createPatientSkiagraphOrder($patient,$request);
+
+            $user = auth()->user();
+
+            if ($patient) {
+                if (!$user->hasRole('Reception')) {
+                    throw new \Exception(__('messages.auth.unauthorized'), 403);
+                }
+            }
+
+            else {
+
+                if (!$user->hasRole('Patient') ) {
+                    throw new \Exception(__('messages.auth.unauthorized'), 403);
+                }
+            }
+
+
+            $data = $this->dashpordReceptionService->showPatientSkiagraphOrders($patient);
             return ApiResponse::success($data['data'], $data['message'], 200);
 
         }catch (\Exception $exception){
-            $code = (int) $exception->getCode();
+            return ApiResponse::error([],$exception->getMessage(),$exception->getCode() == 0 | null ? 500 : $exception->getCode());
+        }
+
+    }
+
+
+    public function showSkiagraphOrders()
+    {
+        try {
+            $data = $this->dashpordReceptionService->showSkiagraphOrders();
+            return ApiResponse::success($data['data'], $data['message'], 200);
+        } catch (\Exception $exception) {
+            $code = (int)$exception->getCode();
+            if ($code < 100 || $code > 599) {
+                $code = 500;
+            }
+
+            return ApiResponse::error([], $exception->getMessage(), $code);
+        }
+    }
+
+    public function countSkiagraphOrders()
+    {
+        try {
+            $data = $this->dashpordReceptionService->countSkiagraphOrders();
+            return ApiResponse::success($data['data'], $data['message'], 200);
+        } catch (\Exception $exception) {
+            $code = (int)$exception->getCode();
+            if ($code < 100 || $code > 599) {
+                $code = 500;
+            }
+
+            return ApiResponse::error([], $exception->getMessage(), $code);
+        }
+    }
+
+
+    public function showPatientSkiagraphOrder(Patient $patient, SkiagraphOrder $order)
+    {
+        try {
+            $data = $this->dashpordReceptionService->showPatientSkiagraphOrder($patient, $order);
+            return ApiResponse::success($data['data'], $data['message'], 200);
+
+        } catch (\Exception $exception) {
+            $code = (int)$exception->getCode();
+            if ($code < 100 || $code > 599) {
+                $code = 500;
+            }
+
+            return ApiResponse::error([], $exception->getMessage(), $code);
+        }
+
+    }
+
+    public function createPatientSkiagraphOrder(Patient $patient, Request $request)
+    {
+        $request->validate([
+            'doctor_name' => ['nullable'],
+            'small_service_id' => ['nullable'],
+        ]);
+        try {
+            $data = $this->dashpordReceptionService->createPatientSkiagraphOrder($patient, $request);
+            return ApiResponse::success($data['data'], $data['message'], 200);
+
+        } catch (\Exception $exception) {
+            $code = (int)$exception->getCode();
             if ($code < 100 || $code > 599) {
                 $code = 500;
             }
@@ -316,14 +491,16 @@ class DashpordReceptionController extends Controller
         }
 
     }
-    public function updatePatientSkiagraphOrder(Patient $patient ,SkiagraphOrder $order,Request $request){
+
+    public function updatePatientSkiagraphOrder(Patient $patient, SkiagraphOrder $order, Request $request)
+    {
         $request->validate([
-            'status'=>['nullable',Rule::enum(SkiagraphOrderStatus::class)],
-            'report'=>['nullable','file','mimes:pdf,png,jpg','max:5120'],
-            'delete_report'=>['nullable',Rule::exists('reports','id')],
+            'status' => ['nullable', Rule::enum(SkiagraphOrderStatus::class)],
+            'report' => ['nullable', 'file', 'mimes:pdf,png,jpg', 'max:5120'],
+            'delete_report' => ['nullable', Rule::exists('reports', 'id')],
         ]);
         try {
-            $data = $this->dashpordReceptionService->updatePatientSkiagraphOrder($patient,$order,$request);
+            $data = $this->dashpordReceptionService->updatePatientSkiagraphOrder($patient, $order, $request);
             return ApiResponse::success($data['data'], $data['message'], 200);
 
         }catch (\Exception $exception){
@@ -332,24 +509,27 @@ class DashpordReceptionController extends Controller
                 $code = 500;
             }
 
-            return ApiResponse::error([], $exception->getMessage(), $code);        }
+            return ApiResponse::error([], $exception->getMessage(), $code);
+        }
 
     }
-    public function deletePatientSkiagraphOrder(Patient $patient,SkiagraphOrder $order){
+
+    public function deletePatientSkiagraphOrder(Patient $patient, SkiagraphOrder $order)
+    {
         try {
-            $data = $this->dashpordReceptionService->deletePatientSkiagraphOrder($patient,$order);
+            $data = $this->dashpordReceptionService->deletePatientSkiagraphOrder($patient, $order);
             return ApiResponse::success($data['data'], $data['message'], 200);
 
-        }catch (\Exception $exception){
-            $code = (int) $exception->getCode();
+        } catch (\Exception $exception) {
+            $code = (int)$exception->getCode();
             if ($code < 100 || $code > 599) {
                 $code = 500;
             }
 
-            return ApiResponse::error([], $exception->getMessage(), $code);        }
+            return ApiResponse::error([], $exception->getMessage(), $code);
+        }
 
     }
-
 
 
     // -------------------- radiology --------------------

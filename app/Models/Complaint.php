@@ -17,6 +17,7 @@ class Complaint extends Model
         'phone',
         'reply',
         'message_reply',
+        'status',
     ];
 
 

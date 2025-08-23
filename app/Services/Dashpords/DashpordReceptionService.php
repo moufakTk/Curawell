@@ -4,6 +4,7 @@ namespace App\Services\Dashpords;
 
 use App\Enums\Orders\AnalyzeOrderStatus;
 use App\Enums\Orders\SkiagraphOrderStatus;
+use App\Enums\SampleType;
 use App\Enums\Services\SectionType;
 use App\Enums\Users\DoctorType;
 use App\Enums\Users\UserType;
@@ -11,8 +12,12 @@ use App\Events\WhatsAppAnalysesPatient;
 use App\Events\WhatsAppInfoPatient;
 use App\Helpers\ApiResponse;
 use App\Http\Resources\Analyze\AnalyzeOrderResource;
+use App\Http\Resources\AppointmentResource;
 use App\Models\Analyze;
 use App\Models\AnalyzeOrder;
+use App\Models\Appointment;
+use App\Models\AppointmentHomeCare;
+use App\Models\Competence;
 use App\Models\Doctor;
 use App\Models\MedicalHistory;
 use App\Models\Patient;
@@ -79,25 +84,104 @@ class DashpordReceptionService
 
     }
 
-    public function searchPatient($patient_num)
+    public function searchPatient($search = null)
     {
-        $patients = null;
-        if ($patient_num) {
-            $patients = Patient::where('patient_num', "LIKE", "%$patient_num%")->with('patient_user:id,first_name,last_name')->select('id', 'user_id', 'patient_num')->get();
-        } else {
-            $patients = Patient::with('patient_user')->select('id', 'user_id', 'patient_num')->get();
+        $patients = Patient::select('id', 'user_id', 'patient_num')
+            ->with('patient_user:id,first_name,last_name');
+
+        if ($search) {
+            if (is_numeric($search)) {
+                // البحث بالرقم
+                $patients->where('patient_num', 'LIKE', "%{$search}%");
+            } else {
+                // البحث بالاسم
+                $patients->whereHas('patient_user', function ($q) use ($search) {
+                    $q->where('first_name', 'LIKE', "%{$search}%")
+                        ->orWhere('last_name', 'LIKE', "%{$search}%")
+                        ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"]);
+                });
+            }
         }
-        $patients = $patients->map(function ($patient) {
+
+        return $patients->get()->map(function ($patient) {
             return [
                 'id' => $patient->id,
                 'patient_num' => $patient->patient_num,
-                'name' => $patient->patient_user->full_name,
+                'name' => $patient->patient_user->first_name . ' ' . $patient->patient_user->last_name,
             ];
         });
+    }
 
-        return $patients;
+
+    // -------------------- patient profile --------------------
+    public function patientInformation($patient)
+    {
+        return [
+            'id' => $patient->id,
+            'patient_num' => $patient->patient_num,
+            'name' => $patient->patient_user->full_name,
+            'age' => $patient->patient_user->age,
+            'gender' => $patient->patient_user->gender,
+            'phone' => $patient->patient_user->phone,
+            'address' => $patient->patient_user->address,
+            'email' => $patient->patient_user->email,
+            'totalPoints' => $patient->totalPoints,
+            'blood_group' => $patient->medical_history->blood_group,
+            'height' => $patient->medical_history->height,
+            'weight' => $patient->medical_history->weight,
+
+        ];
+
 
     }
+
+    public function all_app_homeCare($patient)
+    {
+        $appointment = AppointmentHomeCare::where('patient_id', $patient->id)
+            ->with('appointment_home_session_nurse.nurse', 'appointment_home_session_nurse.session_day')
+            ->get()
+            ->each(function ($q) {
+                $q->type_serv = 'HomeCare';
+            });
+        if ($appointment->isEmpty()) {
+            return ' ما في قيم';
+        }
+
+        $appointment = $appointment
+            ->map(fn($item) => new AppointmentResource($item, 'HomeCare', false))
+            ->groupBy('status');
+
+        return $appointment;
+
+
+    }
+
+    public function all_app_clinic($patient)
+    {
+        $appointment = Appointment::where('patient_id', $patient->id)
+            ->with('appointment_doctor.doctor_user', 'sesstions')
+            ->get()->each(function ($appointment) {
+                $location_id = $appointment->appointment_doctor->doctor_user->active_work_location->locationable_id;
+                $competence_name = Competence::where('id', $location_id)->value('name_' . App()->getLocale());
+                $appointment->department = $competence_name;
+
+                $appointment->date = $appointment->appointment_doctor_session->session_doctor->work_employee_Day->history;
+                $appointment->time = $appointment->appointment_doctor_session->from;
+                $appointment->type_serv = 'Clinic';
+            });
+
+        if ($appointment->isEmpty()) {
+            return 'ما في قيم';
+        }
+
+        return $appointment->map(function ($item) {
+            return new AppointmentResource($item, 'Clinic', true);
+        })->groupBy('status');
+
+    }
+
+
+    // -------------------- patient profile --------------------
 
     // -------------------- samples --------------------
     public function createSample($request, $patient)
@@ -119,16 +203,63 @@ class DashpordReceptionService
 
     }
 
+    public function showSamplesType()
+
+
+    {
+
+        $samples = array_map(fn($case) => $case->value, SampleType::cases());
+
+        return [
+            'data' => $samples,
+            'message' => __('messages.reception.patient.samples'),
+        ];
+    }
+
     public function showSamples($patient)
     {
 
-        $samples = $patient->samples()->where('status', true)->select('sample_type', 'id', 'status')->get();
+        $samples = Sample::where('status', true)->select('sample_type', 'id', 'status', 'process_take', 'patient_id')->with('sample_patient')->get();
         if ($samples->isEmpty()) {
             return [
                 'data' => [],
                 'message' => __('messages.reception.patient.samples.empty'),
             ];
         }
+        $samples = $samples->map(function ($item) use ($patient) {
+            return [
+                'id' => $item->id,
+                'sample_type' => $item->sample_type,
+                'condition' => $item->process_take,
+                'patient_name' => $item->sample_patient->patient_user->full_name,
+                'patient_num' => $item->sample_patient->patient_num,
+            ];
+        });
+        return [
+            'data' => $samples,
+            'message' => __('messages.reception.patient.samples'),
+        ];
+    }
+
+    public function showPatientSamples($patient)
+    {
+
+        $samples = $patient->samples()->where('status', true)->select('sample_type', 'id', 'status', 'process_take')->with('sample_patient')->get();
+        if ($samples->isEmpty()) {
+            return [
+                'data' => [],
+                'message' => __('messages.reception.patient.samples.empty'),
+            ];
+        }
+        $samples = $samples->map(function ($item) use ($patient) {
+            return [
+                'id' => $item->id,
+                'sample_type' => $item->sample_type,
+                'condition' => $item->process_take,
+                'patient_name' => $patient->patient_user->full_name,
+                'patient_num' => $patient->patient_num,
+            ];
+        });
         return [
             'data' => $samples,
             'message' => __('messages.reception.patient.samples'),
@@ -198,18 +329,37 @@ class DashpordReceptionService
     public function showPatientAnalyses($patient)
     {
         $analyses = $patient->analyze_orders()
-            ->where('status', AnalyzeOrderStatus::Pending)
             ->with([
                 'analyzed_order_patient.patient_user',      // لاسم المريض
                 'AnalyzeRelated.analyzesRelated_analyze',   // عناصر التحاليل
                 'samplesRelated.SamplesRelated_sample',     // العينات
             ])->get();
+        $analyses = AnalyzeOrderResource::collection($analyses);
+        $analyses = $analyses->groupBy('status');
+
         return [
-            'data' => AnalyzeOrderResource::collection($analyses)
+            'data' => $analyses
             , 'message' => __('messages.reception.analyze_orders.list'),
         ];
 
     }
+
+    public function showPatientAnalyse($patient, $order)
+    {
+        if ($order->patient_id !== $patient->id) {
+            throw new \Exception('هاد التحليل مو لهاد الحجي ', 404);
+        }
+        $analyses = $patient->analyze_orders()->where('id', $order->id)->with([
+            'analyzed_order_patient.patient_user',      // لاسم المريض
+            'AnalyzeRelated.analyzesRelated_analyze',   // عناصر التحاليل
+            'samplesRelated.SamplesRelated_sample',     // العينات
+        ])->get();
+
+        $analyses = AnalyzeOrderResource::collection($analyses);
+
+        return $analyses;
+    }
+
 
     public function createPatientAnalyse($request, $patient)
     {
@@ -386,7 +536,7 @@ class DashpordReceptionService
 
     }
 
-    public function showPatientSkiagraphOrders($patient =null)
+    public function showPatientSkiagraphOrders($patient)
     {
 
         if (is_null($patient)) {
@@ -411,8 +561,8 @@ class DashpordReceptionService
                 'price' => $item->price,
                 'status' => $item->status,
                 'radiology_image_name' => $item->skaigraph_small_service->{'name_' . app()->getLocale()},
-                'date'=>$item->created_at->format('Y-m-d'),
-                'bill_number'=>$item->bill_num,
+                'date' => $item->created_at->format('Y-m-d'),
+                'bill_number' => $item->bill_num,
                 'reports' => $item->reports->map(function ($item) {
                     return [
                         'id' => $item->id,

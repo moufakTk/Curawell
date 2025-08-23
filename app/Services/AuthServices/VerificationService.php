@@ -85,8 +85,8 @@ class VerificationService
 
     public function sendWhatsappCode($user, $code)
     {
-        $response = Http::asForm()->post('https://api.ultramsg.com/instance118522/messages/chat', [
-            'token' => '1fat1jiymupty7zc',
+        $response = Http::asForm()->post('https://api.ultramsg.com/instance140117/messages/chat', [
+            'token' => 'jamiukukd0u2yxp4',
             'to' => '+963' . substr($user->phone, 1, 9),
             'body' => "👋 Hello {$user->first_name} {$user->last_name},\n
              \n🔐 Your verification code is: *{$code}*\n
@@ -118,8 +118,8 @@ class VerificationService
     }
     public function whatsappMessage($phone, $message)
     {
-        $response = Http::asForm()->post('https://api.ultramsg.com/instance118522/messages/chat', [
-            'token' => '1fat1jiymupty7zc',
+        $response = Http::asForm()->post('https://api.ultramsg.com/instance140117/messages/chat', [
+            'token' => 'jamiukukd0u2yxp4',
             'to' => '+963' . substr($phone, 1, 9),
             'body' => $message
 

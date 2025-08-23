@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRrequest;
 use App\Models\User;
@@ -39,7 +40,31 @@ class AuthController extends Controller
         }
 
     }
+public function updateMissingInfo(Request $request){
+        $user=auth()->user();
+        $request->validate([
+            'first_name' => 'required|string|between:2,100',
+            'last_name'  => 'required|string|between:2,100',
+            'birthday'   => 'required|date',
+            'gender'     => 'required|string|in:male,female',
+            'phone'      => 'required|string|between:10,20|unique:users,phone,' . $user->id,
+            'address'    => 'required|string',
+            'civil_id_number' => 'required|string|between:8,15|unique:patients,civil_id_number,' . optional($user->patient)->id,
 
+
+        ]);
+    try {
+$data = $this->authServices->updateMissingData($request, $user);
+return ApiResponse::success($data,'تم اضافة البيانات',200);
+
+    }catch (\Exception $e){
+        $code = (int)$e->getCode();
+        if ($code < 100 || $code > 599) {
+            $code = 500;
+        }
+
+        return ApiResponse::error([], $e->getMessage(), $code);    }
+}
     public function loginWithGoogle(Request $request)
     {
         $request->validate([
@@ -53,9 +78,10 @@ class AuthController extends Controller
             $user = $this->authServices->loginWithGoogle($googleUser);
 
             return response()->json([
-                'user' => $user,
-                'token' => $user->createToken('google_login')->plainTextToken
-                ,'google_user'=>$googleUser
+                'user' => $user['user'],
+                'token' => $user['user']->createToken('google_login')->plainTextToken
+//                ,'google_user'=>$googleUser
+                ,'missing'=>$user['missing']
             ]);
 
         } catch (\Exception $e) {

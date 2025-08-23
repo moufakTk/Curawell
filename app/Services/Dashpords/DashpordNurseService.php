@@ -130,7 +130,7 @@ $completeAppointmentCount =AppointmentHomeCare::AppointmentsOwnedByNurse(auth()-
 
         return [
             'scheduled_appointments_count'=>$scheduledAppointmentCount,
-            'complete_appointment_count'=>$completeAppointmentCount,
+            'completed_appointments_count'=>$completeAppointmentCount,
 
         ];
     }

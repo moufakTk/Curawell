@@ -29,7 +29,7 @@ class AppointmentHomeCareFactory extends Factory
 //        }
 
         return [
-            'patient_id'       => Patient::inRandomOrder()->first()?->id,
+            'patient_id'       => 1,
             'nurse_session_id' => $session?->id, // ممكن تكون null لو ما في جلسات
             'type'             => fake()->randomElement(AppointmentHomeCareType::cases()),
             'gender'           => fake()->randomElement(Gender::cases()),

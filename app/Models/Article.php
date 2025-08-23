@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Article extends Model
 {
@@ -36,10 +37,15 @@ class Article extends Model
      * Morph PK
      */
 
-    public function images()
+    public function image()
     {
-        return $this->morphMany(Image::class,'imageable');
+        // اسم العلاقة اختاره "image" لأن بدنا صورة واحدة فقط
+        return $this->morphOne(\App\Models\Image::class, 'imageable');
     }
 
+    public function getImageUrlAttribute(): ?string
+    {
 
+        return $this->image->url?? null;
+    }
 }

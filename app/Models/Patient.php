@@ -151,4 +151,14 @@ class Patient extends Model
         return $this->appointment_homes()->where('status','=',AppointmentHomeCareStatus::Scheduled)->first();
 
     }
+    public function scopeHasAppointmentsInSection($query, int $sectionId, bool $onlyActive = true)
+    {
+        return $query->whereHas('appointments.appointment_doctor.doctor_user.active_work_location', function ($q) use ($sectionId, $onlyActive) {
+            if ($onlyActive) {
+                $q->where('active', 1);
+            }
+            $q->where('locationable_type', Section::class)
+                ->where('locationable_id', $sectionId);
+        });
+    }
 }

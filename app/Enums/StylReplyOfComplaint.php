@@ -2,7 +2,8 @@
 
 namespace App\Enums;
 
-enum StylReplyOfComplaint :string
+enum
+StylReplyOfComplaint :string
 {
     //
     case Email = 'email';

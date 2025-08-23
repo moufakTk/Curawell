@@ -15,6 +15,9 @@ class ApiResponse
 
     public static function error($data = null,$message = 'حدث خطأ ما' , $status = 400,)
     {
+        if ($status < 100 || $status > 599) {
+            $status = 500;
+        }
         return response()->json([
             'status' => false,
             'message' => $message,

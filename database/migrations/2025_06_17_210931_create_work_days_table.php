@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('day_en');
             $table->string('day_ar');
             $table->boolean('status')->default(true);
-            $table->date('history');
+            $table->date('history')->unique();
             $table->timestamps();
         });
     }

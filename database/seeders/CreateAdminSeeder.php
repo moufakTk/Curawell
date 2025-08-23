@@ -22,18 +22,29 @@ class CreateAdminSeeder extends Seeder
 
         if(!$admin) {
 
+//            $admin =User::create([
+//                'first_name'=>'moufak',
+//                'last_name'=>'AlTaklh',
+//                'email'=>'muofak@gmail.com',
+//                'phone'=>'0992721424',
+//                'password'=>Hash::make('moufak123456789'),
+//                'age'=>21 ,
+//                'gender'=>Gender::MALE,
+//                'user_type'=>UserType::Admin ,
+//                'is_active'=>true,
+//            ]);
+
             $admin =User::create([
                 'first_name'=>'moufak',
                 'last_name'=>'AlTaklh',
                 'email'=>'muofak@gmail.com',
-                'phone'=>'0992721424',
-                'password'=>Hash::make('moufak123456789'),
+                'phone'=>'0997393611',
+                'password'=>Hash::make('password'),
                 'age'=>21 ,
                 'gender'=>Gender::MALE,
                 'user_type'=>UserType::Admin ,
                 'is_active'=>true,
             ]);
-
         }
 
 

@@ -1,5 +1,16 @@
 <?php
 
+use App\Http\Controllers\Admin\Articles\ArticleController;
+use App\Http\Controllers\Admin\Comments\CommentController;
+use App\Http\Controllers\Admin\ComplaintController;
+use App\Http\Controllers\Admin\Discounts\DiscountController;
+use App\Http\Controllers\Admin\FrequentlyQuestionController;
+use App\Http\Controllers\Admin\Sections\CompetenceController;
+use App\Http\Controllers\Admin\Sections\DivisionController;
+use App\Http\Controllers\Admin\Sections\SectionController;
+use App\Http\Controllers\Admin\Sections\ServiceController;
+use App\Http\Controllers\Admin\Sections\SmallServiceController;
+use App\Http\Controllers\Admin\WorkDay\WorkDayController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\VerificationController;
@@ -20,9 +31,9 @@ Route::middleware(SetLocaleMiddleware::class)->group(function () {
         Route::post('/register', 'register');
         Route::post('/login', 'login');
         Route::post('/logout', 'logout');
-        Route::post('/auth/google/callback', 'loginWithGoogle')->name('loginWithGoogle');
-//        Route::get('/auth/google/callback', 'callback');
-//        Route::get('/auth/google/redirect', 'redirect');
+        Route::post('/auth/google/callbackk', 'loginWithGoogle')->name('loginWithGoogle');
+        Route::get('/auth/google/callback', 'callback');
+        Route::get('/auth/google/redirect', 'redirect');
 
     });
 
@@ -32,6 +43,7 @@ Route::middleware(SetLocaleMiddleware::class)->group(function () {
             Route::post('/verify-code', 'verifyCode');
 
         });
+        Route::post('patient/update-missing-info',[AuthController::class,'updateMissingInfo'])->middleware('auth:sanctum');
         Route::post('/reset-password', [PasswordController::class,'resetPassword']);   // إعادة تعيين كلمة المرور
     });
 });
@@ -114,8 +126,114 @@ Route::prefix('/dashboard')->middleware(['auth:sanctum',SetLocaleMiddleware::cla
     Route::get('/patient/analyses',[DashpordLabDoctorController::class,'patientAnalyses']);
 
                             /* admin dashboard */
-    Route::prefix('/admin')->group( function () {
-    });
+    Route::prefix('admin')
+        ->middleware(['role:Admin']) // عدّل حسب نظامك (abilities/permissions)
+        ->group(function () {
+
+            Route::controller(SectionController::class)->prefix('/sections')->group(function () {
+                Route::get('/',  'index');
+                Route::post('/', 'store');
+                Route::get('{section}',  'show');
+                Route::put('{section}',  'update');
+                Route::delete('{section}',  'destroy');
+                Route::post('{section}/image',  'uploadSectionImage');
+
+            });
+                // Services (للعيادات + الهوم كير)
+            // ===== Services =====
+            Route::prefix('services')->name('admin.services.')->controller(ServiceController::class)->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::post('/', 'store')->name('store');
+                    Route::get('{service}', 'show')->name('show');
+                    Route::put('{service}', 'update')->name('update');
+                    Route::delete('{service}', 'destroy')->name('destroy');
+
+                    // Media (صورة واحدة + فيديو واحد)
+                    Route::post('{service}/image', 'uploadServiceImage')->name('upload-image');
+                    Route::post('{service}/video', 'uploadServiceVideo')->name('upload-video');
+                });
+            // ===== Competences =====
+            Route::prefix('competences')->name('admin.competences.')->controller(CompetenceController::class)->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::post('/', 'store')->name('store');
+                    Route::get('{competence}', 'show')->name('show');
+                    Route::put('{competence}', 'update')->name('update');
+                    Route::delete('{competence}', 'destroy')->name('destroy');
+                });
+            // ===== small-services =====
+            Route::prefix('small-services')->name('admin.small-services.')->controller(SmallServiceController::class)->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::post('/', 'store')->name('store');
+                    Route::get('{smallService}', 'show')->name('show');
+                    Route::put('{smallService}', 'update')->name('update');
+                    Route::delete('{smallService}', 'destroy')->name('destroy');
+                });
+            // ===== divisions =====
+            Route::prefix('divisions')->name('admin.divisions.')->controller(DivisionController::class)->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::post('/', 'store')->name('store');
+                    Route::get('{division}', 'show')->name('show');
+                    Route::put('{division}', 'update')->name('update');
+                    Route::delete('{division}', 'destroy')->name('destroy');
+
+                    // خصم (اختياري)
+                    Route::patch('{division}/toggle-discount', 'toggleDiscount')->name('toggle-discount');
+                });
+
+            Route::prefix('work-days')->name('admin.work-days.')->controller(WorkDayController::class)->group(function () {
+                Route::post('/open', 'open')->name('open');           // فتح فترة
+                Route::get('/', 'index')->name('index');              // استعراض
+                Route::get('/summary', 'summary')->name('summary');   // ملخص
+                Route::patch('/{workDay}/toggle', 'toggle')->name('toggle');      // تبديل حالة
+                Route::patch('/{workDay}/status', 'setStatus')->name('set-status'); // ضبط حالة
+                Route::post('/auto-toUp', 'autoTopUp')->name('auto');    // تعبئة تلقائية عند الطلب
+
+            });
+            Route::prefix('articles')->name('admin.articles.')->controller(ArticleController::class)->group(function () {
+                    Route::get('/', 'index')->name('index');     // GET    /api/admin/articles
+                    Route::post('/', 'store')->name('store');    // POST   /api/admin/articles
+                    Route::get('{article}', 'show')->name('show'); // GET  /api/admin/articles/{article}
+                    Route::put('{article}', 'update')->name('update'); // PUT /api/admin/articles/{article}
+                    Route::post('{article}', 'update');         // PATCH  /api/admin/articles/{article}
+                    Route::delete('{article}', 'destroy')->name('destroy'); // DELETE /api/admin/articles/{article}
+
+                    Route::patch('{article}/toggle', 'toggle')->name('toggle');
+                });
+            Route::prefix('frequently-questions')->name('admin.fq.')->controller(FrequentlyQuestionController::class)->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::post('/', 'store')->name('store');
+                Route::get('{frequentlyQuestion}', 'show')->name('show');
+                Route::put('{frequentlyQuestion}', 'update')->name('update');
+                Route::delete('{frequentlyQuestion}', 'destroy')->name('destroy');
+                Route::patch('{frequentlyQuestion}/toggle', 'toggle')->name('toggle');
+            });
+
+            Route::controller(ComplaintController::class)->prefix('/complaints')->group(function () {
+                Route::get('/',  'index');
+                Route::get('{complaint}',  'show');
+                Route::put('{complaint}',  'update');
+                Route::delete('{complaint}',  'destroy');
+
+            });
+
+            Route::controller(CommentController::class)->prefix('comments')->name('admin.comments.')->group(function () {
+                Route::get('/',  'index')->name('index');
+                Route::get('/{comment}', 'show')->name('show');
+                Route::put('/{comment}/toggle', 'toggle')->name('approve');
+                Route::delete('/{comment}','destroy')->name('destroy');
+            });
+
+            Route::controller(DiscountController::class)->prefix('discounts')->name('admin.comments.')->group(function () {
+                Route::get('/',  'index')->name('index');
+            /*👍*/    Route::get('/searchDoctors',  'searchDoctors')->name('searchDoctors');
+            /*👍*/    Route::post('/doctors-services', 'getDoctorsServices')->name('getDoctorsServices');
+            /* ~ */     Route::post('/discounts', 'create')->name('create');
+                Route::get('/discounts/{discount}', 'show')->name('show');
+                Route::delete('/discounts/{discount}', 'delete')->name('delete');
+                Route::put('/discounts/{discount}/toggle', 'toggle')->name('toggle');
+            });
+
+        });
 
                             /* Doctor dashboard */
     Route::prefix('/doctor')->group( function () {
@@ -125,6 +243,7 @@ Route::prefix('/dashboard')->middleware(['auth:sanctum',SetLocaleMiddleware::cla
 
 
         Route::get('/pending-analyses','pendingAnalyses');
+        Route::get('/patient/{patient}/analyses','patientAnalyses');
         Route::get('/analyses','Analyses');
         Route::get('/complete-analyses','completeAnalyses');
         Route::get('/count-analyses','countAnalyses');
@@ -153,20 +272,29 @@ Route::prefix('/dashboard')->middleware(['auth:sanctum',SetLocaleMiddleware::cla
         // 1. تسجيل مريض جديد
         Route::post('/patients', 'registerPatient');
 
+
 // 2. البحث عن مريض (مثلاً باستخدام ?patient_num=)
         Route::get('/patients', 'searchPatient');
+        Route::get('/patients/{patient}/homeCare-appointments', 'all_app_homeCare')->name('patient_appointments');
+        Route::get('/patients/{patient}/clinic-appointments', 'all_app_clinic')->name('patient_appointments');
+        Route::get('/patients/{patient}/information', 'patientInformation');
+
 
 
         // 3. إنشاء نموذج لعينة جديدة
         Route::get   ('/analyses', 'showAnalyses');
 
         // انشاء العينات
-        Route::post  ('/patients/{patient}/samples/create',            'createSample');
-        Route::get   ('/patients/{patient}/samples',                    'showSamples');
-        Route::post  ('/patients/{patient}/samples/{sample}/update',   'updateSample');
+        Route::get   ('/samples',                    'showSamplesType');
+
+
+        Route::post  ('/patients/{patient}/samples/create',          'createSample');
+        Route::get   ('/patients/{patient}/samples',                 'showPatientSamples');
+        Route::get   ('/patients/samples',                           'showSamples');
+        Route::post  ('/patients/{patient}/samples/{sample}/update', 'updateSample');
         Route::delete('/patients/{patient}/samples/{sample}/delete', 'deleteSample');
 //انشاء التحاليل
-        Route::get   ('/patients/analyze-orders',          'showPatientsAnalyses');
+        Route::get   ('/patients/analyze-orders',                    'showPatientsAnalyses');
         Route::get   ('/patients/{patient}/analyze-orders',          'showPatientAnalyses');
         Route::post  ('/patients/{patient}/analyze-orders',          'createPatientAnalyse');
         Route::get   ('/patients/{patient}/analyze-orders/{order}',  'showPatientAnalyse' );
@@ -179,8 +307,12 @@ Route::prefix('/dashboard')->middleware(['auth:sanctum',SetLocaleMiddleware::cla
 
         Route::get('patients/skiagraph_orders/count','countSkiagraphOrders');
         Route::get('patients/skiagraph_orders','showSkiagraphOrders');
+
+
         // patients CRUD
-       // Route::get('patients/{patient?}/skiagraph_orders','showPatientSkiagraphOrders');
+
+
+        Route::get('patients/{patient}/skiagraph_orders','showPatientSkiagraphOrders');
         Route::get('patients/{patient}/skiagraph_orders/{order}','showPatientSkiagraphOrder');
         Route::post('patients/{patient}/skiagraph_orders/create','createPatientSkiagraphOrder');
         Route::post('patients/{patient}/skiagraph_orders/{order}/update','updatePatientSkiagraphOrder');
