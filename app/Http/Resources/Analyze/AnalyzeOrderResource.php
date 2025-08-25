@@ -18,6 +18,7 @@ class AnalyzeOrderResource extends JsonResource
             'id'         => $this->id,
             'doctor_id'       => $this->doctor_id,
             'name'       => $this->name,
+            'doctor_name'=>$this?->doctor_name,
             'status'     => $this->status->value ?? $this->status,
             'price'      => $this->price,
             'patient'    => [
