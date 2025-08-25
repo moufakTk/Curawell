@@ -516,7 +516,8 @@ class DashpordReceptionService
                     ];
                 })
             ];
-        })->groupBy('status');
+        });
+//        })->groupBy('status');
         return [
             'data' => $orders,
             'message' => __('messages.reception.radiology.orderList'),
