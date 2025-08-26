@@ -86,8 +86,8 @@ class DashpordReceptionService
 
     public function searchPatient($search = null)
     {
-        $patients = Patient::select('id', 'user_id', 'patient_num')
-            ->with('patient_user:id,first_name,last_name');
+        $patients = Patient::select('id', 'user_id', 'patient_num','civil_id_number')
+            ->with('patient_user');
 
         if ($search) {
             if (is_numeric($search)) {
@@ -108,6 +108,12 @@ class DashpordReceptionService
                 'id' => $patient->id,
                 'patient_num' => $patient->patient_num,
                 'name' => $patient->patient_user->first_name . ' ' . $patient->patient_user->last_name,
+                'email'=>$patient->patient_user->email,
+                'phone'=>$patient->patient_user->phone,
+                'birthday'=>$patient->patient_user->birthday,
+                'address'=>$patient->patient_user->address,
+                'civil_id_number'=>$patient->civil_id_number,
+
             ];
         });
     }
