@@ -138,7 +138,6 @@ public function pendingAnalyses(){
                 $analyzeOrder->update([
                     'status'      => AnalyzeOrderStatus::Accepted,
                     'doctor_id'   => $user->doctor->id ?? $analyzeOrder->doctor_id,
-                    'doctor_name' => $user->full_name,
                 ]);
             } elseif ($status === AnalyzeOrderStatus::InProgress) {
                 $analyzeOrder->update(['status' => $status]);

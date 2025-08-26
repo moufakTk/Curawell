@@ -188,6 +188,7 @@ class DashpordReceptionController extends Controller
             return [
                 'id'    => $order->id,
                 'name'  => $name,
+                'doctor_name'=>$order->analyzed_ordering_doctor->doctor_user->full_name,
                 'date'  => optional($order->created_at)->format('Y-m-d'),
                 'price' => $order->price,
                 'link'  => optional($order->reports->first())->file_path, // إذا بدك URL مطلق: Storage::url(...)
