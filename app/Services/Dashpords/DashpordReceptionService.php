@@ -73,7 +73,7 @@ class DashpordReceptionService
 
             $user->assignRole(UserType::Patient->defaultRole());
 //            $user->load('roles.permissions');
-            return $user;
+            return $user->load('patient.medical_history');
         });
         event(new WhatsAppInfoPatient($registered, $password));
         $this->verificationService->sendVerificationCode($registered, 'phone', 'verify');
@@ -517,7 +517,6 @@ class DashpordReceptionService
                 })
             ];
         });
-//        })->groupBy('status');
         return [
             'data' => $orders,
             'message' => __('messages.reception.radiology.orderList'),

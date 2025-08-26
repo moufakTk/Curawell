@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\Sections\DivisionController;
 use App\Http\Controllers\Admin\Sections\SectionController;
 use App\Http\Controllers\Admin\Sections\ServiceController;
 use App\Http\Controllers\Admin\Sections\SmallServiceController;
+use App\Http\Controllers\Admin\Users\UserController;
 use App\Http\Controllers\Admin\WorkDay\WorkDayController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordController;
@@ -127,11 +128,12 @@ Route::prefix('/dashboard')->middleware(['auth:sanctum',SetLocaleMiddleware::cla
 
                             /* admin dashboard */
     Route::prefix('admin')
-        ->middleware(['role:Admin']) // عدّل حسب نظامك (abilities/permissions)
+//        ->middleware(['role:Admin']) // عدّل حسب نظامك (abilities/permissions)
         ->group(function () {
 
             Route::controller(SectionController::class)->prefix('/sections')->group(function () {
                 Route::get('/',  'index');
+                Route::get('/type',  'getType');
                 Route::post('/', 'store');
                 Route::get('{section}',  'show');
                 Route::put('{section}',  'update');
@@ -227,12 +229,21 @@ Route::prefix('/dashboard')->middleware(['auth:sanctum',SetLocaleMiddleware::cla
                 Route::get('/',  'index')->name('index');
             /*👍*/    Route::get('/searchDoctors',  'searchDoctors')->name('searchDoctors');
             /*👍*/    Route::post('/doctors-services', 'getDoctorsServices')->name('getDoctorsServices');
-            /* ~ */     Route::post('/discounts', 'create')->name('create');
-                Route::get('/discounts/{discount}', 'show')->name('show');
-                Route::delete('/discounts/{discount}', 'delete')->name('delete');
-                Route::put('/discounts/{discount}/toggle', 'toggle')->name('toggle');
+            /* ~ */   Route::post('/', 'create')->name('create');
+                Route::get('/{discount}', 'show')->name('show');
+                Route::delete('/{discount}', 'delete')->name('delete');
+//                Route::put('/discounts/{discount}/toggle', 'toggle')->name('toggle');
             });
 
+            Route::controller(UserController::class)
+                ->prefix('/users')
+                ->group(function () {
+                    // إنشاء مستخدم جديد
+                    Route::post('/', 'store');
+
+                    // جلب أماكن العمل حسب نوع المستخدم
+                    Route::post('/work-locations', 'getWorkLocationByUserType');
+                });
         });
 
                             /* Doctor dashboard */
@@ -278,6 +289,7 @@ Route::prefix('/dashboard')->middleware(['auth:sanctum',SetLocaleMiddleware::cla
         Route::get('/patients/{patient}/homeCare-appointments', 'all_app_homeCare')->name('patient_appointments');
         Route::get('/patients/{patient}/clinic-appointments', 'all_app_clinic')->name('patient_appointments');
         Route::get('/patients/{patient}/information', 'patientInformation');
+        Route::get('/patients/{patient}/reports', 'patientReports');
 
 
 

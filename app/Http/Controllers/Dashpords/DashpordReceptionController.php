@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashpords;
 
+use App\Enums\Orders\AnalyzeOrderStatus;
 use App\Enums\Orders\SkiagraphOrderStatus;
 use App\Enums\ProcessTakeSample;
 use App\Enums\SampleType;
@@ -153,6 +154,72 @@ class DashpordReceptionController extends Controller
 
             return ApiResponse::error([], $exception->getMessage(), $code);
         }
+    }
+    public function patientReports(?Patient $patient = null)
+    {
+        // لو ما نُمرِّر مريض، منجيب مريض المستخدم الحالي
+        if (is_null($patient)) {
+            $user = auth()->user();
+            if (!$user || !$user->patient) {
+                throw new \Exception(__('messages.reception.radiology.patients.notPatient'), 403);
+            }
+            $patient = $user->patient;
+        }
+
+        // --- القسم الأول: التحاليل ---
+        $analyzeOrders = $patient->analyze_orders()->where('status',AnalyzeOrderStatus::Completed)
+            ->with([
+                // أول ملف تقرير كرابط
+                'reports',
+                // اسم أول تحليل إذا ما كان عند الطلب اسم
+                'AnalyzeRelated.analyzesRelated_analyze:id,name_ar,name_en,price',
+            ])
+            ->latest()
+            ->get();
+
+        $analyses = $analyzeOrders->map(function ($order) {
+            // الاسم: إمّا اسم الطلب، وإلا اسم أول تحليل ضمنه
+            $name = $order->name;
+            if (!$name) {
+                $firstAnalyze = optional($order->AnalyzeRelated->first())->analyzesRelated_analyze;
+                $name = $firstAnalyze ? $firstAnalyze->{'name_' . app()->getLocale()} : null;
+            }
+
+            return [
+                'id'    => $order->id,
+                'name'  => $name,
+                'date'  => optional($order->created_at)->format('Y-m-d'),
+                'price' => $order->price,
+                'link'  => optional($order->reports->first())->file_path, // إذا بدك URL مطلق: Storage::url(...)
+            ];
+        });
+
+        // --- القسم الثاني: التصوير (سكياغراف) ---
+        $skiagraphOrders = $patient->skiagraph_Orders()->where('status',SkiagraphOrderStatus::Prepared)
+            ->with([
+                'reports',
+                'skaigraph_small_service:id,name_ar,name_en',
+            ])
+            ->latest()
+            ->get();
+
+        $skiagraph = $skiagraphOrders->map(function ($order) {
+            return [
+                'id'    => $order->id,
+                'name'  => optional($order->skaigraph_small_service)->{'name_' . app()->getLocale()},
+                'date'  => optional($order->created_at)->format('Y-m-d'),
+                'price' => $order->price,
+                'link'  => optional($order->reports->first())->file_path,
+            ];
+        });
+
+        return [
+            'data' => [
+                'analyses'  => $analyses,
+                'skiagraph' => $skiagraph,
+            ],
+            'message' => __('messages.reception.patients.reportsList'),
+        ];
     }
 
     // -------------------- patient profile --------------------
