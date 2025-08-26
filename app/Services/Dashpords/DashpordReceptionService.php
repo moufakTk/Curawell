@@ -150,7 +150,7 @@ class DashpordReceptionService
                 $q->type_serv = 'HomeCare';
             });
         if ($appointment->isEmpty()) {
-            return ' ما في قيم';
+            return [];
         }
 
         $appointment = $appointment
@@ -177,7 +177,7 @@ class DashpordReceptionService
             });
 
         if ($appointment->isEmpty()) {
-            return 'ما في قيم';
+            return [];
         }
 
         return $appointment->map(function ($item) {
