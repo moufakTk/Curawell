@@ -87,7 +87,7 @@ class DashpordPatientService
             $minutes = floor(($diffInSeconds % 3600) / 60);
             $appointment->date_ago ='d:'.$days.'|h:'.$hours.'|m:'.$minutes;
             $appointment->date_appointment=$sessionDateTime->format('Y-m-d H:i:s');
-
+            $appointment->doctor_name =$appointment->appointment_doctor->getFullNameAttribute();
             return $appointment;
 
         })->sortBy('date_appointment');
@@ -113,7 +113,7 @@ class DashpordPatientService
             });
 
         if($appointment->isEmpty()){
-            return 'مافي قيم ';
+            return [];
         }
         return $appointment->map(function ($item) {
             return new AppointmentResource($item, 'Clinic',false);
@@ -137,7 +137,7 @@ class DashpordPatientService
             });;
 
         if($appointment->isEmpty()){
-            return 'مافي قيم ';
+            return [];
         }
         return $appointment->map(function ($item) {
             return new AppointmentResource($item, 'Clinic' ,false);
@@ -156,7 +156,7 @@ class DashpordPatientService
             });
 
         if($appointment->isEmpty()){
-            return 'مافي قيم ';
+            return [];
         }
         return $appointment->map(function ($item) {
             return new AppointmentResource($item, 'HomeCare' ,false);
@@ -173,7 +173,7 @@ class DashpordPatientService
                 $q->type_serv ='HomeCare';
             });
         if($appointment->isEmpty()){
-            return 'مافي قيم ';
+            return [];
         }
         return $appointment->map(function ($item) {
             return new AppointmentResource($item, 'HomeCare' ,false);
@@ -196,7 +196,7 @@ class DashpordPatientService
         });
 
         if($appointment->isEmpty()){
-            return 'ما في قيم';
+            return [];
         }
 
         return $appointment->map(function ($item) {
@@ -214,7 +214,7 @@ class DashpordPatientService
                 $q->type_serv ='HomeCare';
             });
         if($appointment->isEmpty()){
-            return ' ما في قيم';
+            return [];
         }
 
         return $appointment->map(function ($item) {

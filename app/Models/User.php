@@ -33,7 +33,7 @@ class User extends Authenticatable
         'gender',
         'user_type',
         'is_active',
-        'num_patients',
+            'num_patients',
         'age',
         'birthday',
         'reset_password_token',

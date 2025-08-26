@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Appointment;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AppointmentRequest extends FormRequest
+class WaitingRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,14 +23,11 @@ class AppointmentRequest extends FormRequest
     {
         return [
             //
-            'mode'=>'required|string|in:Electronically,FaceToFace,Point',
             'doctor_id'=>'required|exists:doctors,id',
-            'doctor_session_id'=>'required|exists:doctor_sessions,id',
             'phone'=>'required',
-            'taxi_order'=>'required|boolean',
-            'location_order'=>'required_if:taxi_order,true|string',
             'name_patient'=>'required_if:mode,FaceToFace|string',
             'number_patient'=>'required_if:mode,FaceToFace|string',
+            'type_waiting'=>'required|string|in:Emergency,Disabled,Old',
 
         ];
     }

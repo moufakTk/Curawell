@@ -8,10 +8,12 @@ use App\Models\SessionCenter;
 use App\Models\SkiagraphOrder;
 use App\Models\User;
 use App\Models\UserReplacement;
+use App\Models\WorkEmployee;
 use App\Observers\AnalyzeOrderObserver;
 use App\Observers\HomeCareObserver;
 use App\Observers\SessionCenterObserver;
 use App\Observers\SkiagraphOrderObserver;
+use App\Observers\UpdateStstusDayDoctor;
 use App\Observers\UserObserver;
 use App\Observers\UserReplacementObserver;
 use Illuminate\Support\Facades\Route;
@@ -40,7 +42,9 @@ class AppServiceProvider extends ServiceProvider
         User::observe(UserObserver::class);
         SessionCenter::observe(SessionCenterObserver::class);
         UserReplacement::observe(UserReplacementObserver::class);
+        WorkEmployee::observe(UpdateStstusDayDoctor::class);
         Route::model('patient', \App\Models\Patient::class);
+
 
     }
 }

@@ -87,6 +87,21 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/reserved_sessions',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'reserved_sessions'])->name('doctor_appointments');
     Route::get('/num_patients',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'num_all_patients']);
+    Route::get('/doctor/appointments_occur',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'appointments_occur'])->name('doctor_appointments');
+
+                                    //  Secretary
+    Route::post('/reserve_appointment_waiting',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'reserve_appointment_waiting']);
+    Route::post('/update_appointment' ,[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'update_appointment']);
+    Route::post("/delete_appointment" ,[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'delete_appointment']);
+    Route::post('/delete_waiting',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'delete_waiting']);
+    Route::get('/send_message_delete_taxi/{appointment}',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'send_message_delete_taxi']);
+    Route::post('/Forbidden_day_doctor',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'Forbidden_day_doctor']);
+    Route::get('/secretary_queue',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'secretary_queue']);
+    Route::post('/make_appointment_occur',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'make_appointment_occur']);
+    Route::post('/make_appointment_checkout',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'make_appointment_checkout']);
+    Route::post('/make_appointment_don',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'make_appointment_don']);
+    Route::get('/secretary_queue_appointment_doctor',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'secretary_queue_appointment_doctor']);
+    Route::get('/secretary_queue_checkOut',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,"secretary_queue_checkOut"]);
 
 });
                                     /* home page & landing page  */
@@ -115,6 +130,7 @@ Route::post("/day_and_sessions" ,[\App\Http\Controllers\Appointment\AppointmentC
 Route::post('/services_section',[\App\Http\Controllers\Appointment\HomeCareController::class,'services']);
 Route::get("/nurses_homeCare" ,[\App\Http\Controllers\Appointment\HomeCareController::class,'nurseHomeCare']);
 Route::post('/period_homeCare',[\App\Http\Controllers\Appointment\HomeCareController::class,'periodsHomeCare'])->name('period_to_patient');
+
 
 
                                         /* Dashboards */
@@ -275,7 +291,6 @@ Route::prefix('/dashboard')->middleware(['auth:sanctum',SetLocaleMiddleware::cla
 
 
     });
-
                             /* reception dashboard*/
     Route::controller(DashpordReceptionController::class)->prefix('/reception')->middleware(['role:Reception'])->group( function () {
 
@@ -329,12 +344,7 @@ Route::prefix('/dashboard')->middleware(['auth:sanctum',SetLocaleMiddleware::cla
         Route::post('patients/{patient}/skiagraph_orders/create','createPatientSkiagraphOrder');
         Route::post('patients/{patient}/skiagraph_orders/{order}/update','updatePatientSkiagraphOrder');
         Route::delete('patients/{patient}/skiagraph_orders/{order}/delete','deletePatientSkiagraphOrder');
-
-
-
     });
-
-
 
 
 });

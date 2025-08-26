@@ -33,6 +33,7 @@ use App\Models\UserReplacement;
 use App\Models\WorkDay;
 use App\Models\WorkEmployee;
 use App\Models\WorkLocation;
+use App\Services\Dashpords\ForAllService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -41,11 +42,14 @@ use Illuminate\Support\Facades\DB;
 class AppointmentService
 {
 
+    protected $forAllService;
+
     protected $locale;
 
-    public function __construct()
+    public function __construct(ForAllService $forAllService)
     {
         $this->locale = app()->getLocale();
+        $this->forAllService = $forAllService;
     }
 
     public function getDoctorServices($request)
@@ -192,14 +196,14 @@ class AppointmentService
 
             }
 
-            if(!($doctor_session->session_doctor->user_id === $doctor->doctor_user->id)){
+            if($this->forAllService->check_doctor_session($doctor_session ,$doctor)){
                 return ['success' => false,
                     'message' => __('messages.doctor_periods'),
                     'data'=>[],
                 ];
             }
 
-            if (in_array($doctor_session->status ,[SessionDoctorStatus::UnAvailable ,sessionDoctorStatus::Reserved ,SessionDoctorStatus::TurnOff]) ) {
+            if ($this->forAllService->test_doctor_session($doctor_session)) {
                 return ['success' => false,
                     'message' => __('messages.session_not_available'),
                     'data' => [],
@@ -213,13 +217,13 @@ class AppointmentService
 
 
 
-            if(now()->greaterThanOrEqualTo($sessionDateTime)){
-                return [
-                    'success' => false,
-                    'message' =>"حمودة سلبينا الوقت قطع الفترة يعني هوينا ",
-                    'data' => []
-                ];
-            }
+//            if(now()->greaterThanOrEqualTo($sessionDateTime)){
+//                return [
+//                    'success' => false,
+//                    'message' =>"حمودة سلبينا الوقت قطع الفترة يعني هوينا ",
+//                    'data' => []
+//                ];
+//            }
 
 
             $appointment = Appointment::create([
@@ -233,50 +237,26 @@ class AppointmentService
                 'appointment_type' => $request->mode,
             ]);
 
+
             DoctorSession::where('id', $request->doctor_session_id)->update(['status' => SessionDoctorStatus::Reserved]);
 
-            if($request->mode =="Electronically")
-            {
-                $point = Point::where('name_en','Book an appointment online')->first();
 
-                $userPoint=UserPoint::create([
-                    'patient_id'=>$user->patient->id,
-                    'point_id'=>$point->id ,
-                    'pointable_type'=>Appointment::class,
-                    'pointable_id'=>$appointment->id,
-                    'history'=>Carbon::today(),
-                    'point_number'=>$point->point_number,
-                ]);
-
-                $user->patient->update(["totalPoints"=>$user->patient->totalPoints + $userPoint->point_number]);
-            }
+            //$this->forAllService->check_given_point($appointment);
 
 
-            if($request->taxi_order == true){
+            if($request->taxi_order == true) {
                 $fullDateTime = Carbon::parse(
                     Carbon::parse($doctor_session->session_doctor->work_employee_Day->history)->format('Y-m-d') . ' ' . $doctor_session->from
                 );
 
-                $order=OrderTaxi::create([
-                    'patient_id' =>$user->patient->id,
-                    'phone'=>$request->phone,
-                    'address'=>$request->location_order,
-                    'date'=>$fullDateTime,
+                $order = OrderTaxi::create([
+                    'patient_id' => $user->patient->id,
+                    'phone' => $request->phone,
+                    'address' => $request->location_order,
+                    'date' => $fullDateTime,
                 ]);
-                event(new WhatsAppTaxi($user,$order));
-
-                $point=Point::where('name_en','Request delivery service online')->first();
-                $userPoint=UserPoint::create([
-                    'patient_id'=>$user->patient->id,
-                    'point_id'=>$point->id ,
-                    'pointable_type'=>Appointment::class,
-                    'pointable_id'=>$appointment->id,
-                    'history'=>Carbon::today(),
-                    'point_number'=>$point->point_number,
-                ]);
-                $user->patient->update(["totalPoints"=>$user->patient->totalPoints + $userPoint->point_number]);
+                event(new WhatsAppTaxi($user, $order));
             }
-
 
 
             $assigned=Assigned::where([
@@ -289,6 +269,11 @@ class AppointmentService
                     'patient_id' => $user->patient->id,
                     'active' => true,
                 ]);
+
+                $doctor->doctor_user->update([
+                    'num_patients'=>$doctor->doctor_user->num_patients+1,
+                ]);
+
             }else{
                 if($assigned->active==false){
                     $doctor->assigned()->update(['active' => true]);
@@ -358,6 +343,8 @@ class AppointmentService
         return $registered;
 
     }
+
+
 
 
 

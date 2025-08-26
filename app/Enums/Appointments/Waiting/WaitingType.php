@@ -8,9 +8,9 @@ enum WaitingType: string
 {
     //
 
-    case Emergency = 'emergency';
-    case Disabled  = 'disabled';
-    case Old       = 'old';
+    case Emergency = 'Emergency';
+    case Disabled  = 'Disabled';
+    case Old       = 'Old';
 
 
     public function label(): string

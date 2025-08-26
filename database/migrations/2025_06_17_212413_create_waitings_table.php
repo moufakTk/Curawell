@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('patient_id')->constrained('patients')->cascadeOnDelete();
             $table->foreignId('doctor_id')->constrained('doctors')->cascadeOnDelete();
             $table->string('phone_number');
-            $table->enum('status',['Confirmed','Occur','Don','Cancel']);
+            $table->enum('status',['Confirmed','Occur','CheckOut','Don','Cancel']);
             $table->enum('waiting_type',['Emergency','Disabled','Old']);
             $table->timestamps();
         });

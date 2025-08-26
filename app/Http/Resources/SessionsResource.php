@@ -29,6 +29,7 @@ class SessionsResource extends JsonResource
 
             'time_ago'=>$this->date_ago,
             'date'=>$this->date_appointment,
+            'doctor_name'=>$this->doctor_name,
             'info_session'=>$this->sesstions->map(function ($session) {
                 return [
                     'session_id'=>$session->id,

@@ -8,6 +8,7 @@ enum WaitingStatus: string
 
     case Confirmed ='Confirmed';
     case Occur     ='Occur';
+    case CheckOut   ='CheckOut';
     case Don       ='Don';
     case Cancel    ='Cancel';
 
@@ -18,6 +19,7 @@ enum WaitingStatus: string
             self::Occur => 'جاري',
             self::Don => 'انتهى',
             self::Cancel=>'ألغي',
+            self::CheckOut=>'محاسبة',
         };
     }
 }

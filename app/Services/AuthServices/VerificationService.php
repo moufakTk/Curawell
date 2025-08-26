@@ -89,23 +89,12 @@ class VerificationService
             'token' => 'jamiukukd0u2yxp4',
             'to' => '+963' . substr($user->phone, 1, 9),
             'body' => "👋 Hello {$user->first_name} {$user->last_name},\n
-             \n🔐 Your verification code is: *{$code}*\n
+             \n🔐 Your verification code is: {$code}\n
              \nPlease enter this code to complete your login.\n
              \n✅ Thank you for using our service! 🚀"
 
         ]);
-
-        if ($response->successful()) {
-            return $response->json(); // أو $response->body() حسب يلي بدك ياه
-        } else {
-            return response()->json([
-                'error' => 'Failed to send message',
-                'status' => $response->status(),
-                'message' => $response->body()
-            ], $response->status());
-        }
     }
-
     public function sendResetPasswordWhatsappCode($user, $code)
     {
       $message =  "👋 Hello {$user->first_name} {$user->last_name},\n
@@ -133,8 +122,8 @@ class VerificationService
                 'status' => $response->status(),
                 'message' => $response->body()
             ], $response->status());
+            }
         }
-    }
 
     //verification function we compained phone and number register ande reset password
     public function verifyCode($request)

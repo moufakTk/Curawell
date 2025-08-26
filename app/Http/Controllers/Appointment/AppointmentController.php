@@ -96,6 +96,8 @@ class AppointmentController extends Controller
     public function reserveAppointment(AppointmentRequest $request)
     {
 
+        $request->validate([]);
+
         try {
         $user=auth()->user();
 

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\Appointments\appointment\AppointmentStatus;
+use App\Enums\Sessions\SessionDoctorStatus;
 use App\Enums\Users\DoctorType;
 use App\Enums\Users\UserType;
 use App\Models\Appointment;
@@ -38,13 +39,15 @@ class AppointmentSeeder extends Seeder
         $user->each(function ($user) use ($patient ,$point){
 
             $sessions = $user->work_employees->flatMap(fn($emp) => $emp->doctor_sessions);
+            $id=$sessions->random()->id;
+
             $appointment =Appointment::factory()->create([
                 'patient_id' => $patient->id,
                 'doctor_id' =>  $user->doctor->id,
-                'doctor_session_id' =>$sessions->random()->id,
+                'doctor_session_id' =>$id,
             ]);
 
-
+            $appointment->appointment_doctor_session->update(['status'=>SessionDoctorStatus::Reserved]);
 
             $userPoint=UserPoint::create([
                 'patient_id'=>$patient->id,

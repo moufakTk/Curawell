@@ -44,6 +44,7 @@ class AppointmentResource extends JsonResource
 
             'doctor_appointments'=>$this->appointment_for_doctor(),
 
+            default => $this->appointment_for_doctor()
 
         };
 
@@ -116,6 +117,8 @@ class AppointmentResource extends JsonResource
 
         return [
 
+            'appointment_id'=>optional($this->appointments)->id,
+            'session_id'=>$this->id,
             'time'=>$this->from,
             'phone_number'=>optional($this->appointments)->phone_number,
             'status'=>optional($this->appointments)->status,

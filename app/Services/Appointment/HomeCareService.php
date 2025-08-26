@@ -17,6 +17,7 @@ use App\Models\User;
 use App\Models\UserPoint;
 use App\Models\WorkDay;
 use App\Models\WorkLocation;
+use App\Services\Dashpords\ForAllService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use function PHPUnit\Framework\isEmpty;
@@ -25,9 +26,12 @@ class HomeCareService
 {
 
     protected $locale;
-    public function __construct()
+
+    protected $forAllServices;
+    public function __construct(ForAllService $forAllServices)
     {
         $this->locale=app()->getLocale();
+        $this->forAllServices=$forAllServices;
     }
 
    public function services($request)  //هذا التابع ليس فقط للخدمة المنزلية بل لكل الاقسام التي فيها خدمات لنرجعهامثلا العيادات
@@ -187,16 +191,8 @@ class HomeCareService
                        ]);
                     }
 
-                    $point=Point::where('name_en','Request home service online')->first();
-                    $userPoint=UserPoint::create([
-                        'patient_id'=>$user->patient->id,
-                        'point_id'=>$point->id ,
-                        'pointable_type'=>AppointmentHomeCare::class,
-                        'pointable_id'=>$appointment->id,
-                        'history'=>Carbon::today(),
-                        'point_number'=>$point->point_number,
-                    ]);
-                    $user->patient->update(["totalPoints"=>$user->patient->totalPoints + $userPoint->point_number]);
+                    $this->forAllServices->check_given_point_hc($appointment);
+
                     $nurse_choice=$nurse->select('id','first_name','last_name','gender','phone')->first();
                    // $nurse_choice=$nurse;
                     $busy=true;

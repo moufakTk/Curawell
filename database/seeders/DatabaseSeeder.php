@@ -44,9 +44,10 @@ class DatabaseSeeder extends Seeder
             WorkEmployeeSeeder::class,
             PointSeeder::class,
             AppointmentSeeder::class,
-            AppointmentHomeCareSeeder::class,
+            //AppointmentHomeCareSeeder::class,
             SkiagraphOrdersSeeder::class,
             AnalysesOrdersSeeder::class,
+            SecretaryWorkLocationSeeder::class,
         ]);
 
     }

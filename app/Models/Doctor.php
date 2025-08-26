@@ -124,4 +124,12 @@ class Doctor extends Model
         return $this->morphMany(Assigned::class ,'assignedable');
     }
 
+
+    public function getFullNameAttribute()
+    {
+        return $this->doctor_user->full_name;
+
+    }
+
+
 }
