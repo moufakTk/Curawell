@@ -5,10 +5,19 @@ namespace App\Services\Dashpords;
 use App\DTO\PointsDTO;
 use App\Enums\Appointments\appointment\AppointmentHomeCareStatus;
 use App\Enums\Appointments\appointment\AppointmentStatus;
+use App\Enums\Appointments\Waiting\WaitingStatus;
+use App\Enums\Orders\AnalyzeOrderStatus;
+use App\Enums\Orders\SkiagraphOrderStatus;
 use App\Enums\Services\SectionType;
 use App\Http\Resources\AppointmentResource;
+use App\Http\Resources\BillAnalyzeResource;
+use App\Http\Resources\BillHCResource;
+use App\Http\Resources\BillRadiologyResource;
+use App\Http\Resources\BillResource;
 use App\Http\Resources\PointsResource;
+use App\Models\AnalyzeOrder;
 use App\Models\Appointment;
+use App\Models\AppointmentBill;
 use App\Models\AppointmentHomeCare;
 use App\Models\Bill;
 use App\Models\Comment;
@@ -17,12 +26,15 @@ use App\Models\Complaint;
 use App\Models\Doctor;
 use App\Models\Evaluction;
 use App\Models\Section;
+use App\Models\SkiagraphOrder;
 use App\Models\User;
 use App\Models\UserPoint;
 use App\Models\UserReplacement;
+use App\Models\Waiting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
+use function Symfony\Component\String\u;
 
 class DashpordPatientService
 {
@@ -193,6 +205,8 @@ class DashpordPatientService
                 $appointment->date =$appointment->appointment_doctor_session->session_doctor->work_employee_Day->history;
                 $appointment->time =$appointment->appointment_doctor_session->from;
                 $appointment->type_serv ='Clinic';
+                $appointment->bill=$appointment->appointment_bills()->first()->total_treatment_amount;
+                $appointment->paid_bill=$appointment->appointment_bills()->first()->paid_of_amount;
         });
 
         if($appointment->isEmpty()){
@@ -375,7 +389,6 @@ class DashpordPatientService
         $comment->delete();
         return $comment;
     }
-
     public function complaint($request)
     {
 
@@ -392,12 +405,148 @@ class DashpordPatientService
     }
 
 
+    public function my_appointment_bills()
+    {
 
-//    public function ()
-//    {
-//
-//    }
+        $sum =0;
+        $paid=0;
 
+        $bill=Bill::where('patient_id', auth()->user()->patient->id)
+            ->with(['doctorEdits', 'appointment_bills' => function($q) {
+                $q->whereHasMorph('appointable', [Appointment::class], function($query){
+                    $query->where('status', AppointmentStatus::Don);
+                })->orWhereHasMorph('appointable', [Waiting::class], function($query){
+                    $query->where('status', WaitingStatus::Don);
+                });
+            }],'bill_doctor')
+            ->whereHas('appointment_bills', function ($q) {
+                $q->whereMorphRelation('appointable', [Appointment::class], function ($query) {
+                    $query->where('status', AppointmentStatus::Don);
+                })->orWhereMorphRelation('appointable', [Waiting::class], function ($query) {
+                    $query->where('status', WaitingStatus::Don);
+                });
+            })
+            ->get()->each(function ($bill) use ($sum ,$paid){
+
+                $bill->appointment_bills->loadMorph('appointable', [
+                    Appointment::class => [
+                        'appointment_doctor_session.session_doctor.work_employee_Day'
+                    ],
+                    Waiting::class => []]);
+
+                $bill->deppartment =$bill->bill_doctor->doctor_user->active_work_location->locationable->{'name_'.$this->locale};
+                $bill->makeHidden([
+                    'bill_doctor',
+                    'bill_doctor.doctor_user',
+                    'bill_doctor.doctor_user.active_work_location',
+                    'bill_doctor.doctor_user.active_work_location.locationable',
+                ]);
+            });
+
+        $sum =$bill->sum('total_bill');
+        $paid=$bill->sum('paid_of_bill');
+        //return $bill;
+
+        return [
+            'sum_bill'=>$sum,
+            'paid'=>$paid,
+            'bills'=>$bill->map(function ($bill) {
+                return new BillResource($bill ,'Patient');
+            })
+        ];
+    }
+    public function my_bill_hc()
+    {
+        $sum=0;
+        $bill=AppointmentHomeCare::where(['patient_id'=>auth()->user()->patient->id ,'status'=>AppointmentHomeCareStatus::Completed])->get()->each(function ($q) use (&$sum){
+            $q->nurse =$q->appointment_home_session_nurse->nurse->getFullNameAttribute();
+            $q->makeHidden('appointment_home_session_nurse');
+            $sum+=$q->price;
+        });
+
+
+        return  [
+            'sum_bill'=>$sum,
+            'paid'=>$sum,
+            'bills'=>BillHCResource::collection($bill)
+        ];
+    }
+    public function my_bill_analyze()
+    {
+        $sum=0;
+        $bill =AnalyzeOrder::where(['patient_id'=>auth()->user()->patient->id ,'status'=>AnalyzeOrderStatus::Completed])->with('AnalyzeRelated.analyzesRelated_analyze')->get()->each(function ($q) use (&$sum){
+
+            $q->department ='Laboratory';
+            $sum+=$q->price;
+        });
+        return [
+            'sum_bill'=>$sum,
+            'paid'=>$sum,
+            'bills'=>BillAnalyzeResource::collection($bill)
+        ] ;
+    }
+    public function my_bill_skiagraph()
+    {
+        $sum=0;
+        $bill =SkiagraphOrder::where(['patient_id'=>auth()->user()->patient->id ,'status'=>SkiagraphOrderStatus::Prepared])->with('skaigraph_small_service')->get()->each(function ($q) use (&$sum){
+            $q->department ='Radiography';
+            $sum+=$q->price;
+        });
+
+        return [
+            'sum_bill'=>$sum,
+            'paid'=>$sum,
+            'bills'=>BillRadiologyResource::collection($bill),
+        ] ;
+    }
+
+    public function rates_bill()
+    {
+        $re1=$this->my_bill_analyze();
+        $re2=$this->my_bill_skiagraph();
+        $re3=$this->my_bill_hc();
+        $re4=$this->my_appointment_bills();
+
+        $all_sum =$re1['sum_bill']+$re2['sum_bill']+$re3['sum_bill']+$re4['sum_bill'];
+        $all_paid =$re1['paid']+$re2['paid']+$re3['paid']+$re4['paid'];
+
+        $percentage = $all_sum > 0 ? round(($all_paid / $all_sum) * 100, 2) : 0;
+
+        $re1_percentage = $all_sum > 0 ? round(($re1['sum_bill'] / $all_sum) * 100, 2) : 0;
+        $re2_percentage = $all_sum > 0 ? round(($re2['sum_bill'] / $all_sum) * 100, 2) : 0;
+        $re3_percentage = $all_sum > 0 ? round(($re3['sum_bill'] / $all_sum) * 100, 2) : 0;
+        $re4_percentage = $all_sum > 0 ? round(($re4['sum_bill'] / $all_sum) * 100, 2) : 0;
+
+        return [
+            'all_sum'=>$all_sum,
+            'all_paid'=>$all_paid,
+            '$percentage'=>$percentage,
+            'rates'=>[
+                [
+                    'department'=>'clinic',
+                    'rate'=>$re4_percentage
+                ],
+                [
+                    'department'=>'laboratory',
+                    'rate'=>$re1_percentage
+                ],
+                [
+                    'department'=>'radiology',
+                    'rate'=>$re2_percentage
+                ],
+                [
+                    'department'=>'homeCar',
+                    'rate'=>$re3_percentage
+                ]
+            ],
+            'clinic_bills'=>$re4['bills'],
+            'lab_bills'=>$re1['bills'],
+            'radiology_bills'=>$re2['bills'],
+            'home_car_bills'=>$re3['bills'],
+
+        ];
+
+    }
 
 
 

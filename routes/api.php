@@ -78,7 +78,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/my_bill_hc',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,'my_bill_hc']);
     Route::get('/my_bill_analyze',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,"my_bill_analyze"]);
     Route::get('/my_bill_skiagraph',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,"my_bill_skiagraph"]);
-
+    Route::get('/rates_bill',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,'rates_bill']);
 
                                         // Doctor
 
@@ -94,6 +94,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/doctor_patients/doctor/{$doctor}',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'doctor_patients']);
     Route::get('/doctor_patients/doctor',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'doctor_patients']);
+
+    Route::get('/all_appointments_doctor',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'all_appointments_doctor']);
 
 
                                     //  Secretary

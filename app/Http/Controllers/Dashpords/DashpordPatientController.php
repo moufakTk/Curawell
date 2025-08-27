@@ -206,11 +206,38 @@ class DashpordPatientController extends Controller
 
 
 
-//    public function ()
-//    {
-//
-//    }
+    public function  my_appointment_bills()
+    {
 
+        $re =$this->dashpordPatientService->my_appointment_bills();
+        return response()->json($re);
+
+    }
+
+    public function my_bill_hc()
+    {
+        $re =$this->dashpordPatientService->my_bill_hc();
+        return response()->json($re['bills']);
+
+    }
+
+    public function my_bill_analyze()
+    {
+        $re =$this->dashpordPatientService->my_bill_analyze();
+        return response()->json($re['bills']);
+    }
+
+    public function my_bill_skiagraph(){
+        $re =$this->dashpordPatientService->my_bill_skiagraph();
+        return response()->json($re['bills']);
+    }
+
+    public function rates_bill()
+    {
+        $re=$this->dashpordPatientService->rates_bill();
+        return response()->json($re);
+
+    }
 
 
 

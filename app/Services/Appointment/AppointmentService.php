@@ -179,8 +179,6 @@ class AppointmentService
                 $user=User::where('id',auth()->user()->id)->with('patient')->first();
             }
 
-
-
             $doctor=Doctor::where('id', $request->doctor_id)->with('doctor_user','doctor_examination')->first();
             $department=$doctor->doctor_user->active_work_location->locationable->competence_services->name_en;
             $doctor_session = DoctorSession::where('id', $request->doctor_session_id)->with('session_doctor.work_employee_Day')->first();

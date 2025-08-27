@@ -337,6 +337,10 @@ class CenterInfoController extends Controller
     }
 
 
+    public function aboutPoints()
+    {
+
+    }
 
 
 
