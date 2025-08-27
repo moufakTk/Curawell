@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\Appointments\Waiting\WaitingStatus;
 use App\Enums\Appointments\Waiting\WaitingType;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Waiting extends Model
@@ -58,5 +59,10 @@ class Waiting extends Model
         return $this->morphMany(AppointmentBill::class , 'appointable');
     }
 
+
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y-m-d H:i');
+    }
 
 }

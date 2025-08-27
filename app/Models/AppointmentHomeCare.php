@@ -6,6 +6,7 @@ use App\Enums\Appointments\appointment\AppointmentHomeCareStatus;
 use App\Enums\Appointments\appointment\AppointmentHomeCareStyle;
 use App\Enums\Appointments\AppointmentHomeCareType;
 use App\Enums\Gender;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -30,7 +31,7 @@ class AppointmentHomeCare extends Model
         'explain',
         'status',
     ];
-    protected $hidden=['created_at','updated_at'];
+    protected $hidden=['updated_at'];
     protected $casts =[
         'type'=>AppointmentHomeCareType::class,
         'status'=>AppointmentHomeCareStatus::class,
@@ -89,5 +90,10 @@ class AppointmentHomeCare extends Model
         );
     }
 
+
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y-m-d H:i');
+    }
 
 }

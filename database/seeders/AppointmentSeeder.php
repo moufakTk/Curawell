@@ -3,10 +3,13 @@
 namespace Database\Seeders;
 
 use App\Enums\Appointments\appointment\AppointmentStatus;
+use App\Enums\Payments\BallStatus;
 use App\Enums\Sessions\SessionDoctorStatus;
 use App\Enums\Users\DoctorType;
 use App\Enums\Users\UserType;
 use App\Models\Appointment;
+use App\Models\AppointmentBill;
+use App\Models\Bill;
 use App\Models\Division;
 use App\Models\Doctor;
 use App\Models\Patient;
@@ -45,6 +48,18 @@ class AppointmentSeeder extends Seeder
                 'patient_id' => $patient->id,
                 'doctor_id' =>  $user->doctor->id,
                 'doctor_session_id' =>$id,
+            ]);
+
+            $bill=Bill::create([
+                'patient_id' => $patient->id,
+                'doctor_id' =>  $user->doctor->id,
+                "status"=>BallStatus::Incomplete
+            ]);
+
+            AppointmentBill::create([
+                'bill_id'=>$bill->id,
+                'appointable_type'=>Appointment::class,
+                'appointable_id'=>$appointment->id,
             ]);
 
             $appointment->appointment_doctor_session->update(['status'=>SessionDoctorStatus::Reserved]);

@@ -16,11 +16,12 @@ class AnalyzeOrderResource extends JsonResource
     {
         return [
             'id'         => $this->id,
-            'doctor_id'       => $this->doctor_id,
+            'doctor_id'  =>$this->doctor_id,
             'name'       => $this->name,
             'doctor_name'=>$this?->doctor_name,
             'status'     => $this->status->value ?? $this->status,
             'price'      => $this->price,
+            'date'       =>$this->created_at->format('Y-m-d H:i'),
             'patient'    => [
                 'id'   => $this->patient_id,
                 'name' => optional($this->analyzed_order_patient?->patient_user)->full_name,

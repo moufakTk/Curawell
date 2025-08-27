@@ -217,13 +217,13 @@ class AppointmentService
 
 
 
-//            if(now()->greaterThanOrEqualTo($sessionDateTime)){
-//                return [
-//                    'success' => false,
-//                    'message' =>"حمودة سلبينا الوقت قطع الفترة يعني هوينا ",
-//                    'data' => []
-//                ];
-//            }
+            if(now()->greaterThanOrEqualTo($sessionDateTime)){
+                return [
+                    'success' => false,
+                    'message' =>"حمودة سلبينا الوقت قطع الفترة يعني هوينا ",
+                    'data' => []
+                ];
+            }
 
 
             $appointment = Appointment::create([

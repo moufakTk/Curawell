@@ -74,7 +74,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/updateComment',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,'updateComment']);
     Route::post('/deleteComment',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,'deleteComment']);
     Route::post('/complaint',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,'complaint']);
-
+    Route::get('/my_appointment_bills',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,'my_appointment_bills']);
+    Route::get('/my_bill_hc',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,'my_bill_hc']);
+    Route::get('/my_bill_analyze',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,"my_bill_analyze"]);
+    Route::get('/my_bill_skiagraph',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,"my_bill_skiagraph"]);
 
 
                                         // Doctor
@@ -89,6 +92,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/num_patients',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'num_all_patients']);
     Route::get('/doctor/appointments_occur',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'appointments_occur'])->name('doctor_appointments');
 
+    Route::get('/doctor_patients/doctor/{$doctor}',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'doctor_patients']);
+    Route::get('/doctor_patients/doctor',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'doctor_patients']);
+
+
                                     //  Secretary
     Route::post('/reserve_appointment_waiting',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'reserve_appointment_waiting']);
     Route::post('/update_appointment' ,[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'update_appointment']);
@@ -102,6 +109,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/make_appointment_don',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'make_appointment_don']);
     Route::get('/secretary_queue_appointment_doctor',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'secretary_queue_appointment_doctor']);
     Route::get('/secretary_queue_checkOut',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,"secretary_queue_checkOut"]);
+    Route::post('/bill_for_appointment',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'bill_for_appointment']);
+    Route::post('/update_paid_of_appointment',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'update_paid_of_appointment']);
+    Route::post('/update_paid_of_bill',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,"update_paid_of_bill"]);
+    Route::post('/update_status_bill',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,"update_status_bill"]);
+    Route::get('/secretary_patients',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'secretary_patients']);
+
 
 });
                                     /* home page & landing page  */

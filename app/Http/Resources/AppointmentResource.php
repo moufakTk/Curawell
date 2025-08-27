@@ -68,6 +68,8 @@ class AppointmentResource extends JsonResource
         if($rel && $this->status ==AppointmentStatus::Don ){
 
             $return =array_merge($return,[
+                'bill'=>$this->bill,
+                'paid_bill'=>$this->paid_bill,
                 'info session' =>$this->sesstions->map(function ($session) {
                     return [
                         'session_name'=>$session->session_name,

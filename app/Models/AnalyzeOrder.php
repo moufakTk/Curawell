@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Orders\AnalyzeOrderStatus;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -72,7 +73,10 @@ class AnalyzeOrder extends Model
     }
 
 
-
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y-m-d H:i');
+    }
 
 
 }

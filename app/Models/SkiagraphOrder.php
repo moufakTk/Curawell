@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Orders\SkiagraphOrderStatus;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -56,6 +57,13 @@ public function skaigraph_small_service(){
     public function reports()
     {
         return $this->morphMany(Report::class, 'reportable');
+    }
+
+
+
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y-m-d H:i');
     }
 
 }

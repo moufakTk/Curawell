@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
             WorkDaySeeder::class,
             WorkEmployeeSeeder::class,
             PointSeeder::class,
-            AppointmentSeeder::class,
+            //AppointmentSeeder::class,
             //AppointmentHomeCareSeeder::class,
             SkiagraphOrdersSeeder::class,
             AnalysesOrdersSeeder::class,
