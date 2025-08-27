@@ -28,7 +28,8 @@ class BillRadiologyResource extends JsonResource
             'bill_num'=>$this->bill_num,
             'doctor_name'=>$this->doctor_name,
             'price'=>$this->price,
-            'date'=>$this->created_at,
+            'date'=>$this->created_at->format('Y-m-d H:i'),
+            'department'=>$this->department,
             'name'=>optional($this->skaigraph_small_service)->{'name_'.$this->locale},
 
         ];

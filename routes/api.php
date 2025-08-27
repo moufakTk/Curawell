@@ -116,6 +116,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/update_paid_of_bill',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,"update_paid_of_bill"]);
     Route::post('/update_status_bill',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,"update_status_bill"]);
     Route::get('/secretary_patients',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'secretary_patients']);
+    Route::get('/all_appointment_secretary',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'all_appointment_secretary']);
 
 
 });

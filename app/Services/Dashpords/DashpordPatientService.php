@@ -430,7 +430,8 @@ class DashpordPatientService
 
                 $bill->appointment_bills->loadMorph('appointable', [
                     Appointment::class => [
-                        'appointment_doctor_session.session_doctor.work_employee_Day'
+                        'appointment_doctor_session.session_doctor.work_employee_Day',
+                        'appointment_doctor.doctor_user.active_work_location.locationable'
                     ],
                     Waiting::class => []]);
 

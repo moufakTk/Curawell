@@ -24,7 +24,7 @@ class BillAnalyzeResource extends JsonResource
         return [
             'bill_num'=>$this->bill_num,
             'doctor_name'=>$this->doctor_name,
-            'date'=>$this->created_at,
+            'date'=>$this->created_at->format('Y-m-d H:i'),
             'name'=>$this->name,
             'price'=>$this->price,
             'department'=>$this->department,

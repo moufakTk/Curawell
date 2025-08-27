@@ -215,6 +215,7 @@ class DashpordSecretaryController extends Controller
     public function all_appointment_secretary()
     {
         $re=$this->dashpordSecretaryService->all_appointment_secretary();
+        return response()->json($re);
 
     }
 

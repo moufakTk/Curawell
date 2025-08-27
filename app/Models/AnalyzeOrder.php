@@ -73,10 +73,10 @@ class AnalyzeOrder extends Model
     }
 
 
-    public function getCreatedAtAttribute($value)
-    {
-        return Carbon::parse($value)->format('Y-m-d H:i');
-    }
+//    public function getCreatedAtAttribute($value)
+//    {
+//        return Carbon::parse($value)->format('Y-m-d H:i');
+//    }
 
 
 }

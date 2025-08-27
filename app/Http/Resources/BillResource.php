@@ -73,6 +73,7 @@ class BillResource extends JsonResource
                     $appointable = $bill->appointable;
                     if($appointable instanceof Appointment){
                         return[
+                            'department'=>optional($appointable->appointment_doctor->doctor_user->active_work_location->locationable)->{'name_'.$this->locale},
                             'appointment_bill_id'=>$bill->id,
                             'total_bill'=>$bill->total_treatment_amount,
                             'paid_bill'=>$bill->paid_of_amount,

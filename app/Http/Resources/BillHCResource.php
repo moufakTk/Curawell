@@ -26,7 +26,7 @@ class BillHCResource extends JsonResource
             'bill_num'=>$this->bill_num,
             'type'=>$this->type,
             'price'=>$this->price,
-            'date'=>$this->created_at,
+            'date'=>$this->created_at->format('Y-m-d H:i'),
             'nurse'=>$this->nurse,
 
         ];

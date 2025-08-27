@@ -804,9 +804,17 @@ class DashpordSecretaryService
             ->whereIn('locationable_id',$competence)
             ->pluck('user_id')
             ->toArray();
+        //$app=[];
+        $app = collect();
+        foreach($user_doctor as $user){
+            $appointment =$this->all_appointments_doctor($user);
+            if($appointment->isNotEmpty()){
+                $app=$app->merge($appointment);
+            }
 
+        }
 
-        return '';
+        return $app;
     }
 
     public function all_appointments_doctor($user)
@@ -824,7 +832,7 @@ class DashpordSecretaryService
             $appointment->paid_bill=$appointment->appointment_bills()->first()->paid_of_amount;
         });
         return $appointment->map(function ($item) {
-            return new AppointmentDoctorResource($item, '');
+            return new AppointmentDoctorResource($item, 'Secretary');
         });
 
     }

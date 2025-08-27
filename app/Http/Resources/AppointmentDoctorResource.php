@@ -32,7 +32,7 @@ class AppointmentDoctorResource extends JsonResource
     {
         return match ($this->rel){
             'Doctor'=> $this->ifDon(),
-            'Secretary'=>[],
+            'Secretary'=>$this->Secretary(),
               default => [],
 
         };
@@ -65,6 +65,25 @@ class AppointmentDoctorResource extends JsonResource
         }
 
         return $return ;
+    }
+
+
+    public function Secretary()
+    {
+        $return=[
+            'date'=>$this->date,
+            'time'=>$this->time,
+            'status'=>$this->status,
+            'mode'=>$this->appointment_type,
+            'patient_name'=>optional($this->appointment_patient)->getFullNameAttribute(),
+            'patient_num'=>optional($this->appointment_patient)->patient_num,
+            'doctor_name'=>optional($this->appointment_doctor)->getFullNameAttribute(),
+            'department'=>$this->department
+
+
+        ];
+
+        return $return;
     }
 
 
