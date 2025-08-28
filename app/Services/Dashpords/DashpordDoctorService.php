@@ -327,8 +327,6 @@ class DashpordDoctorService
         ];
 
     }
-
-
     public function all_appointments_doctor()
     {
 
@@ -344,10 +342,27 @@ class DashpordDoctorService
             $appointment->bill=$appointment->appointment_bills()->first()->total_treatment_amount;
             $appointment->paid_bill=$appointment->appointment_bills()->first()->paid_of_amount;
         });
-        return $appointment->map(function ($item) {
-            return new AppointmentDoctorResource($item, 'Doctor');
-        });
+        $num_app=$this->number_appointment();
 
+        return[
+            'appointment_reserved'=>$num_app['appointment_reserved'],
+            'appointment_done'=>$num_app['appointment_done'],
+            'appointments'=>$appointment->map(function ($item) {
+                return new AppointmentDoctorResource($item, 'Doctor');
+            })
+            ];
+
+    }
+
+    public function number_appointment()
+    {
+
+       $num_app_res= Appointment::where(['doctor_id'=>auth()->user()->doctor->id,'status'=>AppointmentStatus::Confirmed])->count();
+       $num_app_don=Appointment::where(['doctor_id'=>auth()->user()->doctor->id,'status'=>AppointmentStatus::Don])->count();
+       return [
+           'appointment_reserved'=>$num_app_res,
+           'appointment_done'=>$num_app_don,
+       ];
     }
 
 

@@ -804,23 +804,33 @@ class DashpordSecretaryService
             ->whereIn('locationable_id',$competence)
             ->pluck('user_id')
             ->toArray();
-        //$app=[];
+        $sum_all_app_res=0;
+        $sum_all_app_don=0;
         $app = collect();
         foreach($user_doctor as $user){
+            $re_num=$this->number_appointment($user);
+            $sum_all_app_res+=$re_num['appointment_reserved'];
+            $sum_all_app_don+=$re_num['appointment_done'];
             $appointment =$this->all_appointments_doctor($user);
             if($appointment->isNotEmpty()){
                 $app=$app->merge($appointment);
+                //$app[]=$appointment;
             }
 
         }
 
-        return $app;
+        return [
+            'appointment_reserved'=>$sum_all_app_res,
+            'appointment_done'=>$sum_all_app_don,
+            'appointments'=>$app
+        ];
     }
 
     public function all_appointments_doctor($user)
     {
+        $doctor =Doctor::where('user_id',$user)->first();
 
-        $appointment =Appointment::where('doctor_id',$user)->with('sesstions','appointment_doctor','appointment_patient')->get()->each(function ($appointment) {
+        $appointment =Appointment::where('doctor_id',$doctor->id)->with('sesstions','appointment_doctor','appointment_patient')->get()->each(function ($appointment) {
             $location_id=$appointment->appointment_doctor->doctor_user->active_work_location->locationable_id;
             $competence_name=Competence::where('id',$location_id)->value('name_'.$this->locale);
             $appointment->department=$competence_name;
@@ -835,6 +845,17 @@ class DashpordSecretaryService
             return new AppointmentDoctorResource($item, 'Secretary');
         });
 
+    }
+
+    public function number_appointment($user)
+    {
+        $doctor=Doctor::where('user_id',$user)->first();
+        $num_app_res= Appointment::where(['doctor_id'=>$doctor->id,'status'=>AppointmentStatus::Confirmed])->count();
+        $num_app_don=Appointment::where(['doctor_id'=>$doctor->id,'status'=>AppointmentStatus::Don])->count();
+        return [
+            'appointment_reserved'=>$num_app_res,
+            'appointment_done'=>$num_app_don,
+        ];
     }
 
 

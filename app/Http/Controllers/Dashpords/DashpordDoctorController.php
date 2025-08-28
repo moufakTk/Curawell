@@ -130,7 +130,11 @@ class DashpordDoctorController extends Controller
         return response()->json($re);
     }
 
-
+    public function number_appointment()
+    {
+        $re =$this->dashpordDoctorService->number_appointment();
+        return response()->json($re);
+    }
 
 
 

@@ -87,15 +87,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post("/addEdit",[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'addEdit']);
     Route::post('/updateEdit',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'updateEdit']);
     Route::post('/deleteEdit',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'deleteEdit']);
-
     Route::get('/reserved_sessions',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'reserved_sessions'])->name('doctor_appointments');
     Route::get('/num_patients',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'num_all_patients']);
     Route::get('/doctor/appointments_occur',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'appointments_occur'])->name('doctor_appointments');
-
     Route::get('/doctor_patients/doctor/{$doctor}',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'doctor_patients']);
     Route::get('/doctor_patients/doctor',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'doctor_patients']);
-
     Route::get('/all_appointments_doctor',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'all_appointments_doctor']);
+    Route::get('/number_appointment',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'number_appointment']);
 
 
                                     //  Secretary
