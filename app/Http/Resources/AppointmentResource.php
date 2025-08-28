@@ -127,6 +127,7 @@ class AppointmentResource extends JsonResource
             'type'=>optional($this->appointments)->appointment_type,
             'patient_num'=>optional(optional($this->appointments)->appointment_patient)->patient_num,
             'patient name'=> optional(optional(optional($this->appointments)->appointment_patient)->patient_user)->getFullNameAttribute(),
+            'Kind'=>$this->Kind,
             'patient_photo'=>'',
 
 

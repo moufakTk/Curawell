@@ -79,6 +79,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/my_bill_analyze',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,"my_bill_analyze"]);
     Route::get('/my_bill_skiagraph',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,"my_bill_skiagraph"]);
     Route::get('/rates_bill',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,'rates_bill']);
+    Route::get('/profilePatient/{user}',[\App\Http\Controllers\Dashpords\DashpordPatientController::class,'profilePatient']);
 
                                         // Doctor
 
@@ -94,6 +95,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/doctor_patients/doctor',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'doctor_patients']);
     Route::get('/all_appointments_doctor',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'all_appointments_doctor']);
     Route::get('/number_appointment',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'number_appointment']);
+    Route::get('/appointment_doctor_patient/{patient}',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'appointment_doctor_patient']);
 
 
                                     //  Secretary
@@ -115,6 +117,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/update_status_bill',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,"update_status_bill"]);
     Route::get('/secretary_patients',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'secretary_patients']);
     Route::get('/all_appointment_secretary',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'all_appointment_secretary']);
+    Route::get('/appointment_secretary_patient/{patient}',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'appointment_secretary_patient']);
+    Route::get('/bill_patient_secretary/{patient}',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'bill_patient_secretary']);
 
 
 });
@@ -155,6 +159,8 @@ Route::prefix('/dashboard')->middleware(['auth:sanctum',SetLocaleMiddleware::cla
 
     Route::get('/patient/{patient}/analyses',[DashpordLabDoctorController::class,'patientAnalyses']);
     Route::get('/patient/analyses',[DashpordLabDoctorController::class,'patientAnalyses']);
+
+    Route::get('/patientAnalysesDon/{patient}',[DashpordLabDoctorController::class,'patientAnalysesDon']);
 
                             /* admin dashboard */
     Route::prefix('admin')

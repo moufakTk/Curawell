@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Appointment\AppointmentRequest;
 use App\Http\Requests\WaitingRequest;
 use App\Models\Appointment;
+use App\Models\Patient;
 use App\Services\Dashpords\DashpordSecretaryService;
 use App\Services\Dashpords\ForAllService;
 use Illuminate\Http\Request;
@@ -215,6 +216,23 @@ class DashpordSecretaryController extends Controller
     public function all_appointment_secretary()
     {
         $re=$this->dashpordSecretaryService->all_appointment_secretary();
+        return response()->json($re);
+
+    }
+
+
+    public function appointment_secretary_patient(Patient $patent)
+    {
+
+        $re=$this->dashpordSecretaryService->appointment_secretary_patient($patent);
+        return response()->json($re);
+
+    }
+
+    public function bill_patient_secretary(Patient $patent)
+    {
+
+        $re=$this->dashpordSecretaryService->bill_patient_secretary($patent);
         return response()->json($re);
 
     }

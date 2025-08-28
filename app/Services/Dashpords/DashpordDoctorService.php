@@ -354,6 +354,30 @@ class DashpordDoctorService
 
     }
 
+
+    public function appointment_doctor_patient($patient)
+    {
+
+
+        $appointment =Appointment::where(['doctor_id'=>auth()->user()->doctor->id,'patient_id'=>$patient->id])->with('sesstions','appointment_doctor','appointment_patient')->get()->each(function ($appointment) {
+            $location_id=$appointment->appointment_doctor->doctor_user->active_work_location->locationable_id;
+            $competence_name=Competence::where('id',$location_id)->value('name_'.$this->locale);
+            $appointment->department=$competence_name;
+
+            $appointment->date =$appointment->appointment_doctor_session->session_doctor->work_employee_Day->history;
+            $appointment->time =$appointment->appointment_doctor_session->from;
+            //$appointment->type_serv ='Clinic';
+            $appointment->bill=$appointment->appointment_bills()->first()->total_treatment_amount;
+            $appointment->paid_bill=$appointment->appointment_bills()->first()->paid_of_amount;
+        });
+
+
+        return $appointment->map(function ($item) {
+                return new AppointmentDoctorResource($item, 'Doctor');
+            });
+
+    }
+
     public function number_appointment()
     {
 

@@ -38,6 +38,27 @@ class DashpordLabDoctorService
 
 
 
+    public function patientAnalysesDon($patient)
+    {
+
+        $analyses = AnalyzeOrder::where(["patient_id"=>$patient->id,'status'=>AnalyzeOrderStatus::Completed])
+            ->with([
+                'analyzed_order_patient.patient_user',
+                'AnalyzeRelated.analyzesRelated_analyze',
+                'samplesRelated.SamplesRelated_sample',
+                'reports'
+            ])->get();
+        $analyses =AnalyzeOrderResource::collection($analyses);
+        $analyses=$analyses->groupBy('status');
+        return [
+            'data'=>$analyses,
+            'message'=>('messages.reception.analyze_orders.list'),
+        ];
+
+    }
+
+
+
 
 
 public function pendingAnalyses(){

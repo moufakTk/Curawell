@@ -576,7 +576,9 @@ class DashpordSecretaryService
         $workEmployee =WorkEmployee::where(['work_day_id'=>$workDay->id ,'user_id'=>$user])->first();
         $appointment_confirmed = $workEmployee->doctor_sessions()->where('status', SessionDoctorStatus::Reserved)->whereHas('appointments',function ($q){
             $q->where('status',AppointmentStatus::Confirmed);
-        })->with('appointments.appointment_patient.patient_user')->get();
+        })->with('appointments.appointment_patient.patient_user')->get()->each(function ($q){
+            $q->Kind='Appointment';
+        });
 
         return $appointment_confirmed;
 
@@ -846,7 +848,6 @@ class DashpordSecretaryService
         });
 
     }
-
     public function number_appointment($user)
     {
         $doctor=Doctor::where('user_id',$user)->first();
@@ -856,6 +857,92 @@ class DashpordSecretaryService
             'appointment_reserved'=>$num_app_res,
             'appointment_done'=>$num_app_don,
         ];
+    }
+    public function appointment_secretary_patient($patent)
+    {
+
+        $user =User::where('id',auth()->id())->first();
+        $service_id=$user->active_work_location->locationable_id;
+        $competence =Competence::where('service_id',$service_id)->pluck('id')->toArray();
+        $user_doctor =WorkLocation::where('locationable_type',Competence::class)
+            ->whereIn('locationable_id',$competence)
+            ->pluck('user_id')
+            ->toArray();
+
+        $app=  collect();
+        foreach ($user_doctor as $user){
+            $appointment=$this->appointment_doctor_patient($patent,$user);
+            if($appointment->isNotEmpty()){
+                $app=$app->merge($appointment);
+            }
+        }
+
+        return $app;
+
+    }
+
+    public function appointment_doctor_patient($patient ,$user)
+    {
+        $doctor=Doctor::where('user_id',$user)->first();
+
+        $appointment =Appointment::where(['doctor_id'=>$doctor->id,'patient_id'=>$patient->id])->with('sesstions','appointment_doctor','appointment_patient')->get()->each(function ($appointment) {
+            $location_id=$appointment->appointment_doctor->doctor_user->active_work_location->locationable_id;
+            $competence_name=Competence::where('id',$location_id)->value('name_'.$this->locale);
+            $appointment->department=$competence_name;
+
+            $appointment->date =$appointment->appointment_doctor_session->session_doctor->work_employee_Day->history;
+            $appointment->time =$appointment->appointment_doctor_session->from;
+            //$appointment->type_serv ='Clinic';
+            $appointment->bill=$appointment->appointment_bills()->first()->total_treatment_amount;
+            $appointment->paid_bill=$appointment->appointment_bills()->first()->paid_of_amount;
+        });
+
+
+        return $appointment->map(function ($item) {
+            return new AppointmentDoctorResource($item, 'Secretary');
+        });
+
+    }
+
+    public function bill_patient_secretary($patient)
+    {
+
+        $bill=Bill::where('patient_id', $patient->id)
+            ->with(['doctorEdits', 'appointment_bills' => function($q) {
+                $q->whereHasMorph('appointable', [Appointment::class], function($query){
+                    $query->where('status', AppointmentStatus::Don);
+                })->orWhereHasMorph('appointable', [Waiting::class], function($query){
+                    $query->where('status', WaitingStatus::Don);
+                });
+            }],'bill_doctor')
+            ->whereHas('appointment_bills', function ($q) {
+                $q->whereMorphRelation('appointable', [Appointment::class], function ($query) {
+                    $query->where('status', AppointmentStatus::Don);
+                })->orWhereMorphRelation('appointable', [Waiting::class], function ($query) {
+                    $query->where('status', WaitingStatus::Don);
+                });
+            })
+            ->get()->each(function ($bill){
+
+                $bill->appointment_bills->loadMorph('appointable', [
+                    Appointment::class => [
+                        'appointment_doctor_session.session_doctor.work_employee_Day',
+                        'appointment_doctor.doctor_user.active_work_location.locationable'
+                    ],
+                    Waiting::class => []]);
+
+                $bill->deppartment =$bill->bill_doctor->doctor_user->active_work_location->locationable->{'name_'.$this->locale};
+                $bill->makeHidden([
+                    'bill_doctor',
+                    'bill_doctor.doctor_user',
+                    'bill_doctor.doctor_user.active_work_location',
+                    'bill_doctor.doctor_user.active_work_location.locationable',
+                ]);
+            });
+
+        return $bill->map(function ($bill) {
+            return new BillResource($bill ,'Patient');
+        });
     }
 
 

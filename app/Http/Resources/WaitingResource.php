@@ -34,6 +34,7 @@ class WaitingResource extends JsonResource
             'waiting_type'=>$this->waiting_type,
             'patient_name'=>optional($this->waiting_patient)->getFullNameAttribute(),
             'patient_num'=>optional($this->waiting_patient)->patient_num,
+            'Kind'=>'Waiting',
             'patient_photo'=>''
 
 

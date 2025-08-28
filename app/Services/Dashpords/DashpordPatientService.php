@@ -426,7 +426,7 @@ class DashpordPatientService
                     $query->where('status', WaitingStatus::Don);
                 });
             })
-            ->get()->each(function ($bill) use ($sum ,$paid){
+            ->get()->each(function ($bill){
 
                 $bill->appointment_bills->loadMorph('appointable', [
                     Appointment::class => [

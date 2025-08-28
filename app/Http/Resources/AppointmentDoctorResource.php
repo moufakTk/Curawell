@@ -41,6 +41,7 @@ class AppointmentDoctorResource extends JsonResource
     public function ifDon()
     {
         $return=[
+            'id'=>$this->id,
             'date'=>$this->date,
             'time'=>$this->time,
             'status'=>$this->status,
@@ -71,6 +72,7 @@ class AppointmentDoctorResource extends JsonResource
     public function Secretary()
     {
         $return=[
+            'id'=>$this->id,
             'date'=>$this->date,
             'time'=>$this->time,
             'status'=>$this->status,

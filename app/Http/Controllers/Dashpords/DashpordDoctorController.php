@@ -6,6 +6,7 @@ use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Doctor;
 use App\Models\DoctorEdit;
+use App\Models\Patient;
 use App\Models\SessionCenter;
 use App\Services\Dashpords\DashpordDoctorService;
 use http\Env\Response;
@@ -137,5 +138,12 @@ class DashpordDoctorController extends Controller
     }
 
 
+    public function appointment_doctor_patient(Patient $patient)
+    {
+
+        $re =$this->dashpordDoctorService->appointment_doctor_patient($patient);
+        return response()->json($re);
+
+    }
 
 }

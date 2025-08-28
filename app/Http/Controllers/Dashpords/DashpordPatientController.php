@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashpords;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProfilePatientRequest;
 use App\Http\Resources\SessionsResource;
+use App\Models\User;
 use App\Services\Dashpords\DashpordPatientService;
 use Illuminate\Http\Request;
 
@@ -31,6 +32,8 @@ class DashpordPatientController extends Controller
         $re = $this->dashpordPatientService->Sessions();
         return SessionsResource::collection($re);
     }
+
+
 
     public function appointments()
     {
@@ -235,6 +238,14 @@ class DashpordPatientController extends Controller
     public function rates_bill()
     {
         $re=$this->dashpordPatientService->rates_bill();
+        return response()->json($re);
+
+    }
+
+        public function profilePatient($user)
+    {
+        $thisUser = User::findOrFail($user);
+        $re=$this->dashpordPatientService->profilePatient($thisUser);
         return response()->json($re);
 
     }
