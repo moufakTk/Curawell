@@ -207,6 +207,12 @@ class DashpordSecretaryController extends Controller
 
     }
 
+
+    public function update_appointment_to_missed(Appointment $appointment)
+    {
+        $re=$this->dashpordSecretaryService->update_appointment_to_missed($appointment);
+        return response()->json($re);
+    }
     public function secretary_patients()
     {
         $re=$this->dashpordSecretaryService->secretary_patients();

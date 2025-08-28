@@ -768,6 +768,13 @@ class DashpordSecretaryService
         ];
     }
 
+    public function update_appointment_to_missed($appointment)
+    {
+
+        $appointment->update(['status'=>AppointmentStatus::Missed]);
+        return $appointment;
+    }
+
     public function secretary_patients()
     {
         $user =User::where('id',auth()->id())->first();
@@ -944,6 +951,9 @@ class DashpordSecretaryService
             return new BillResource($bill ,'Patient');
         });
     }
+
+
+
 
 
 }

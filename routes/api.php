@@ -109,6 +109,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/make_appointment_occur',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'make_appointment_occur']);
     Route::post('/make_appointment_checkout',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'make_appointment_checkout']);
     Route::post('/make_appointment_don',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'make_appointment_don']);
+    Route::get('/update_appointment_to_missed/{appointment}',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'update_appointment_to_missed']);
     Route::get('/secretary_queue_appointment_doctor',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'secretary_queue_appointment_doctor']);
     Route::get('/secretary_queue_checkOut',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,"secretary_queue_checkOut"]);
     Route::post('/bill_for_appointment',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'bill_for_appointment']);
