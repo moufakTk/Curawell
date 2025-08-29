@@ -174,6 +174,14 @@ class AppointmentService
 
             if($request->mode=='FaceToFace'){
                 $patient=Patient::where('patient_num' ,$request->number_patient)->first();
+                if(!$patient){
+                    return [
+                        'success' => false,
+                        'message' => 'لا يوجد مريض بهذا الرقم',
+                        'data' => []
+                    ];
+                }
+
                 $user = $patient->patient_user;
             }else{
                 $user=User::where('id',auth()->user()->id)->with('patient')->first();

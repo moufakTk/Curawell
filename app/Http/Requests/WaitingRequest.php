@@ -25,7 +25,7 @@ class WaitingRequest extends FormRequest
             //
             'doctor_id'=>'required|exists:doctors,id',
             'phone'=>'required',
-            'name_patient'=>'required_if:mode,FaceToFace|string',
+            //'name_patient'=>'required_if:mode,FaceToFace|string',
             'number_patient'=>'required_if:mode,FaceToFace|string',
             'type_waiting'=>'required|string|in:Emergency,Disabled,Old',
 

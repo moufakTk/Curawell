@@ -124,6 +124,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/bill_patient_secretary/{patient}',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'bill_patient_secretary']);
 
     Route::get('/secretary_doctors_today',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'secretary_doctors_today']);
+    Route::get('/doctor_section',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'doctor_section']);
 
 
 

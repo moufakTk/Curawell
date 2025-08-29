@@ -49,11 +49,11 @@ class AppointmentDoctorResource extends JsonResource
             'patent_name'=>optional($this->appointment_patient)->getFullNameAttribute(),
             'patient_num'=>optional($this->appointment_patient)->patient_num,
         ];
-        if($this->status ==AppointmentStatus::Don){
+        if($this->status == AppointmentStatus::Don || $this->status == AppointmentStatus::Occur){
             $return =array_merge($return,[
                 'bill'=>$this->bill,
                 'paid_bill'=>$this->paid_bill,
-                'p'=>$this->p,
+                //'p'=>$this->p,
                 'info session' =>$this->sesstions->map(function ($session) {
                     return [
                         'session_name'=>$session->session_name,
@@ -74,6 +74,30 @@ class AppointmentDoctorResource extends JsonResource
                 })
             ]);
         }
+//        if($this->status ==AppointmentStatus::Occur){
+//
+//            if($this->sesstions->treatments->isEmpty()){
+//
+//            }
+//
+//            $return =array_merge($return,[
+//                'bill'=>$this->bill,
+//                'paid_bill'=>$this->paid_bill,
+//                'p'=>$this->p,
+//                'info session' =>$this->sesstions->map(function ($session) {
+//                    return [
+//                        'session_name'=>$session->session_name,
+//                        'diagnosis'=>$session->diagnosis,
+//                        'symptoms'=>$session->symptoms,
+//                        'medicines'=>$session->medicines,
+//                        'examin'=>$this->examin,
+//                    ];
+//                })
+//
+//            ]);
+//        }
+
+
         return $return ;
     }
 
@@ -82,6 +106,7 @@ class AppointmentDoctorResource extends JsonResource
     {
         $return=[
             'id'=>$this->id,
+            'doctor_id'=>optional($this->appointment_doctor)->id,
             'date'=>$this->date,
             'time'=>$this->time,
             'status'=>$this->status,

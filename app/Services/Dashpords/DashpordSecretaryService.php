@@ -58,6 +58,15 @@ class DashpordSecretaryService
 
         $registered = DB::transaction(function () use ($request) {
             $patient= Patient::where(['patient_num'=>$request->number_patient])->first();
+
+            if(!$patient){
+                return [
+                    'success' => false,
+                    'message' => 'لا يوجد مريض بهذا الرقم',
+                    'data' => []
+                ];
+            }
+
             $doctor=Doctor::where('id', $request->doctor_id)->with('doctor_user','doctor_examination')->first();
 
             $waiting=Waiting::create([
@@ -861,7 +870,7 @@ class DashpordSecretaryService
     public function number_appointment($user)
     {
         $doctor=Doctor::where('user_id',$user)->first();
-        $num_app_res= Appointment::where(['doctor_id'=>$doctor->id,'status'=>AppointmentStatus::Confirmed])->count();
+        $num_app_res= Appointment::where(['doctor_id'=>$doctor->id])->count();
         $num_app_don=Appointment::where(['doctor_id'=>$doctor->id,'status'=>AppointmentStatus::Don])->count();
         return [
             'appointment_reserved'=>$num_app_res,
@@ -1065,6 +1074,7 @@ class DashpordSecretaryService
            $this->authService->attachDefaultAvatarIfMissing($u);
             $photo=$u->image->url??null;
             $doctor[] = [
+                'doctor_id'=>$u->doctor->id,
                 'department' => $department,
                  'doctor_photo'=>$photo,
                 'doctor_name'=>$u->getFullNameAttribute(),
@@ -1074,6 +1084,14 @@ class DashpordSecretaryService
         }
 
     return $doctor;
+    }
+
+
+    public function doctor_this_section()
+    {
+
+
+
     }
 
 

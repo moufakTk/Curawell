@@ -376,7 +376,7 @@ class DashpordDoctorService
             $treatments = $appointment->sesstions->first()->treatments;
             $sum = 0;
 
-            if ($appointment->status == AppointmentStatus::Don && $treatments->isNotEmpty()) {
+            if (($appointment->status == AppointmentStatus::Don || $appointment->status == AppointmentStatus::Don) && $treatments->isNotEmpty()) {
 
                 $a_b = $appointment->appointment_bills()->first();
 
@@ -400,7 +400,7 @@ class DashpordDoctorService
 
             }
 
-            $appointment->p=$sum;
+            //$appointment->p=$sum;
 
         });
 

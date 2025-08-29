@@ -249,6 +249,14 @@ class DashpordSecretaryController extends Controller
 
 
 
+    public function doctor_section()
+    {
+
+        $re=$this->dashpordSecretaryService->doctor_section();
+        return response()->json($re);
+    }
+
+
 
 
 }
