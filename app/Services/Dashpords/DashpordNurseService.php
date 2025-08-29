@@ -183,7 +183,7 @@ public function patients(){
         $section_id=WorkLocation::where(['user_id'=>$user->id ,'active'=>1])->value('locationable_id');
         $section_name=Section::where('id',$section_id)->value('name_'.$this->locale);
         $user->section_name = $section_name;
-        return $user->load('work_day_time') ;
+        return $user->load('work_day_time','image:id,imageable_id,imageable_type,path_image') ;
     }
 
 

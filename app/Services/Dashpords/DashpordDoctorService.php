@@ -44,7 +44,7 @@ class DashpordDoctorService
         $competence_id=WorkLocation::where(['user_id'=>$user->id,"active"=>1])->value('locationable_id');
         $competence_name=Competence::where('id',$competence_id)->value('name_'.$this->locale);
         $user->compentence_name = $competence_name;
-        return $user->load('doctor','work_day_time');
+        return $user->load('doctor','work_day_time','image:id,imageable_id,imageable_type,path_image');
     }
     public function treatments(){
 
@@ -362,7 +362,7 @@ class DashpordDoctorService
     {
 
 
-        $appointment =Appointment::where(['doctor_id'=>auth()->user()->doctor->id,'patient_id'=>$patient->id])->with('sesstions','appointment_doctor','appointment_patient')->get()->each(function ($appointment) {
+        $appointment =Appointment::where(['doctor_id'=>auth()->user()->doctor->id,'patient_id'=>$patient->id])->with('sesstion','sesstions','appointment_doctor','appointment_patient')->get()->each(function ($appointment) {
             $location_id=$appointment->appointment_doctor->doctor_user->active_work_location->locationable_id;
             $competence_name=Competence::where('id',$location_id)->value('name_'.$this->locale);
             $appointment->department=$competence_name;
@@ -372,6 +372,36 @@ class DashpordDoctorService
             //$appointment->type_serv ='Clinic';
             $appointment->bill=$appointment->appointment_bills()->first()->total_treatment_amount;
             $appointment->paid_bill=$appointment->appointment_bills()->first()->paid_of_amount;
+
+            $treatments = $appointment->sesstions->first()->treatments;
+            $sum = 0;
+
+            if ($appointment->status == AppointmentStatus::Don && $treatments->isNotEmpty()) {
+
+                $a_b = $appointment->appointment_bills()->first();
+
+                foreach ($treatments as $treatment) {
+                    // استخدم السعر والكمية مباشرة من التريتمنت
+                    $price = $treatment->small_service_price ?? 0;
+                    $count = $treatment->small_service_num ?? 0;
+                    $discount = $treatment->discount_rate ?? 0; // إذا عندك خصم موجود هون
+
+                    $sum += ($price * $count) * (1 - $discount / 100);
+                }
+
+                $minus = $a_b->total_treatment_amount - $sum;
+
+                if ($minus > 0) {
+                    $appointment->examin = 'true';
+                } else {
+                    $appointment->examin = 'false';
+                }
+
+
+            }
+
+            $appointment->p=$sum;
+
         });
 
 

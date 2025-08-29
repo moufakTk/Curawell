@@ -31,6 +31,7 @@ use App\Models\User;
 use App\Models\UserPoint;
 use App\Models\UserReplacement;
 use App\Models\Waiting;
+use App\Services\AuthServices\AuthServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
@@ -40,14 +41,17 @@ class DashpordPatientService
 {
 
     protected $locale;
-    public function __construct(){
+    protected $s;
+    public function __construct(AuthServices $authServices){
+        $this->s= $authServices;
         $this->locale = App::getLocale();
     }
 
 
     public function profilePatient(User $user)
     {
-        return $user->load('patient.medical_history');
+        $this->s->attachDefaultAvatarIfMissing($user);
+        return $user->load('patient.medical_history','image');
     }
 
     public function myDoctors()
@@ -60,7 +64,12 @@ class DashpordPatientService
             ->groupBy('doctor_id');
 
         $appointments = Appointment::whereIn('id', $minIds)
-            ->with('appointment_doctor.doctor_user.active_work_location')
+            ->with([
+                'appointment_doctor.doctor_user.active_work_location',
+                'appointment_doctor.doctor_user.image' => function($q) {
+                    $q->select('id','imageable_id','imageable_type','path_image');
+                }
+            ])
             ->get();
 
         $appointments->each(function ($appointment) {
@@ -73,7 +82,7 @@ class DashpordPatientService
 
         return $appointments->pluck('appointment_doctor.doctor_user')->map(function ($doctor) {
             $doctor->makeHidden(['active_work_location']);
-            return $doctor->only(['id', 'first_name', 'last_name', 'competence_name']);
+            return $doctor->only(['id', 'first_name', 'last_name', 'competence_name','image']);
         });
 
     }

@@ -270,7 +270,7 @@ return $user;
         ];
     }
 
-    private function attachDefaultAvatarIfMissing(\App\Models\User $user): void
+    public function attachDefaultAvatarIfMissing(\App\Models\User $user): void
     {
         // إذا عنده صورة، ما منعمل شي
         if ($user->image()->exists()) {

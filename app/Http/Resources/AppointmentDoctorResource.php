@@ -53,13 +53,14 @@ class AppointmentDoctorResource extends JsonResource
             $return =array_merge($return,[
                 'bill'=>$this->bill,
                 'paid_bill'=>$this->paid_bill,
+                'p'=>$this->p,
                 'info session' =>$this->sesstions->map(function ($session) {
                     return [
                         'session_name'=>$session->session_name,
                         'diagnosis'=>$session->diagnosis,
                         'symptoms'=>$session->symptoms,
                         'medicines'=>$session->medicines,
-
+                        'examin'=>$this->examin,
                         'treatments' => $session->treatments->map(function ($treatment) {
                             return [
                                 'service_name'=>optional($treatment->treatment_division->division_small_service)
@@ -73,7 +74,6 @@ class AppointmentDoctorResource extends JsonResource
                 })
             ]);
         }
-
         return $return ;
     }
 

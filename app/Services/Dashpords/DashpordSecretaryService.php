@@ -33,6 +33,7 @@ use App\Models\Waiting;
 use App\Models\WorkDay;
 use App\Models\WorkEmployee;
 use App\Models\WorkLocation;
+use App\Services\AuthServices\AuthServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -41,14 +42,15 @@ use function PHPUnit\Framework\isEmpty;
 class DashpordSecretaryService
 {
 
-    protected $forAllService,$dashpordDoctorService ,$locale;
+    protected $forAllService,$dashpordDoctorService ,$locale,$authService;
 
 
-    public function __construct(ForAllService $forAllService ,DashpordDoctorService $dashpordDoctorService)
+    public function __construct(ForAllService $forAllService ,DashpordDoctorService $dashpordDoctorService,AuthServices $authService)
     {
         $this->forAllService = $forAllService;
         $this->locale=app()->getLocale();
         $this->dashpordDoctorService=$dashpordDoctorService;
+        $this->authService=$authService;
     }
 
     public function reserve_appointment_waiting($request)
@@ -976,11 +978,11 @@ class DashpordSecretaryService
             $work_day_today = $this->workDay_today($userI);
             $u=User::where('id',$userI)->first();
             $department=$u->active_work_location->locationable->{'name_'.$this->locale};
-           // $photo =$u->image->url;
+            $photo =$u->image->url??null;
             $w[] = [
                 'work_day_today' => $work_day_today,
                 'department' => $department,
-               // 'doctor_photo'=>$photo,
+                'doctor_photo'=>$photo,
                 'doctor_name'=>$u->getFullNameAttribute(),
                 'appointments'=>AppointmentResource::collection($this->appointment_doctor_confirmed($userI,$time_now)),
                 'numbers'=>$this->number_appointment_today($userI,$time_now),
@@ -1060,9 +1062,11 @@ class DashpordSecretaryService
         foreach ($user_doctor as $userI) {
             $u=User::where('id',$userI)->first();
             $department=$u->active_work_location->locationable->{'name_'.$this->locale};
+           $this->authService->attachDefaultAvatarIfMissing($u);
+            $photo=$u->image->url??null;
             $doctor[] = [
                 'department' => $department,
-                // 'doctor_photo'=>$photo,
+                 'doctor_photo'=>$photo,
                 'doctor_name'=>$u->getFullNameAttribute(),
                 'phone'=>$u->phone,
                 'work_day_today' =>UserDayTime::where('user_id',$userI)->select('id','day_'.$this->locale,'timeStart','timeEnd')->get(),
