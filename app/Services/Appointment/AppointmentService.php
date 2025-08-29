@@ -185,6 +185,9 @@ class AppointmentService
             $rep=Replacement::where('name_en',$department)->first();
 
             if($request->mode ==="Point"){
+
+
+
                 if($user->patient->totalPoints < $rep->replace_point_num){
                     return [
                         'success' => false,

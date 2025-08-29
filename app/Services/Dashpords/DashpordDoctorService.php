@@ -295,7 +295,9 @@ class DashpordDoctorService
         $workEmployee =WorkEmployee::where(['work_day_id'=>$workDay->id ,'user_id'=>auth()->user()->id])->first();
         $appointment_occur = $workEmployee->doctor_sessions()->where('status', SessionDoctorStatus::Reserved)->whereHas('appointments',function ($q){
             $q->where('status',AppointmentStatus::Occur);
-        })->with('appointments.appointment_patient.patient_user')->get();
+        })->with('appointments.appointment_patient.patient_user')->get()->each(function ($q){
+            $q->Kind='Appointment';
+        });
 
         return $appointment_occur;
 
@@ -385,7 +387,6 @@ class DashpordDoctorService
            'appointment_done'=>$num_app_don,
        ];
     }
-
     public function add_info_session($request)
     {
         $session=SessionCenter::where('id',$request->session_id)->first();
@@ -410,8 +411,6 @@ class DashpordDoctorService
         return $session;
 
     }
-
-
     public function add_on_new_diseases($session ,$newDisease)
     {
 
