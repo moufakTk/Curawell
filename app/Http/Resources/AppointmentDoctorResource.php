@@ -59,10 +59,19 @@ class AppointmentDoctorResource extends JsonResource
                         'diagnosis'=>$session->diagnosis,
                         'symptoms'=>$session->symptoms,
                         'medicines'=>$session->medicines,
+
+                        'treatments' => $session->treatments->map(function ($treatment) {
+                            return [
+                                'service_name'=>optional($treatment->treatment_division->division_small_service)
+                                ->{'name_'.app()->getLocale()},
+                                'price'=>$treatment->small_service_price,
+                                'count'=>$treatment->small_service_num,
+                                ];
+
+                        }), // لتجنب null وترتيبها بشكل نظيف
                     ];
                 })
             ]);
-
         }
 
         return $return ;

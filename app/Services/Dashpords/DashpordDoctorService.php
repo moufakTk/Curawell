@@ -333,7 +333,7 @@ class DashpordDoctorService
     {
 
 
-        $appointment =Appointment::where('doctor_id',auth()->user()->doctor->id)->with('sesstions','appointment_doctor','appointment_patient')->get()->each(function ($appointment) {
+        $appointment =Appointment::where('doctor_id',auth()->user()->doctor->id)->with('sesstions.treatments.treatment_division.division_small_service','appointment_doctor','appointment_patient')->get()->each(function ($appointment) {
             $location_id=$appointment->appointment_doctor->doctor_user->active_work_location->locationable_id;
             $competence_name=Competence::where('id',$location_id)->value('name_'.$this->locale);
             $appointment->department=$competence_name;
@@ -345,6 +345,9 @@ class DashpordDoctorService
             $appointment->paid_bill=$appointment->appointment_bills()->first()->paid_of_amount;
         });
         $num_app=$this->number_appointment();
+
+
+
 
         return[
             'appointment_reserved'=>$num_app['appointment_reserved'],
