@@ -380,7 +380,7 @@ class DashpordDoctorService
     public function number_appointment()
     {
 
-       $num_app_res= Appointment::where(['doctor_id'=>auth()->user()->doctor->id,'status'=>AppointmentStatus::Confirmed])->count();
+       $num_app_res= Appointment::where(['doctor_id'=>auth()->user()->doctor->id])->count();
        $num_app_don=Appointment::where(['doctor_id'=>auth()->user()->doctor->id,'status'=>AppointmentStatus::Don])->count();
        return [
            'appointment_reserved'=>$num_app_res,
