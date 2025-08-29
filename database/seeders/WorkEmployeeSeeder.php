@@ -42,7 +42,7 @@ class WorkEmployeeSeeder extends Seeder
 
         $time_period=['09:00:00','15:00:00','18:00:00'];
 
-        WorkDay::whereNotIn('day_en',['Friday','Saturday'])->each(function ($workDay) use ($user_id ,$user_nurse,$time_period) {
+        WorkDay::whereNotIn('day_en',['Friday'])->each(function ($workDay) use ($user_id ,$user_nurse,$time_period) {
 
             //قيم لايام الطبيب والفترات فيها//
             foreach ($user_id as $id) {

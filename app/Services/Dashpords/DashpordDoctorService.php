@@ -353,8 +353,6 @@ class DashpordDoctorService
             ];
 
     }
-
-
     public function appointment_doctor_patient($patient)
     {
 
@@ -377,7 +375,6 @@ class DashpordDoctorService
             });
 
     }
-
     public function number_appointment()
     {
 
@@ -387,6 +384,53 @@ class DashpordDoctorService
            'appointment_reserved'=>$num_app_res,
            'appointment_done'=>$num_app_don,
        ];
+    }
+
+    public function add_info_session($request)
+    {
+        $session=SessionCenter::where('id',$request->session_id)->first();
+
+        $newDiagnosis = $request->diagnosis ?? [];
+
+        $updatedDiagnosis = [
+            'report'      => $newDiagnosis['report'] ?? null,
+            'description' => $newDiagnosis['description'] ?? null,
+        ];
+
+        $session->update([
+            'session_name' => $request->filled('diagnosis_name') ? $request->diagnosis_name : $session->session_name,
+            'diagnosis'    => $updatedDiagnosis,
+            'medicines'    => $request->filled('medicines') ? $request->medicines : $session->medicines,
+        ]);
+
+        if ($request->has('diagnosis_name')) {
+            $this->add_on_new_diseases($session,$request->diagnosis_name);
+        }
+
+        return $session;
+
+    }
+
+
+    public function add_on_new_diseases($session ,$newDisease)
+    {
+
+        $appointment = $session->sessionable;
+
+        if($appointment instanceof Appointment){
+            $md=$appointment->appointment_patient->medical_history;
+            $newDiseases = $md->new_diseases ?? [];
+            $newDiseases[] = $newDisease;
+            $md->new_diseases = $newDiseases;
+            $md->save();
+        }elseif ($appointment instanceof Waiting){
+            $md=$appointment->waiting_patient->medical_history;
+            $newDiseases = $md->new_diseases ?? [];
+            $newDiseases[] = $newDisease;
+            $md->new_diseases = $newDiseases;
+            $md->save();
+        }
+
     }
 
 

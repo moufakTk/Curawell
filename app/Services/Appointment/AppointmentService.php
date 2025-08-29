@@ -156,7 +156,7 @@ class AppointmentService
         }
 
         $day = WorkDay::where('history', $request->day_date)->first();
-        if (in_array($day->day_en, ['Friday', 'Saturday'])) {
+        if (in_array($day->day_en, ['Friday'])) {
             return ['success' => false, 'message' => __('messages.name_day')];
         }
         $work_day_of_doctor = WorkEmployee::where(['user_id' => $doctor->doctor_user->id, 'work_day_id' => $day->id])->with('doctor_sessions')->get();

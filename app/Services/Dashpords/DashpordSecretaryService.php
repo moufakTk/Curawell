@@ -28,6 +28,7 @@ use App\Models\OrderTaxi;
 use App\Models\Patient;
 use App\Models\SessionCenter;
 use App\Models\User;
+use App\Models\UserDayTime;
 use App\Models\Waiting;
 use App\Models\WorkDay;
 use App\Models\WorkEmployee;
@@ -952,8 +953,124 @@ class DashpordSecretaryService
         });
     }
 
+    public function secretary_doctors_today()
+    {
+        $user =User::where('id',auth()->id())->first();
+        $service_id=$user->active_work_location->locationable_id;
+        $competence =Competence::where('service_id',$service_id)->pluck('id')->toArray();
+        $user_doctor =WorkLocation::where('locationable_type',Competence::class)
+            ->whereIn('locationable_id',$competence)
+            ->pluck('user_id')
+            ->toArray();
 
 
+        $time_now = Carbon::today('Asia/Damascus')->toDateString();
+        $work_day =WorkDay::where('history',$time_now)->value('id');
+
+        $user_doctor_today=WorkEmployee::where('work_day_id',$work_day)->whereIn('user_id',$user_doctor)->pluck('user_id')->toArray();
+
+
+        $w = [];
+
+        foreach ($user_doctor_today as $userI) {
+            $work_day_today = $this->workDay_today($userI);
+            $u=User::where('id',$userI)->first();
+            $department=$u->active_work_location->locationable->{'name_'.$this->locale};
+           // $photo =$u->image->url;
+            $w[] = [
+                'work_day_today' => $work_day_today,
+                'department' => $department,
+               // 'doctor_photo'=>$photo,
+                'doctor_name'=>$u->getFullNameAttribute(),
+                'appointments'=>AppointmentResource::collection($this->appointment_doctor_confirmed($userI,$time_now)),
+                'numbers'=>$this->number_appointment_today($userI,$time_now),
+            ];
+        }
+
+
+        return [
+            'doctors_today'=>$w,
+            'doctors_Section'=>$this->doctor_section()
+
+        ];
+
+    }
+
+    public function workDay_today($user)
+    {
+        $time_now = Carbon::today('Asia/Damascus')->toDateString();
+        $work_day =WorkDay::where('history',$time_now)->value('id');
+        $re =WorkEmployee::where(['work_day_id'=>$work_day,'user_id'=>$user])->select('id','from' ,'to')->get();
+        return $re;
+    }
+
+
+    public function number_appointment_today($user,$time_now)
+    {
+        //$doctor=Doctor::where('user_id',$user)->first();
+        //$num_app_res= Appointment::where(['doctor_id'=>$doctor->id,'status'=>AppointmentStatus::Confirmed])->count();
+        //$num_app_don=Appointment::where(['doctor_id'=>$doctor->id,'status'=>AppointmentStatus::Don])->count();
+
+        $workDay=WorkDay::where('history',$time_now)->first();
+        $workEmployee =WorkEmployee::where(['work_day_id'=>$workDay->id ,'user_id'=>$user])->first();
+        $appointment_confirmed_count = $workEmployee->doctor_sessions()->where('status', SessionDoctorStatus::Reserved)->count();
+
+        $appointment_confirmed_Don = $workEmployee->doctor_sessions()->where('status', SessionDoctorStatus::Reserved)->whereHas('appointments',function ($q){
+            $q->where('status',AppointmentStatus::Don);
+        })->with('appointments.appointment_patient.patient_user')->count();
+
+        $appointment_confirmed_Missed = $workEmployee->doctor_sessions()->where('status', SessionDoctorStatus::Reserved)->whereHas('appointments',function ($q){
+            $q->where('status',AppointmentStatus::Missed);
+        })->with('appointments.appointment_patient.patient_user')->count();
+
+        $appointment_confirmed_Occur = $workEmployee->doctor_sessions()->where('status', SessionDoctorStatus::Reserved)->whereHas('appointments',function ($q){
+            $q->where('status',AppointmentStatus::Occur);
+        })->with('appointments.appointment_patient.patient_user')->count();
+
+        $appointment_confirmed_CheckOut = $workEmployee->doctor_sessions()->where('status', SessionDoctorStatus::Reserved)->whereHas('appointments',function ($q){
+            $q->where('status',AppointmentStatus::CheckOut);
+        })->with('appointments.appointment_patient.patient_user')->count();
+
+        $appointment_confirmed_Confirmed = $workEmployee->doctor_sessions()->where('status', SessionDoctorStatus::Reserved)->whereHas('appointments',function ($q){
+            $q->where('status',AppointmentStatus::Confirmed);
+        })->with('appointments.appointment_patient.patient_user')->count();
+
+
+
+        return [
+            'appointment_reserved'=>$appointment_confirmed_count,
+            '$appointment_Confirmed'=>$appointment_confirmed_Confirmed,
+            'appointment_Done'=>$appointment_confirmed_Don,
+            'appointment_confirmed_Occur'=>$appointment_confirmed_Occur,
+            'appointment_confirmed_CheckOut'=>$appointment_confirmed_CheckOut,
+            'appointment_confirmed_Missed'=>$appointment_confirmed_Missed,
+
+        ];
+    }
+
+    public function doctor_section(){
+        $user =User::where('id',auth()->id())->first();
+        $service_id=$user->active_work_location->locationable_id;
+        $competence =Competence::where('service_id',$service_id)->pluck('id')->toArray();
+        $user_doctor =WorkLocation::where('locationable_type',Competence::class)
+            ->whereIn('locationable_id',$competence)
+            ->pluck('user_id')
+            ->toArray();
+        $doctor=[];
+        foreach ($user_doctor as $userI) {
+            $u=User::where('id',$userI)->first();
+            $department=$u->active_work_location->locationable->{'name_'.$this->locale};
+            $doctor[] = [
+                'department' => $department,
+                // 'doctor_photo'=>$photo,
+                'doctor_name'=>$u->getFullNameAttribute(),
+                'phone'=>$u->phone,
+                'work_day_today' =>UserDayTime::where('user_id',$userI)->select('id','day_'.$this->locale,'timeStart','timeEnd')->get(),
+            ];
+        }
+
+    return $doctor;
+    }
 
 
 }

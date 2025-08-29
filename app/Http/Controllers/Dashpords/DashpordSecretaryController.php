@@ -226,7 +226,11 @@ class DashpordSecretaryController extends Controller
 
     }
 
+    public function secretary_doctors_today(){
+        $re=$this->dashpordSecretaryService->secretary_doctors_today();
+        return response()->json($re);
 
+    }
     public function appointment_secretary_patient(Patient $patent)
     {
 
@@ -242,6 +246,7 @@ class DashpordSecretaryController extends Controller
         return response()->json($re);
 
     }
+
 
 
 

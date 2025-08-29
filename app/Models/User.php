@@ -146,6 +146,12 @@ class User extends Authenticatable
         return $this->morphMany(Assigned::class ,'assignedable');
     }
 
+
+    public function image()
+    {
+        return $this->morphOne(Image::class,'imageable');
+    }
+
     public function nurse_sessions()
     {
         return $this->hasManyThrough(

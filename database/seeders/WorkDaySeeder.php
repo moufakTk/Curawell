@@ -39,7 +39,7 @@ class WorkDaySeeder extends Seeder
                 [
                     'day_en'     => $dayName,
                     'day_ar'  => $daysArabic[$dayName],
-                    'status'      => !in_array($startDate->dayOfWeek, [Carbon::FRIDAY, Carbon::SATURDAY]) ? 1 : 0,
+                    'status'      => !in_array($startDate->dayOfWeek, [Carbon::FRIDAY]) ? 1 : 0,
                 ]
             );
 

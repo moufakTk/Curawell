@@ -38,7 +38,7 @@ class WorkLocation extends Model
      * Morph   FK
      */
 
-    public function locationable()
+        public function locationable()
     {
         return $this->morphTo();
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashpords;
 
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SessionInfoRequest;
 use App\Models\Doctor;
 use App\Models\DoctorEdit;
 use App\Models\Patient;
@@ -142,6 +143,14 @@ class DashpordDoctorController extends Controller
     {
 
         $re =$this->dashpordDoctorService->appointment_doctor_patient($patient);
+        return response()->json($re);
+
+    }
+
+
+    public function add_info_session(SessionInfoRequest $request)
+    {
+        $re =$this->dashpordDoctorService->add_info_session($request);
         return response()->json($re);
 
     }

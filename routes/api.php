@@ -97,6 +97,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/number_appointment',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'number_appointment']);
     Route::get('/appointment_doctor_patient/{patient}',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'appointment_doctor_patient']);
 
+    Route::post('/add_info_session',[\App\Http\Controllers\Dashpords\DashpordDoctorController::class,'add_info_session']);
+
 
                                     //  Secretary
     Route::post('/reserve_appointment_waiting',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'reserve_appointment_waiting']);
@@ -120,6 +122,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/all_appointment_secretary',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'all_appointment_secretary']);
     Route::get('/appointment_secretary_patient/{patient}',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'appointment_secretary_patient']);
     Route::get('/bill_patient_secretary/{patient}',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'bill_patient_secretary']);
+
+    Route::get('/secretary_doctors_today',[\App\Http\Controllers\Dashpords\DashpordSecretaryController::class,'secretary_doctors_today']);
+
+
 
 
 });
