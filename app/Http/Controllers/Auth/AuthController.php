@@ -93,7 +93,7 @@ return ApiResponse::success($data,'تم اضافة البيانات',200);
     }
 
     Public function register(RegisterRrequest $request){
-        try {
+
 
             $user =   $this->authServices->register($request);
              return response()->json([
@@ -102,12 +102,7 @@ return ApiResponse::success($data,'تم اضافة البيانات',200);
 
             ],201);
 
-        }catch (\Exception $e){
-            return response()->json([
-                'message' => __('messages.register_failed'),
-                'error'   => $e->getMessage()
-            ], $e->getCode()?0:401);
-        }
+
 
     }
     public function logout()

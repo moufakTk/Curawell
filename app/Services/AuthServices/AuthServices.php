@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 use PhpParser\Node\Expr\FuncCall;
@@ -34,7 +35,7 @@ class AuthServices
 //'password' => 'required|string|confirmed|min:8',
 //'phone' => 'required|string|between:10,20',
 
-public function register($request){
+    public function register($request){
         $registered = DB::transaction(function () use ($request) {
             $birthday = Carbon::parse($request->birthday);
 
@@ -43,7 +44,7 @@ public function register($request){
                 'last_name'  => $request->last_name,
                 'birthday'   => $request->birthday,
                 'age'        => $birthday->age,
-                'gender'     => $request->gender,
+                'gender'     => $request->gender,     // ← بنعتمد عليها لاختيار الصورة
                 'email'      => $request->email,
                 'password'   => Hash::make($request->password),
                 'phone'      => $request->phone,
@@ -51,32 +52,36 @@ public function register($request){
                 'user_type'  => UserType::Patient,
             ]);
 
+            // ▼▼ أضف هالسطـر: عيّن صورة افتراضيّة حسب الجنس إذا ما في صورة
+            $this->attachDefaultAvatarIfMissing($user);
+
             $patient = Patient::create([
                 'user_id'            => $user->id,
                 'civil_id_number'    => $request->civil_id_number,
                 'alternative_phone'  => $request->alternative_phone,
-                'patient_num'=>str_pad((Patient::max('id')??0 )+ 1, 8, '0', STR_PAD_LEFT)
+                'patient_num'        => str_pad((Patient::max('id') ?? 0) + 1, 8, '0', STR_PAD_LEFT),
             ]);
 
             $medical_history = MedicalHistory::create([
-                'patient_id'         => $patient->id,
-                'chronic_diseases'   => $request->chronic_diseases,
-                'hereditary_diseases'=>$request->hereditary_diseases,
-                'allergies'          => $request->allergies,
-                'blood_group'        => $request->blood_group,
-                'weight'             => $request->weight,
-                'height'             => $request->height,
+                'patient_id'          => $patient->id,
+                'chronic_diseases'    => $request->chronic_diseases,
+                'hereditary_diseases' => $request->hereditary_diseases,
+                'allergies'           => $request->allergies,
+                'blood_group'         => $request->blood_group,
+                'weight'              => $request->weight,
+                'height'              => $request->height,
             ]);
 
             $user->assignRole(UserType::Patient->defaultRole());
-//            $user->load('roles.permissions');
-            return $user;
-            });
-        $this->verificationService->sendVerificationCode($registered,'phone','verify');
-//        $this->verificationService->sendVerificationCode($registered,'email','verify');
-        return $registered;
 
-}
+            return $user->load('image');
+        });
+
+        $this->verificationService->sendVerificationCode($registered,'phone','verify');
+        // $this->verificationService->sendVerificationCode($registered,'email','verify');
+
+        return $registered;
+    }
     public function login(Request $request)
     {
         $user = User::where('email', $request->login)
@@ -263,6 +268,33 @@ return $user;
 
             ]
         ];
+    }
+
+    private function attachDefaultAvatarIfMissing(\App\Models\User $user): void
+    {
+        // إذا عنده صورة، ما منعمل شي
+        if ($user->image()->exists()) {
+            return;
+        }
+
+        // حدد الجنس (يدعم enum أو string)
+        $gender = Str::lower((string)($user->gender?->value ?? $user->gender));
+
+        // اسم الملف حسب الجنس
+        $filename = $gender === 'female' ? 'default-female.png' : 'default-male.png';
+
+        // مسار الملف على قرص public (غيّره إذا بتحب)
+        $path = "avatars/{$filename}";
+
+        // لو بدك URL كامل:
+        $url = Storage::disk('public')->url($path);
+
+        // IMPORTANT: غيّر المفاتيح حسب أعمدة جدول Image عندك
+        // أمثلة شائعة: path/disk أو url
+        $user->image()->create([
+            'path_image' => $path,
+
+        ]);
     }
 
 }
