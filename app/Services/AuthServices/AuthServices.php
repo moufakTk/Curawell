@@ -126,6 +126,8 @@ class AuthServices
             ];
         }
         $missing = $this->missing($user);
+        $user->load('roles');
+
 
         return [
             'status'       => 'success',
