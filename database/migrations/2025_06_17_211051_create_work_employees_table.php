@@ -19,6 +19,8 @@ return new class extends Migration
             $table->time('from');
             $table->time('to')->nullable();
             $table->timestamps();
+            $table->unique(['work_day_id','user_id']); // واحد فقط لكل يوم/مستخدم
+
         });
     }
 

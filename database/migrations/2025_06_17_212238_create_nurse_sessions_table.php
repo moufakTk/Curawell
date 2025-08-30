@@ -17,6 +17,8 @@ return new class extends Migration
             $table->enum('status',['Available','Reserved','UnAvailable','TurnOff']);
             $table->time('time_in');
             $table->timestamps();
+            $table->unique(['work_employee_id','time_in']);
+
         });
     }
 

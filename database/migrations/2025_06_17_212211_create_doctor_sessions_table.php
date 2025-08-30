@@ -18,6 +18,8 @@ return new class extends Migration
             $table->time('from');
             $table->time('to');
             $table->timestamps();
+            $table->unique(['work_employee_id','from','to']);
+
         });
     }
 
